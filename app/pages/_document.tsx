@@ -44,6 +44,14 @@ export default class PobDocument extends Document {
           <Head>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link
+              href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+              rel="stylesheet"
+            />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap"
+              rel="stylesheet"
+            />
+            <link
               href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
               rel="stylesheet"
             />

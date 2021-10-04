@@ -1,5 +1,16 @@
 import styled from 'styled-components';
 
+export const BaseAnchor = styled.a`
+  outline: none;
+  background: none;
+  border: none;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  color: unset;
+  transition: all 200ms ease-in-out;
+`;
+
 export const A = styled.a`
   color: black;
   font-weight: 500;

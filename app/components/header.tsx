@@ -1,70 +1,155 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
-import { FlexEnds, Flex } from './flex';
-import { Web3Status } from './web3Status';
-import { A } from './anchor';
+import Link from 'next/link';
+import { useWindowSize } from 'react-use';
+import {
+  HEADER_HEIGHT,
+  MOBILE_HEADER_HEIGHT,
+  STUDIO_PROD_LINK,
+} from '../constants';
 import { BREAKPTS } from '../styles';
+import { MenuIcon } from './icons/menu';
+import { CloseIcon } from './icons/close';
+import { BaseButton } from './button';
+import { Web3Status } from './web3Status';
+import { useModalStore } from '../stores/modal';
 
-const HeaderContainer = styled.div`
-  /* padding: 0 12px; */
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
+export const Header: FC = () => {
+  const {
+    isMenuModalOpen,
+    isWalletModalOpen,
+    setIsWalletModalOpen,
+    setIsMenuModalOpen,
+  } = useModalStore();
+  const dismissAllModals = useCallback(() => {
+    setIsWalletModalOpen(false);
+    setIsMenuModalOpen(false);
+  }, [setIsWalletModalOpen, setIsMenuModalOpen]);
+
+  const isModalOpen = useMemo(() => {
+    return isMenuModalOpen || isWalletModalOpen;
+  }, [isMenuModalOpen, isWalletModalOpen]);
+
+  const { width } = useWindowSize();
+  const isMobile = useMemo(() => width <= BREAKPTS.SM, [width]);
+
+  return (
+    <HeaderWrapper>
+      <HeaderSpacer />
+      <HeaderRow>
+        <HeaderSideContentWrapper>
+          <HeaderLogoWrapper>
+            <HeaderLogoText
+              onClick={() => {
+                dismissAllModals();
+              }}
+              href={STUDIO_PROD_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              PoB
+            </HeaderLogoText>
+            <HeaderSlashWrapper>
+              <svg
+                width="32"
+                height="32"
+                fill="#eaeaea"
+                stroke="#eaeaea"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                color="#eaeaea"
+                shapeRendering="geometricPrecision"
+                viewBox="0 0 24 24"
+              >
+                <path d="M16.88 3.549L7.12 20.451"></path>
+              </svg>
+            </HeaderSlashWrapper>
+            <Link href={'/'} passHref>
+              <ProjectTitleText>Shop</ProjectTitleText>
+            </Link>
+          </HeaderLogoWrapper>
+        </HeaderSideContentWrapper>
+        <HeaderRightSideContentWrapper>
+          {!isMobile && <Web3Status />}
+          {isMobile && (
+            <BaseButton
+              onClick={() =>
+                isModalOpen ? dismissAllModals() : setIsMenuModalOpen(true)
+              }
+              style={{ height: 24, width: 24, marginLeft: 6 }}
+            >
+              {isModalOpen ? <CloseIcon /> : <MenuIcon />}
+            </BaseButton>
+          )}
+        </HeaderRightSideContentWrapper>
+      </HeaderRow>
+    </HeaderWrapper>
+  );
+};
+
+const SPACER_HEIGHT = 0;
+
+const HeaderSpacer = styled.div`
+  width: 100%;
+  height: ${SPACER_HEIGHT}px;
+`;
+
+const HeaderRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  width: 100%;
+  height: ${HEADER_HEIGHT - SPACER_HEIGHT}px;
+  padding: 0 16px 0 24px;
+  @media (max-width: ${BREAKPTS.SM}px) {
+    grid-template-columns: 1fr 2fr;
+    padding: 0 16px 0 16px;
+    height: ${MOBILE_HEADER_HEIGHT - SPACER_HEIGHT}px;
+  }
+`;
+
+const HeaderWrapper = styled.div`
   background: white;
-  z-index: 100;
-`;
-
-const HeaderRow = styled(FlexEnds)`
-  padding: 4px 12px;
-`;
-
-const AnchorRow = styled(Flex)`
-  > * + * {
-    margin-left: 16px;
-  }
-`;
-
-const AnchorColumn = styled.div`
-  a {
-    display: block;
-  }
-  > * + * {
-    margin-top: 8px;
-  }
-`;
-const AddressA = styled(A)`
-  @media (max-width: ${BREAKPTS.MD}px) {
-    display: none;
-  }
-`;
-
-const DropdownA = styled(A)`
-  cursor: pointer;
-`;
-
-const DropdownBody = styled.div`
-  padding: 8px;
-  background: white;
-  border: 1px solid black;
-  position: absolute;
-  left: 0;
-  margin-top: 4px;
-`;
-
-const DropdownContainer = styled.div`
+  transition: background 200ms ease-in-out;
+  z-index: 1000;
   position: relative;
 `;
 
-export const Header: FC = () => {
-  const [showMore, setShowMore] = useState(false);
+const HeaderSideContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
-  return (
-    <HeaderContainer>
-      <HeaderRow>
-        <div></div>
-        <Web3Status />
-      </HeaderRow>
-    </HeaderContainer>
-  );
-};
+const HeaderRightSideContentWrapper = styled(HeaderSideContentWrapper)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: 200ms ease-in-out opacity;
+`;
+
+const HeaderLogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const HeaderLogoText = styled.a`
+  color: black;
+  font-size: 24px;
+  font-family: Bebas Neue;
+  text-decoration: none;
+  opacity: 0.5;
+`;
+
+const HeaderSlashWrapper = styled.div`
+  transform: translateY(1.5px);
+  margin: 0 -1px 0 -2px;
+`;
+
+const ProjectTitleText = styled.a`
+  color: black;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: Helvetica;
+  text-decoration: none;
+  text-transform: uppercase;
+  transform: translateY(-1px);
+`;
