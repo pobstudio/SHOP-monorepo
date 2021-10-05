@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import styled from 'styled-components';
 import { BREAKPTS } from '../styles';
 

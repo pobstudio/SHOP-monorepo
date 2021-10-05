@@ -19,7 +19,8 @@ export const ContentWrapper = styled.div`
 
 export const MainContent = styled.div`
   width: 100%;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
+  background-color: white;
   min-height: calc(100vh - ${HEADER_HEIGHT}px);
   @media (max-width: ${BREAKPTS.SM}px) {
     min-height: calc(100vh - ${MOBILE_HEADER_HEIGHT}px);

@@ -1,23 +1,16 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
 import { useRouter } from 'next/dist/client/router';
 import { A } from './anchor';
 import { useTransactionsStore } from '../stores/transaction';
 import { useENSorHex } from '../hooks/useENS';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { injected, walletconnect } from '../connectors';
+import { injected, walletconnect, walletlink } from '../connectors';
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { usePrevious } from 'react-use';
 import { Flex } from './flex';
 import { isMobile } from 'react-device-detect';
-import { utils } from 'ethers';
-
-const AStatus = styled(A)`
-  cursor: pointer;
-  font-style: italic;
-  font-size: 12px;
-`;
 
 interface WalletInfo {
   connector?: AbstractConnector;
@@ -46,14 +39,11 @@ const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobile: true,
     description: 'Connect via WalletConnect',
   },
-  // WALLET_LINK: {
-  //   connector: walletlink,
-  //   name: 'Coinbase Wallet',
-  //   iconName: 'coinbaseWalletIcon.svg',
-  //   description: 'Use Coinbase Wallet app on mobile device',
-  //   href: null,
-  //   color: '#315CF5'
-  // },
+  WALLET_LINK: {
+    connector: walletlink,
+    name: 'Coinbase Wallet',
+    description: 'Connect via Coinbase Wallet',
+  },
 };
 
 export type WalletState = 'options' | 'connect' | 'account' | 'pending';
@@ -256,4 +246,10 @@ const AnchorRow = styled(Flex)`
   a + a {
     margin-left: 16px;
   }
+`;
+
+const AStatus = styled(A)`
+  cursor: pointer;
+  font-style: italic;
+  font-size: 12px;
 `;

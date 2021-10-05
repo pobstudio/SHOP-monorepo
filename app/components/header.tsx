@@ -70,6 +70,18 @@ export const Header: FC = () => {
           </HeaderLogoWrapper>
         </HeaderSideContentWrapper>
         <HeaderRightSideContentWrapper>
+          {!isMobile && (
+            <Link passHref href={'/'}>
+              <NavLink
+                style={{ marginRight: 12, fontWeight: 700 }}
+                onClick={() => {
+                  dismissAllModals();
+                }}
+              >
+                Home
+              </NavLink>
+            </Link>
+          )}
           {!isMobile && <Web3Status />}
           {isMobile && (
             <BaseButton
@@ -112,6 +124,7 @@ const HeaderWrapper = styled.div`
   transition: background 200ms ease-in-out;
   z-index: 1000;
   position: relative;
+  border-bottom: 1px solid black;
 `;
 
 const HeaderSideContentWrapper = styled.div`
@@ -152,4 +165,19 @@ const ProjectTitleText = styled.a`
   text-decoration: none;
   text-transform: uppercase;
   transform: translateY(-1px);
+`;
+
+const NavLink = styled.a`
+  font-weight: 600;
+  color: black;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 8px;
+  text-decoration: none;
+  &:focus {
+    color: black;
+  }
+  &:hover {
+    color: #0000ff;
+  }
 `;

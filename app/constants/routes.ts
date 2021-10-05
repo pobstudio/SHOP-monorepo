@@ -1,4 +1,4 @@
 export const ROUTES = {
   INDEX: '/',
-  PIANO: '/piano',
+  PRINT: '/print',
 };
