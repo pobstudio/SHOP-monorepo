@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 import {
@@ -10,6 +10,19 @@ import { Header } from '../components/header';
 import { Footer } from '../components/footer';
 
 const PrintPage: NextPage = () => {
+  const [printOnly, setPrintOnly] = useState(true);
+  const [frameOption, setFrameOption] = useState<'framed' | 'paper'>('paper');
+  const handleFrameChange = (e: any) => setFrameOption(e.target.value);
+  useEffect(() => {
+    if (frameOption === 'paper') {
+      setPrintOnly(true);
+    }
+    if (frameOption === 'framed') {
+      setPrintOnly(false);
+    }
+  }, [frameOption]);
+  const price = printOnly ? 0.08 : 0.25;
+
   return (
     <>
       <ContentWrapper>
@@ -21,24 +34,23 @@ const PrintPage: NextPage = () => {
               <img src="https://balenciaga.dam.kering.com/m/5e63dc1a91a9c5b9/Large-651795TKVF53660_F.jpg?v=3" />
             </LeftSide>
             <RightSide>
-              <RightSection>
-                <SectionBody>
-                  <h1>Official POB Printmaking</h1>
-                  <p>
-                    Select any Proof of Beauty artwork you own to print. All
-                    prints require $LONDON token to purchase. Enter your Contact
-                    Info and Shipping Address to ensure delivery.
-                    <br />
-                    <br />
-                    Shipping Information • FAQs • Get $LONDON
-                  </p>
-                </SectionBody>
-              </RightSection>
+              <PrintHero />
               <RightSection>
                 <Price>
-                  0.02 ETH = 5000 $LONDON
+                  {price} ETH = {(price / 0.0000123).toFixed(0)} $LONDON
                   <Slippage>Slippage 5%</Slippage>
                 </Price>
+                <PurchaseButton>Purchase Print</PurchaseButton>
+              </RightSection>
+              <RightSection>
+                <SectionBody>
+                  <h4>Choose Type</h4>
+                  <br />
+                  <select onChange={(e) => handleFrameChange(e)}>
+                    <option value="paper">No Frame / Paper Only</option>
+                    <option value="framed">Framed</option>
+                  </select>
+                </SectionBody>
               </RightSection>
               <PrintDetails />
             </RightSide>
@@ -51,6 +63,110 @@ const PrintPage: NextPage = () => {
   );
 };
 export default React.memo(PrintPage);
+
+const PurchaseButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: lighter;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #000000;
+  width: 50%;
+
+  background-color: #74d86d;
+  cursor: pointer;
+  &:hover {
+  }
+`;
+
+const PrintHero: FC = () => (
+  <RightSection>
+    <SectionBody>
+      <h1>Official Print Service</h1>
+      <p>
+        Select any Proof of Beauty artwork you own to print. All prints require
+        $LONDON token to purchase. Enter your Contact Info and Shipping Address
+        to ensure delivery.
+        <br />
+        <br />
+        Shipping Information • FAQs •{' '}
+        <a
+          href="https://matcha.xyz/markets/1/0x491d6b7d6822d5d4bc88a1264e1b47791fd8e904"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get $LONDON
+        </a>
+      </p>
+    </SectionBody>
+  </RightSection>
+);
+
+const PrintDetails: FC = () => (
+  <RightSection>
+    <SectionBody>
+      <h3>Product Details</h3>
+      <p>
+        All prints are done on Hahnemühle Photo Rag 308g paper with
+        archival-grade ink. Printed via a fine art 74 inch wide Roland Hi-Fi Jet
+        Pro II.
+        <br />
+        <br />
+        Framing Option: All framing is custom, handcrafted black metal. The
+        paper is set with a slight elevation off the back to create a floating
+        effect. 1 inch wide x 1 inch deep.
+        <br />
+        <br />
+        $HASH Prints
+        <ul>
+          <li>Print Sizing: 18 inches x 24 inches ( 45.72 cm x 60.96 cm )</li>
+          <li>Framed Size: 20 inches x 26 inches ( 50.8 cm x 66.04 cm )</li>
+        </ul>
+        <br />
+        $LONDON GIFT Prints
+        <ul>
+          <li>
+            Print Sizing: 24.55 inches x 24.55 inches ( 62.36 cm x 62.36 cm )
+          </li>
+          <li>
+            Framed Size: 26.55 inches x 26.55 inches ( 67.44 cm x 67.44 cm )
+          </li>
+        </ul>
+        <br />
+        Printing via{' '}
+        <a
+          href="https://twitter.com/gallery16"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          @gallery16
+        </a>
+        {' / '}
+        <a
+          href="https://www.urbandigitalcolor.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          @UDC
+        </a>
+        {'. '}
+        Framing via{' '}
+        <a
+          href="https://twitter.com/gallery16"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          @gallery16
+        </a>
+      </p>
+    </SectionBody>
+  </RightSection>
+);
 
 const Split = styled.div`
   display: flex;
@@ -85,6 +201,16 @@ const RightSection = styled.div`
     border-bottom: none;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
   h1 {
     font-family: Helvetica;
     font-style: normal;
@@ -108,8 +234,10 @@ const RightSection = styled.div`
     font-size: 14px;
     line-height: 16px;
     color: #000000;
+    text-transform: uppercase;
   }
   p {
+    margin-top: 12px;
     font-family: Helvetica;
     font-style: normal;
     font-weight: normal;
@@ -130,11 +258,25 @@ const RightSection = styled.div`
       }
     }
   }
+  select {
+    appearance: none;
+    width: 50%;
+    padding: 10px 12px;
+    border: 1px solid black;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNOS4wOSAxTDQuNTQ1IDQuNTkgMCAxIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iLjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiLz48L3N2Zz4=');
+    background-position-x: calc(100% - 10px);
+    background-position-y: 50%;
+    background-size: 11px 5px;
+    background-repeat: no-repeat;
+    font-size: 12px;
+    font-weight: lighter;
+  }
 `;
 
 const SectionBody = styled.div`
   display: block;
   padding: 32px 40px;
+  width: 100%;
 `;
 
 const Price = styled.div`
@@ -152,6 +294,10 @@ const Price = styled.div`
   text-align: center;
   color: #000000;
   position: relative;
+  span {
+    font-size: 12px;
+    opacity: 0.5;
+  }
 `;
 const Slippage = styled.div`
   position: absolute;
@@ -162,66 +308,3 @@ const Slippage = styled.div`
   color: black;
   opacity: 0.4;
 `;
-
-const PrintDetails: FC = () => (
-  <RightSection>
-    <SectionBody>
-      <h3>Product Details</h3>
-      <p>
-        All prints are done on Hahnemühle Photo Rag 308g paper with
-        archival-grade ink. Printed via a fine art 74 inch wide Roland Hi-Fi Jet
-        Pro II.
-        <br />
-        <br />
-        Framing Option: All framing is custom, handcrafted black metal. The
-        paper is set with a slight elevation off the back to create a floating
-        effect. 1 inch wide x 1 inch deep.
-        <br />
-        <br />
-        $HASH Prints
-        <ul>
-          <li>Print Sizing: 18 inches x 24 inches ( 45.72 cm x 60.96 cm )</li>
-          <li>Framed Size: 20 inches x 26 inches ( 50.8 cm x 66.04 cm )</li>
-          <li>Paper: Hahnemühle Photo Rag 308g</li>
-        </ul>
-        <br />
-        $LONDON GIFT Prints
-        <ul>
-          <li>
-            Print Sizing: 24.55 inches x 24.55 inches ( 62.36 cm x 62.36 cm ){' '}
-          </li>
-          <li>
-            Framed Size: 26.55 inches x 26.55 inches ( 67.44 cm x 67.44 cm )
-          </li>{' '}
-          <li>Paper: Hahnemühle Photo Rag 308g</li>
-        </ul>
-        <br />
-        Printing via{' '}
-        <a
-          href="https://twitter.com/gallery16"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          @gallery16
-        </a>
-        {' / '}
-        <a
-          href="https://www.urbandigitalcolor.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          @UDC
-        </a>
-        {'. '}
-        Framing via{' '}
-        <a
-          href="https://twitter.com/gallery16"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          @gallery16
-        </a>
-      </p>
-    </SectionBody>
-  </RightSection>
-);

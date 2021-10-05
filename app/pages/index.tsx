@@ -21,12 +21,11 @@ const IndexPage: NextPage = () => {
           <Pages>
             <Link href={ROUTES.PRINT} passHref>
               <PageButton>
-                <h1>Printing Service</h1>
+                <h1>Official Print Service</h1>
                 <p>
                   Select any Proof of Beauty artwork you own to print. All
-                  prints cost 1 $POSTER.
-                </p>
-                <p>
+                  prints cost $LONDON token.
+                  <br />
                   Enter your Contact Info and Shipping Address to complete
                   purchase.
                 </p>
