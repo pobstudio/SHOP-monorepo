@@ -38,19 +38,56 @@ const PrintPage: NextPage = () => {
               <RightSection>
                 <Price>
                   {price} ETH = {(price / 0.0000123).toFixed(0)} $LONDON
-                  <Slippage>Slippage 5%</Slippage>
+                  <Slippage>Slip 5%</Slippage>
                 </Price>
                 <PurchaseButton>Purchase Print</PurchaseButton>
               </RightSection>
               <RightSection>
-                <SectionBody>
+                <SlimSectionBody>
                   <h4>Choose Type</h4>
                   <br />
-                  <select onChange={(e) => handleFrameChange(e)}>
+                  <select
+                    // style={{ width: '50%' }}
+                    onChange={(e) => handleFrameChange(e)}
+                  >
                     <option value="paper">No Frame / Paper Only</option>
                     <option value="framed">Framed</option>
                   </select>
-                </SectionBody>
+                </SlimSectionBody>
+              </RightSection>
+              <RightSection>
+                <SlimSectionBody>
+                  <h4>Contact Info</h4>
+                  <br />
+                  <input type="text" placeholder="email@pob.studio" />
+                </SlimSectionBody>
+              </RightSection>
+              <RightSection>
+                <SlimSectionBody>
+                  <h4>Shipping Address</h4>
+                  <br />
+                  <input
+                    type="text"
+                    placeholder="123 Wall St, New York, NY 10001"
+                  />
+                </SlimSectionBody>
+              </RightSection>
+              <RightSection>
+                <SlimSectionBody>
+                  <h4>Select Artwork</h4>
+                  <br />
+                  <select onChange={(e) => handleFrameChange(e)}>
+                    <option value="paper">LONDON GIFT</option>
+                    <option value="framed">HASH</option>
+                  </select>
+                </SlimSectionBody>
+                <SlimSectionBody>
+                  <h4>Select Token ID</h4>
+                  <br />
+                  <select onChange={(e) => handleFrameChange(e)}>
+                    <option value="paper">8765</option>
+                  </select>
+                </SlimSectionBody>
               </RightSection>
               <PrintDetails />
             </RightSide>
@@ -109,8 +146,8 @@ const PrintHero: FC = () => (
 
 const PrintDetails: FC = () => (
   <RightSection>
-    <SectionBody>
-      <h3>Product Details</h3>
+    <SlimSectionBody>
+      <h4>Product Details</h4>
       <p>
         All prints are done on Hahnemühle Photo Rag 308g paper with
         archival-grade ink. Printed via a fine art 74 inch wide Roland Hi-Fi Jet
@@ -122,13 +159,13 @@ const PrintDetails: FC = () => (
         effect. 1 inch wide x 1 inch deep.
         <br />
         <br />
-        $HASH Prints
+        HASH Prints
         <ul>
           <li>Print Sizing: 18 inches x 24 inches ( 45.72 cm x 60.96 cm )</li>
           <li>Framed Size: 20 inches x 26 inches ( 50.8 cm x 66.04 cm )</li>
         </ul>
         <br />
-        $LONDON GIFT Prints
+        LONDON GIFT Prints
         <ul>
           <li>
             Print Sizing: 24.55 inches x 24.55 inches ( 62.36 cm x 62.36 cm )
@@ -164,7 +201,7 @@ const PrintDetails: FC = () => (
           @gallery16
         </a>
       </p>
-    </SectionBody>
+    </SlimSectionBody>
   </RightSection>
 );
 
@@ -215,9 +252,10 @@ const RightSection = styled.div`
     font-family: Helvetica;
     font-style: normal;
     font-weight: bold;
-    font-size: 28px;
+    font-size: 32px;
     line-height: 40px;
     color: #000000;
+    text-transform: uppercase;
   }
   h3 {
     font-family: Helvetica;
@@ -231,10 +269,11 @@ const RightSection = styled.div`
     font-family: Helvetica;
     font-style: normal;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 16px;
     color: #000000;
     text-transform: uppercase;
+    margin-top: -8px;
   }
   p {
     margin-top: 12px;
@@ -259,8 +298,9 @@ const RightSection = styled.div`
     }
   }
   select {
+    width: 100%;
+    outline: none;
     appearance: none;
-    width: 50%;
     padding: 10px 12px;
     border: 1px solid black;
     background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNOS4wOSAxTDQuNTQ1IDQuNTkgMCAxIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iLjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiLz48L3N2Zz4=');
@@ -271,12 +311,32 @@ const RightSection = styled.div`
     font-size: 12px;
     font-weight: lighter;
   }
+  input {
+    outline: none;
+    border: none;
+    background-image: none;
+    background-color: transparent;
+    box-shadow: none;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid black;
+    font-size: 12px;
+    font-weight: lighter;
+  }
 `;
 
 const SectionBody = styled.div`
   display: block;
-  padding: 32px 40px;
+  padding: 32px;
   width: 100%;
+
+  &:nth-child(even) {
+    border-left: 1px solid black;
+  }
+`;
+
+const SlimSectionBody = styled(SectionBody)`
+  padding: 28px 32px;
 `;
 
 const Price = styled.div`
@@ -303,8 +363,9 @@ const Slippage = styled.div`
   position: absolute;
   bottom: 4px;
   right: 4px;
-  font-size: 9px;
-  font-weight: 400;
+  font-size: 10px;
+  font-weight: normal;
   color: black;
   opacity: 0.4;
+  text-transform: uppercase;
 `;
