@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 import {
@@ -23,6 +23,37 @@ const PrintPage: NextPage = () => {
   }, [frameOption]);
   const price = printOnly ? 0.08 : 0.25;
 
+  const [artwork, setArtworkOption] = useState<'london' | 'hash'>('london');
+  const handleArtChange = (e: any) => setArtworkOption(e.target.value);
+
+  const [artworkID, setArtworkID] = useState<string>('');
+  const handleArtIDChange = (e: any) => setArtworkID(e.target.value);
+
+  const [email, setEmail] = useState<string>('');
+  const handleEmailChange = (e: any) => setEmail(e.target.value);
+
+  const [shipping, setShipping] = useState<string>('');
+  const handleShippingChange = (e: any) => setShipping(e.target.value);
+
+  const purchaseButton = useMemo(() => {
+    const green = '#44db5e';
+    const grey = '#FF6565';
+
+    if (email && shipping && artwork && artworkID) {
+      return {
+        color: green,
+        text: 'Purchase Print',
+      };
+    }
+
+    return {
+      color: grey,
+      text: 'Not Ready',
+      underline: false,
+      disabled: true,
+    };
+  }, [artwork, artworkID, email, shipping]);
+
   return (
     <>
       <ContentWrapper>
@@ -40,54 +71,75 @@ const PrintPage: NextPage = () => {
                   {price} ETH = {(price / 0.0000123).toFixed(0)} $LONDON
                   <Slippage>Slip 5%</Slippage>
                 </Price>
-                <PurchaseButton>Purchase Print</PurchaseButton>
+                <PurchaseButton
+                  style={{
+                    background: purchaseButton.color,
+                    textDecoration: purchaseButton.underline
+                      ? 'underline'
+                      : 'none',
+                    cursor: purchaseButton.disabled ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                  {purchaseButton.text}
+                </PurchaseButton>
               </RightSection>
               <RightSection>
-                <SlimSectionBody>
+                <SectionBody>
                   <h4>Choose Type</h4>
                   <br />
                   <select
                     // style={{ width: '50%' }}
                     onChange={(e) => handleFrameChange(e)}
                   >
-                    <option value="paper">No Frame / Paper Only</option>
-                    <option value="framed">Framed</option>
+                    <option value="paper">
+                      Standard: No Frame / Paper Only
+                    </option>
+                    <option value="framed">
+                      Premium: Custom Black Metal Framing
+                    </option>
                   </select>
-                </SlimSectionBody>
+                </SectionBody>
               </RightSection>
               <RightSection>
-                <SlimSectionBody>
+                <SectionBody>
+                  <h4>Choose Artwork</h4>
+                  <br />
+                  <select onChange={(e) => handleArtChange(e)}>
+                    <option value="london">LONDON GIFT</option>
+                    <option value="hash">HASH</option>
+                  </select>
+                </SectionBody>
+                <SectionBody>
+                  <h4>Choose Token ID</h4>
+                  <br />
+                  <select onChange={(e) => handleArtIDChange(e)}>
+                    <option value="8765">8765</option>
+                  </select>
+                </SectionBody>
+              </RightSection>
+              <RightSection>
+                <SectionBody>
                   <h4>Contact Info</h4>
                   <br />
-                  <input type="text" placeholder="email@pob.studio" />
-                </SlimSectionBody>
+                  <input
+                    value={email}
+                    onChange={handleEmailChange}
+                    type="text"
+                    placeholder="email@pob.studio"
+                  />
+                </SectionBody>
               </RightSection>
               <RightSection>
-                <SlimSectionBody>
+                <SectionBody>
                   <h4>Shipping Address</h4>
                   <br />
                   <input
+                    value={shipping}
+                    onChange={handleShippingChange}
                     type="text"
                     placeholder="123 Wall St, New York, NY 10001"
                   />
-                </SlimSectionBody>
-              </RightSection>
-              <RightSection>
-                <SlimSectionBody>
-                  <h4>Select Artwork</h4>
-                  <br />
-                  <select onChange={(e) => handleFrameChange(e)}>
-                    <option value="paper">LONDON GIFT</option>
-                    <option value="framed">HASH</option>
-                  </select>
-                </SlimSectionBody>
-                <SlimSectionBody>
-                  <h4>Select Token ID</h4>
-                  <br />
-                  <select onChange={(e) => handleFrameChange(e)}>
-                    <option value="paper">8765</option>
-                  </select>
-                </SlimSectionBody>
+                </SectionBody>
               </RightSection>
               <PrintDetails />
             </RightSide>
@@ -101,26 +153,6 @@ const PrintPage: NextPage = () => {
 };
 export default React.memo(PrintPage);
 
-const PurchaseButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: lighter;
-  font-size: 16px;
-  line-height: 18px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #000000;
-  width: 50%;
-
-  background-color: #74d86d;
-  cursor: pointer;
-  &:hover {
-  }
-`;
-
 const PrintHero: FC = () => (
   <RightSection>
     <SectionBody>
@@ -128,10 +160,10 @@ const PrintHero: FC = () => (
       <p>
         Select any Proof of Beauty artwork you own to print. All prints require
         $LONDON token to purchase. Enter your Contact Info and Shipping Address
-        to ensure delivery.
+        correctly to ensure delivery.
         <br />
         <br />
-        Shipping Information • FAQs •{' '}
+        Free International Shipping •{' '}
         <a
           href="https://matcha.xyz/markets/1/0x491d6b7d6822d5d4bc88a1264e1b47791fd8e904"
           target="_blank"
@@ -146,7 +178,7 @@ const PrintHero: FC = () => (
 
 const PrintDetails: FC = () => (
   <RightSection>
-    <SlimSectionBody>
+    <SectionBody>
       <h4>Product Details</h4>
       <p>
         All prints are done on Hahnemühle Photo Rag 308g paper with
@@ -191,7 +223,7 @@ const PrintDetails: FC = () => (
         >
           @UDC
         </a>
-        {'. '}
+        {/* {'. '}
         Framing via{' '}
         <a
           href="https://twitter.com/gallery16"
@@ -199,9 +231,9 @@ const PrintDetails: FC = () => (
           rel="noopener noreferrer"
         >
           @gallery16
-        </a>
+        </a> */}
       </p>
-    </SlimSectionBody>
+    </SectionBody>
   </RightSection>
 );
 
@@ -327,7 +359,7 @@ const RightSection = styled.div`
 
 const SectionBody = styled.div`
   display: block;
-  padding: 32px;
+  padding: 28px;
   width: 100%;
 
   &:nth-child(even) {
@@ -336,16 +368,13 @@ const SectionBody = styled.div`
 `;
 
 const SlimSectionBody = styled(SectionBody)`
-  padding: 28px 32px;
+  padding: 20px;
 `;
 
-const Price = styled.div`
-  border-right: 1px solid black;
+const Price = styled(SlimSectionBody)`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  padding: 24px;
   font-family: Helvetica;
   font-style: normal;
   font-weight: bold;
@@ -368,4 +397,19 @@ const Slippage = styled.div`
   color: black;
   opacity: 0.4;
   text-transform: uppercase;
+`;
+
+const PurchaseButton = styled(SlimSectionBody)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: lighter;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #000000;
+  cursor: pointer;
 `;

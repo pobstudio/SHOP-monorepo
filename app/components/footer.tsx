@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
           <FooterLinksColumn>
             <FooterColumnLabel>Proof of Beauty</FooterColumnLabel>
             <FooterLink href={STUDIO_PROD_LINK} target={'_blank'}>
-              Studio Site
+              Studio
             </FooterLink>
             <FooterLink href={PUBLICO_LINK} target={'_blank'}>
               Publico
@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
             </FooterLink>
           </FooterLinksColumn>
           <FooterLinksColumn>
-            <FooterColumnLabel>Social</FooterColumnLabel>
+            <FooterColumnLabel>Contact Us</FooterColumnLabel>
             <FooterLink href={TWITTER_LINK} target={'_blank'}>
               Twitter
             </FooterLink>
@@ -55,6 +55,7 @@ export const Footer: React.FC = () => {
             <FooterLink href={BLOG_LINK} target={'_blank'}>
               Blog
             </FooterLink>
+            <FooterLink href={`mailto:team@pob.studio`}>Email</FooterLink>
           </FooterLinksColumn>
           <FooterLinksColumn>
             <FooterColumnLabel>Legal</FooterColumnLabel>

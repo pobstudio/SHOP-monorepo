@@ -64,6 +64,7 @@ const PageButton = styled.a`
     font-weight: bold;
     font-size: 28px;
     line-height: 40px;
+    text-transform: uppercase;
   }
   p {
     font-family: Helvetica;
