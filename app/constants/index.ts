@@ -1,19 +1,24 @@
 import { BigNumber } from 'ethers';
 
+// env
+export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1');
+
+// keys
+export const OPENSEA_API_KEY = 'fc09ae6245fb40ab8afbcff451553345';
+
+export const AIRTABLE_API_KEY = `keynNuQm3SaErRWib`;
+
+export const ALCHEMY_KEY =
+  CHAIN_ID === 1
+    ? process.env.NEXT_PUBLIC_ALCHEMY_KEY
+    : process.env.NEXT_PUBLIC_TEST_ALCHEMY_KEY ?? '';
+
 // constants
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const MIN_BLOCK_CONFIRMATIONS = 30;
 
 export const ZERO = BigNumber.from(0);
-
-// env
-export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1');
-
-export const ALCHEMY_KEY =
-  CHAIN_ID === 1
-    ? process.env.NEXT_PUBLIC_ALCHEMY_KEY
-    : process.env.NEXT_PUBLIC_TEST_ALCHEMY_KEY ?? '';
 
 // links
 export const STUDIO_PROD_LINK = 'https://pob.studio';

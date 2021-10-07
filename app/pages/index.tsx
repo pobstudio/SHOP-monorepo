@@ -1,11 +1,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
-import {
-  BetweenContentAndFooterSpacer,
-  ContentWrapper,
-  MainContent,
-} from '../components/content';
+import { ContentWrapper, MainContent } from '../components/content';
 import { Header } from '../components/header';
 import { Footer } from '../components/footer';
 import { ROUTES } from '../constants/routes';
@@ -34,7 +30,6 @@ const IndexPage: NextPage = () => {
             </Link>
           </Pages>
         </MainContent>
-        <BetweenContentAndFooterSpacer />
         <Footer />
       </ContentWrapper>
     </>

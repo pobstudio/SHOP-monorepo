@@ -1,11 +1,7 @@
-import React, { FC, useState, useEffect, useMemo } from 'react';
+import React, { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
-import {
-  BetweenContentAndFooterSpacer,
-  ContentWrapper,
-  MainContent,
-} from '../components/content';
+import { ContentWrapper, MainContent } from '../components/content';
 import { Header } from '../components/header';
 import { Footer } from '../components/footer';
 
@@ -35,23 +31,29 @@ const PrintPage: NextPage = () => {
   const [shipping, setShipping] = useState<string>('');
   const handleShippingChange = (e: any) => setShipping(e.target.value);
 
+  const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
   const purchaseButton = useMemo(() => {
     const green = '#44db5e';
     const grey = '#FF6565';
-
-    if (email && shipping && artwork && artworkID) {
-      return {
-        color: green,
-        text: 'Purchase Print',
-      };
+    if (hoverPurchaseButton) {
+      if (!email || !shipping || !artwork || !artworkID) {
+        return {
+          color: grey,
+          text: 'Not Ready',
+          underline: false,
+          disabled: true,
+        };
+      }
     }
-
     return {
-      color: grey,
-      text: 'Not Ready',
-      underline: false,
-      disabled: true,
+      color: green,
+      text: 'Purchase Print',
     };
+  }, [hoverPurchaseButton, artwork, artworkID, email, shipping]);
+  const purchaseButtonOnClick = useCallback(() => {
+    if (!email || !shipping || !artwork || !artworkID) {
+      return;
+    }
   }, [artwork, artworkID, email, shipping]);
 
   return (
@@ -68,10 +70,14 @@ const PrintPage: NextPage = () => {
               <PrintHero />
               <RightSection>
                 <Price>
-                  {price} ETH = {(price / 0.0000123).toFixed(0)} $LONDON
+                  {/* {price} ETH  */}1 POSTER ={' '}
+                  {(price / 0.0000123).toFixed(0)} $LONDON
                   <Slippage>Slip 5%</Slippage>
                 </Price>
                 <PurchaseButton
+                  onClick={purchaseButtonOnClick}
+                  onMouseEnter={() => setHoverPurchaseButton(true)}
+                  onMouseLeave={() => setHoverPurchaseButton(false)}
                   style={{
                     background: purchaseButton.color,
                     textDecoration: purchaseButton.underline
@@ -83,6 +89,25 @@ const PrintPage: NextPage = () => {
                   {purchaseButton.text}
                 </PurchaseButton>
               </RightSection>
+
+              <RightSection>
+                <SectionBody>
+                  <h4>Collection</h4>
+                  <br />
+                  <select onChange={(e) => handleArtChange(e)}>
+                    <option value="london">LONDON GIFT</option>
+                    <option value="hash">HASH</option>
+                  </select>
+                </SectionBody>
+                <SectionBody>
+                  <h4>Select Artwork</h4>
+                  <br />
+                  <select onChange={(e) => handleArtIDChange(e)}>
+                    <option value="">-</option>
+                  </select>
+                </SectionBody>
+              </RightSection>
+
               <RightSection>
                 <SectionBody>
                   <h4>Choose Type</h4>
@@ -99,25 +124,6 @@ const PrintPage: NextPage = () => {
                     </option>
                   </select>
                 </SectionBody>
-              </RightSection>
-              <RightSection>
-                <SectionBody>
-                  <h4>Choose Artwork</h4>
-                  <br />
-                  <select onChange={(e) => handleArtChange(e)}>
-                    <option value="london">LONDON GIFT</option>
-                    <option value="hash">HASH</option>
-                  </select>
-                </SectionBody>
-                <SectionBody>
-                  <h4>Choose Token ID</h4>
-                  <br />
-                  <select onChange={(e) => handleArtIDChange(e)}>
-                    <option value="8765">8765</option>
-                  </select>
-                </SectionBody>
-              </RightSection>
-              <RightSection>
                 <SectionBody>
                   <h4>Contact Info</h4>
                   <br />
@@ -129,15 +135,16 @@ const PrintPage: NextPage = () => {
                   />
                 </SectionBody>
               </RightSection>
+
               <RightSection>
                 <SectionBody>
-                  <h4>Shipping Address</h4>
+                  <h4>Name & Shipping Address</h4>
                   <br />
                   <input
                     value={shipping}
                     onChange={handleShippingChange}
                     type="text"
-                    placeholder="123 Wall St, New York, NY 10001"
+                    placeholder="Cookie Monster, 123 Sesame St, Kings Park, NY 11754"
                   />
                 </SectionBody>
               </RightSection>
@@ -145,7 +152,6 @@ const PrintPage: NextPage = () => {
             </RightSide>
           </Split>
         </MainContent>
-        <BetweenContentAndFooterSpacer />
         <Footer />
       </ContentWrapper>
     </>
@@ -155,7 +161,7 @@ export default React.memo(PrintPage);
 
 const PrintHero: FC = () => (
   <RightSection>
-    <SectionBody>
+    <SectionBody style={{ paddingTop: 32 }}>
       <h1>Official Print Service</h1>
       <p>
         Select any Proof of Beauty artwork you own to print. All prints require
@@ -359,11 +365,15 @@ const RightSection = styled.div`
 
 const SectionBody = styled.div`
   display: block;
-  padding: 28px;
+  padding: 24px 18px;
   width: 100%;
 
   &:nth-child(even) {
     border-left: 1px solid black;
+  }
+
+  br {
+    user-select: none;
   }
 `;
 
@@ -391,7 +401,7 @@ const Price = styled(SlimSectionBody)`
 const Slippage = styled.div`
   position: absolute;
   bottom: 4px;
-  right: 4px;
+  right: 6px;
   font-size: 10px;
   font-weight: normal;
   color: black;
@@ -407,6 +417,7 @@ const PurchaseButton = styled(SlimSectionBody)`
   font-style: normal;
   font-weight: lighter;
   font-size: 16px;
+  letter-spacing: 1px;
   line-height: 18px;
   text-align: center;
   text-transform: uppercase;

@@ -15,66 +15,70 @@ import {
 import { BaseAnchor } from './anchor';
 import { Stamp } from './icons/stamp';
 import { Flex } from './flex';
+import { BetweenContentAndFooterSpacer } from './content';
 
 export const Footer: React.FC = () => {
   return (
-    <FooterWrapper>
-      <FooterLeftSideContentWrapper>
-        <Flex>
-          <Stamp />
-          <Link href={'/'} passHref={true}>
-            <FooterLogoText>SHOP</FooterLogoText>
-          </Link>
-        </Flex>
-      </FooterLeftSideContentWrapper>
-      <FooterRightSideContentWrapper>
-        <FooterLinksContainer>
-          <FooterLinksColumn>
-            <FooterColumnLabel>Proof of Beauty</FooterColumnLabel>
-            <FooterLink href={STUDIO_PROD_LINK} target={'_blank'}>
-              Studio
-            </FooterLink>
-            <FooterLink href={PUBLICO_LINK} target={'_blank'}>
-              Publico
-            </FooterLink>
-            <FooterLink href={LONDON_LINK} target={'_blank'}>
-              London
-            </FooterLink>
-            <FooterLink href={HASH_LINK} target={'_blank'}>
-              Hash
-            </FooterLink>
-          </FooterLinksColumn>
-          <FooterLinksColumn>
-            <FooterColumnLabel>Contact Us</FooterColumnLabel>
-            <FooterLink href={TWITTER_LINK} target={'_blank'}>
-              Twitter
-            </FooterLink>
-            <FooterLink href={DISCORD_LINK} target={'_blank'}>
-              Discord
-            </FooterLink>
-            <FooterLink href={BLOG_LINK} target={'_blank'}>
-              Blog
-            </FooterLink>
-            <FooterLink href={`mailto:team@pob.studio`}>Email</FooterLink>
-          </FooterLinksColumn>
-          <FooterLinksColumn>
-            <FooterColumnLabel>Legal</FooterColumnLabel>
-            <FooterLink
-              href="https://hash.pob.studio/terms-of-use"
-              target={'_blank'}
-            >
-              Terms of Use
-            </FooterLink>
-            <FooterLink
-              href="https://hash.pob.studio/privacy-policy"
-              target={'_blank'}
-            >
-              Privacy Policy
-            </FooterLink>
-          </FooterLinksColumn>
-        </FooterLinksContainer>
-      </FooterRightSideContentWrapper>
-    </FooterWrapper>
+    <>
+      {/* <BetweenContentAndFooterSpacer /> */}
+      <FooterWrapper>
+        <FooterLeftSideContentWrapper>
+          <Flex>
+            <Stamp />
+            <Link href={'/'} passHref={true}>
+              <FooterLogoText>SHOP</FooterLogoText>
+            </Link>
+          </Flex>
+        </FooterLeftSideContentWrapper>
+        <FooterRightSideContentWrapper>
+          <FooterLinksContainer>
+            <FooterLinksColumn>
+              <FooterColumnLabel>Proof of Beauty</FooterColumnLabel>
+              <FooterLink href={STUDIO_PROD_LINK} target={'_blank'}>
+                Studio
+              </FooterLink>
+              <FooterLink href={PUBLICO_LINK} target={'_blank'}>
+                Publico
+              </FooterLink>
+              <FooterLink href={LONDON_LINK} target={'_blank'}>
+                London
+              </FooterLink>
+              <FooterLink href={HASH_LINK} target={'_blank'}>
+                Hash
+              </FooterLink>
+            </FooterLinksColumn>
+            <FooterLinksColumn>
+              <FooterColumnLabel>Contact Us</FooterColumnLabel>
+              <FooterLink href={TWITTER_LINK} target={'_blank'}>
+                Twitter
+              </FooterLink>
+              <FooterLink href={DISCORD_LINK} target={'_blank'}>
+                Discord
+              </FooterLink>
+              <FooterLink href={BLOG_LINK} target={'_blank'}>
+                Blog
+              </FooterLink>
+              <FooterLink href={`mailto:team@pob.studio`}>Email</FooterLink>
+            </FooterLinksColumn>
+            <FooterLinksColumn>
+              <FooterColumnLabel>Legal</FooterColumnLabel>
+              <FooterLink
+                href="https://hash.pob.studio/terms-of-use"
+                target={'_blank'}
+              >
+                Terms of Use
+              </FooterLink>
+              <FooterLink
+                href="https://hash.pob.studio/privacy-policy"
+                target={'_blank'}
+              >
+                Privacy Policy
+              </FooterLink>
+            </FooterLinksColumn>
+          </FooterLinksContainer>
+        </FooterRightSideContentWrapper>
+      </FooterWrapper>
+    </>
   );
 };
 
