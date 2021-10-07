@@ -67,21 +67,16 @@ export const Header: FC = () => {
             <Link href={'/'} passHref>
               <ProjectTitleText>Shop</ProjectTitleText>
             </Link>
+            {!isMobile && (
+              <Link href={'/'} passHref>
+                <LightNavLink style={{ transform: 'translateY(-1px)' }}>
+                  Q421: CATALOG
+                </LightNavLink>
+              </Link>
+            )}
           </HeaderLogoWrapper>
         </HeaderSideContentWrapper>
         <HeaderRightSideContentWrapper>
-          {!isMobile && (
-            <Link passHref href={'/'}>
-              <NavLink
-                style={{ marginRight: 12, fontWeight: 700 }}
-                onClick={() => {
-                  dismissAllModals();
-                }}
-              >
-                Home
-              </NavLink>
-            </Link>
-          )}
           {!isMobile && <Web3Status />}
           {isMobile && (
             <BaseButton
@@ -179,5 +174,16 @@ const NavLink = styled.a`
   }
   &:hover {
     color: #0000ff;
+  }
+`;
+
+const LightNavLink = styled.a`
+  font-weight: 500;
+  color: black;
+  font-size: 14px;
+  text-decoration: none;
+  margin-left: 32px;
+  &:focus {
+    color: black;
   }
 `;

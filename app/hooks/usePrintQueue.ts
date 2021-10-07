@@ -14,6 +14,20 @@ export const usePrintQueueRecords = () => {
   }, [data]);
 };
 
+export const usePrintOrdersByAccount = (account: string | undefined | null) => {
+  const records = usePrintQueueRecords();
+  return useMemo(() => {
+    if (!records || !account) {
+      return undefined;
+    }
+    const matches = records.filter((record: Record<FieldSet>) => {
+      const entry = record?.fields['wallet'!]?.toString();
+      return entry?.toLowerCase()?.includes(account?.toLowerCase());
+    });
+    return matches?.length > 0 ? matches : undefined;
+  }, [records, account]);
+};
+
 export const usePrintOrderRecordById = (searchParams: {
   orderId: string;
   tokenId: string;

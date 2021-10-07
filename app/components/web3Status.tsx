@@ -11,6 +11,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 import { usePrevious } from 'react-use';
 import { Flex } from './flex';
 import { isMobile } from 'react-device-detect';
+import { ROUTES } from '../constants/routes';
 
 interface WalletInfo {
   connector?: AbstractConnector;
@@ -119,6 +120,7 @@ export const Web3Status: FC = () => {
     if (walletView === 'pending') {
     }
     if (walletView === 'account') {
+      router.push(ROUTES.ACCOUNT);
     }
   }, [walletView, error]);
 

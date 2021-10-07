@@ -31,16 +31,20 @@ export type PrintServiceOrderStatus =
   | 'complete';
 export type PrintServiceOrderType = 'noframe' | 'framed';
 export interface PrintServiceAirtableRecordType {
-  'id': string; // artwork identifier
+  'order id'?: string; // incremented number
+  'created at'?: string;
+  'wallet': string; // customer wallet address
+  'tokenid'?: string; // artwork token id
+  'name': string; //
   'collection': string; // artwork collection
   'opensea': string; // opensea asset url
   'contact': string; // customer contact
   'shipping': string; // customer shipping details
   'type': PrintServiceOrderType;
-  'status': PrintServiceOrderStatus;
-  'etherscan': string; // customer payment etherscan receipt
-  'amount paid': string; // customer payment amount
-  [key: string]: number | string; // for Partial<FieldSet> type compatibility
+  'status'?: PrintServiceOrderStatus;
+  'etherscan'?: string; // customer payment etherscan receipt
+  'amount paid'?: string; // customer payment amount
+  [key: string]: number | string | undefined; // for Partial<FieldSet> type compatibility
 }
 
 export const getAirtableRecords = async (airtable: AirtableData) => {

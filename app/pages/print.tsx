@@ -110,20 +110,23 @@ const PrintPage: NextPage = () => {
 
               <RightSection>
                 <SectionBody>
-                  <h4>Choose Type</h4>
+                  <h4>Choose Package</h4>
                   <br />
                   <select
                     // style={{ width: '50%' }}
                     onChange={(e) => handleFrameChange(e)}
                   >
                     <option value="paper">
-                      Standard: No Frame / Paper Only
+                      No Frame / Print Only - Ships in 2 Weeks
                     </option>
                     <option value="framed">
-                      Premium: Custom Black Metal Framing
+                      Custom Black Metal Framing - Ships in 4 Weeks
                     </option>
                   </select>
                 </SectionBody>
+              </RightSection>
+
+              <RightSection>
                 <SectionBody>
                   <h4>Contact Info</h4>
                   <br />
