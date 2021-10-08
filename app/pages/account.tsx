@@ -29,7 +29,7 @@ const AccountPage: NextPage = () => {
                 ) : (
                   <>
                     {orders?.map((order: PrintServiceAirtableRecordType) => (
-                      <Order order={order} />
+                      <Order key={order['order id']} order={order} />
                     ))}
                   </>
                 )}

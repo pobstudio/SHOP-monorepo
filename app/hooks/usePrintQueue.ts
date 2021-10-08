@@ -86,19 +86,19 @@ export const useNewPrintOrder = () => {
     [isCreating],
   );
 
-  const buttonText = useMemo(() => {
+  const submittingState = useMemo(() => {
     switch (true) {
       case created:
         return 'Order Created ✔️';
       case isCreating:
         return 'Creating Order...';
       default:
-        return 'Purchase Print';
+        return '';
     }
   }, [created, isCreating]);
 
   return {
-    buttonText,
+    submittingState,
     handleCreate,
     isCreating,
     created,

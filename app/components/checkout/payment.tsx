@@ -1,6 +1,8 @@
+import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
 import { SlimSectionBody } from '.';
+import { useNewPrintOrder } from '../../hooks/usePrintQueue';
 
 export type ProductsType =
   | 'PRINT_PAPER_HASH'
@@ -18,6 +20,7 @@ export const PRICING = {
 };
 
 const usePaymentFlow = (product: ProductsType) => {
+  const [paying, setPaying] = useState(false);
   const price = PRICING[product];
   const slippage = 0.05;
 
@@ -25,21 +28,48 @@ const usePaymentFlow = (product: ProductsType) => {
   const rate = 0.0000123; // fake eth rate
   const amountDue = (price / rate).toFixed(0);
 
+  const { submittingState: pushingNewPrintOrder } = useNewPrintOrder();
+
   const handlePay = useCallback(async () => {
+    if (paying) {
+      return;
+    }
+    setPaying(true);
     console.log('calculate payment stub');
     console.log('approve london tokens needed');
     console.log('start contract interaction to accept payment');
-  }, []);
+    setPaying(false);
+  }, [paying]);
 
-  return { amountDue, price, rate, token, slippage, handlePay };
+  const payingState = useMemo(() => {
+    switch (true) {
+      case paying:
+        return 'Paying...';
+      default:
+        return '';
+    }
+  }, [paying]);
+
+  return {
+    amountDue,
+    price,
+    rate,
+    token,
+    slippage,
+    handlePay,
+    payingState: pushingNewPrintOrder || payingState,
+  };
 };
 
-export const PaymentFlow: FC<{ product: ProductsType; disabled: boolean }> = ({
-  product,
-  disabled,
-}) => {
+export const PaymentFlow: FC<{
+  asset: any;
+  product: ProductsType;
+  disabled: boolean;
+}> = ({ asset, product, disabled }) => {
   const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
-  const { amountDue, handlePay, token, slippage } = usePaymentFlow(product);
+  const { amountDue, handlePay, token, payingState, slippage } = usePaymentFlow(
+    product,
+  );
 
   const purchaseButton = useMemo(() => {
     if (hoverPurchaseButton) {
@@ -58,11 +88,20 @@ export const PaymentFlow: FC<{ product: ProductsType; disabled: boolean }> = ({
     };
   }, [hoverPurchaseButton, disabled]);
 
-  const purchaseButtonOnClick = useCallback(() => {
-    if (disabled) {
+  const { handleCreate } = useNewPrintOrder();
+  const { account } = useWeb3React();
+
+  console.log(asset);
+
+  const purchaseButtonOnClick = useCallback(async () => {
+    if (disabled || !account || !asset) {
       return;
     }
-    handlePay();
+    await handlePay();
+    // await handleCreate({
+    //   wallet: account,
+    //   tokenid: asset.token_id,
+    // })
   }, [disabled]);
 
   return (
@@ -81,7 +120,7 @@ export const PaymentFlow: FC<{ product: ProductsType; disabled: boolean }> = ({
           cursor: purchaseButton.disabled ? 'not-allowed' : 'pointer',
         }}
       >
-        {purchaseButton.text}
+        {payingState || purchaseButton.text}
       </PurchaseButton>
     </>
   );

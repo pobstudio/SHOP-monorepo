@@ -13,13 +13,15 @@ export const PrintCheckout = () => {
 
   const [artworkID, setArtworkID] = useState<string>('');
   const handleArtIDChange = (e: any) => setArtworkID(e.target.value);
-  const ArtworkIDSelectValues: FC = () => {
+  const ArtworkIDSelectValues = useMemo(() => {
     if (artwork === 'hash') {
       return (
         <>
           <option value="">-</option>
           {collections?.hash?.map((asset: any) => (
-            <option value={asset}>{asset.name}</option>
+            <option key={asset.name} value={asset.token_id}>
+              {asset.name}
+            </option>
           ))}
         </>
       );
@@ -28,11 +30,13 @@ export const PrintCheckout = () => {
       <>
         <option value="">-</option>
         {collections?.['london-gifts']?.map((asset: any) => (
-          <option value={asset}>{asset.name}</option>
+          <option key={asset.name} value={asset.token_id}>
+            {asset.name}
+          </option>
         ))}
       </>
     );
-  };
+  }, [artwork, collections]);
 
   const [frameOption, setFrameOption] = useState<'framed' | 'paper'>('paper');
   const handleFrameChange = (e: any) => setFrameOption(e.target.value);
@@ -43,23 +47,33 @@ export const PrintCheckout = () => {
   const [shipping, setShipping] = useState<string>('');
   const handleShippingChange = (e: any) => setShipping(e.target.value);
 
-  const reduceProduct = useMemo((): ProductsType => {
+  const reducer = useMemo(() => {
+    let asset = {};
+    let product: ProductsType = 'FAILURE_TO_LAUNCH';
+
     if (artwork === 'london') {
+      asset = collections['london-gifts'!]?.find(
+        (a: any) => a.token_id === artworkID,
+      );
+      product = 'PRINT_PAPER_LONDON';
       if (frameOption === 'framed') {
-        return 'PRINT_FRAME_LONDON';
+        product = 'PRINT_FRAME_LONDON';
       }
-      return 'PRINT_PAPER_LONDON';
     }
 
     if (artwork === 'hash') {
+      asset = collections?.hash?.find((a: any) => a.token_id === artworkID);
+      product = 'PRINT_PAPER_HASH';
       if (frameOption === 'framed') {
-        return 'PRINT_FRAME_HASH';
+        product = 'PRINT_FRAME_HASH';
       }
-      return 'PRINT_PAPER_HASH';
     }
 
-    return 'FAILURE_TO_LAUNCH';
-  }, [artwork, frameOption]);
+    return {
+      asset,
+      product,
+    };
+  }, [artwork, frameOption, artworkID, collections]);
 
   const paymentDisabled =
     !artwork || !artworkID || !frameOption || !email || !shipping;
@@ -67,7 +81,11 @@ export const PrintCheckout = () => {
   return (
     <>
       <RightSection>
-        <PaymentFlow product={reduceProduct} disabled={paymentDisabled} />
+        <PaymentFlow
+          asset={reducer.asset}
+          product={reducer.product}
+          disabled={paymentDisabled}
+        />
       </RightSection>
 
       <RightSection>
@@ -83,7 +101,7 @@ export const PrintCheckout = () => {
           <h4>Select Artwork</h4>
           <br />
           <select onChange={(e) => handleArtIDChange(e)}>
-            <ArtworkIDSelectValues />
+            {ArtworkIDSelectValues}
           </select>
         </SectionBody>
       </RightSection>
