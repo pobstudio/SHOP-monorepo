@@ -43,6 +43,7 @@ const PrintHero: FC = () => (
   <RightSection>
     <SectionBody style={{ paddingTop: 32 }}>
       <h1>Official Print Service</h1>
+      <br />
       <p>
         Select any Proof of Beauty artwork you own to print. All prints require
         $LONDON token to purchase. Enter your Contact Info and Shipping Address
@@ -66,6 +67,7 @@ const PrintDetails: FC = () => (
   <RightSection>
     <SectionBody>
       <h4>Product Details</h4>
+      <br />
       <p>
         All prints are done on Hahnemühle Photo Rag 308g paper with
         archival-grade ink. Printed via a fine art 74 inch wide Roland Hi-Fi Jet
@@ -77,13 +79,17 @@ const PrintDetails: FC = () => (
         effect. 1 inch wide x 1 inch deep.
         <br />
         <br />
-        HASH Prints
+      </p>
+      <figure>
+        <figcaption> HASH Prints</figcaption>
         <ul>
           <li>Print Sizing: 18 inches x 24 inches ( 45.72 cm x 60.96 cm )</li>
           <li>Framed Size: 20 inches x 26 inches ( 50.8 cm x 66.04 cm )</li>
         </ul>
-        <br />
-        LONDON GIFT Prints
+      </figure>
+      <br />
+      <figure>
+        <figcaption> LONDON GIFT Prints</figcaption>
         <ul>
           <li>
             Print Sizing: 24.55 inches x 24.55 inches ( 62.36 cm x 62.36 cm )
@@ -92,7 +98,9 @@ const PrintDetails: FC = () => (
             Framed Size: 26.55 inches x 26.55 inches ( 67.44 cm x 67.44 cm )
           </li>
         </ul>
-        <br />
+      </figure>
+      <br />
+      <p>
         Printing via{' '}
         <a
           href="https://twitter.com/gallery16"

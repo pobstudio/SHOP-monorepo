@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useWeb3React } from '@web3-react/core';
+import React, { useState, useEffect, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
 import { RightSection, SectionBody, SlimSectionBody } from '.';
+import { useAccountCollections } from '../../hooks/useCollection';
 
 export const PrintCheckout = () => {
   const [printOnly, setPrintOnly] = useState(true);
@@ -53,6 +55,31 @@ export const PrintCheckout = () => {
     }
   }, [artwork, artworkID, email, shipping]);
 
+  const { account } = useWeb3React();
+  const collections = useAccountCollections(account);
+  console.log(collections);
+
+  const ArtworkSelectValues: FC = () => {
+    if (artwork === 'hash') {
+      return (
+        <>
+          <option value="">-</option>
+          {collections?.hash?.map((asset: any) => (
+            <option value={asset}>{asset.name}</option>
+          ))}
+        </>
+      );
+    }
+    return (
+      <>
+        <option value="">-</option>
+        {collections?.['london-gifts']?.map((asset: any) => (
+          <option value={asset}>{asset.name}</option>
+        ))}
+      </>
+    );
+  };
+
   return (
     <>
       <RightSection>
@@ -88,7 +115,7 @@ export const PrintCheckout = () => {
           <h4>Select Artwork</h4>
           <br />
           <select onChange={(e) => handleArtIDChange(e)}>
-            <option value="">-</option>
+            <ArtworkSelectValues />
           </select>
         </SectionBody>
       </RightSection>

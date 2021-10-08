@@ -38,9 +38,27 @@ export const RightSection = styled.div`
   h3,
   h4,
   h5,
+  figure,
   p {
     margin: 0;
     padding: 0;
+  }
+  ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  p,
+  ul,
+  figcaption {
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 20px;
+    color: #000000;
   }
 
   h1 {
@@ -70,28 +88,14 @@ export const RightSection = styled.div`
     text-transform: uppercase;
     margin-top: -8px;
   }
-  p {
-    margin-top: 12px;
-    font-family: Helvetica;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 20px;
-    color: #000000;
-    ul {
-      margin-top: 0;
-      margin-bottom: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-    a {
-      text-decoration: none;
-      color: unset;
-      &:hover {
-        color: blue;
-      }
+  a {
+    text-decoration: none;
+    color: unset;
+    &:hover {
+      color: blue;
     }
   }
+
   select {
     width: 100%;
     outline: none;
