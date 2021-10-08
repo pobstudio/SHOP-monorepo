@@ -63,8 +63,10 @@ const PrintPage: NextPage = () => {
         <MainContent>
           <Split>
             <LeftSide>
-              <img src="https://balenciaga.dam.kering.com/m/5e63dc1a91a9c5b9/Large-651795TKVF53660_F.jpg?v=3" />
-              <img src="https://balenciaga.dam.kering.com/m/5e63dc1a91a9c5b9/Large-651795TKVF53660_F.jpg?v=3" />
+              <img src="/imgs/zrx-framed-photos/frame-1.jpg" />
+              <img src="/imgs/zrx-framed-photos/frame-2.jpg" />
+              <img src="/imgs/zrx-framed-photos/frame-3.jpg" />
+              <img src="/imgs/zrx-framed-photos/frame-4.jpg" />
             </LeftSide>
             <RightSide>
               <PrintHero />
