@@ -6,14 +6,12 @@ import { BlockchainEffect } from '../effects/BlockchainEffect';
 import { EagerConnectEffect } from '../effects/EagerConnectEffect';
 import { TokensEffect } from '../effects/TokensEffect';
 import { TransactionsEffect } from '../effects/TransactionsEffect';
-import { useModalStore } from '../stores/modal';
 import { ToastsEffect } from '../effects/ToastEffect';
 import { WalletEffect } from '../effects/WalletEffect';
 import { DefaultSeo } from 'next-seo';
 import { Web3ReactProvider } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { AppProvider } from '../contexts/app';
-import { ApolloProvider } from '@apollo/client';
 // import { subgraphClient } from '../clients/graph';
 import { PROD_LINK, SEO_TITLE, SEO_DESCRIPTION, OG_BANNER } from '../constants';
 

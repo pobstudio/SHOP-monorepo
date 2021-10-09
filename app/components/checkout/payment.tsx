@@ -2,7 +2,6 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
 import { SlimSectionBody } from '.';
-import { useNewPrintOrder } from '../../hooks/usePrintQueue';
 
 export type ProductsType =
   | 'PRINT_PAPER_HASH'
@@ -27,8 +26,6 @@ const usePaymentFlow = (product: ProductsType) => {
   const token = '$LONDON';
   const rate = 0.0000123; // fake eth rate
   const amountDue = (price / rate).toFixed(0);
-
-  const { submittingState: pushingNewPrintOrder } = useNewPrintOrder();
 
   const handlePay = useCallback(async () => {
     if (paying) {
@@ -57,7 +54,7 @@ const usePaymentFlow = (product: ProductsType) => {
     token,
     slippage,
     handlePay,
-    payingState: pushingNewPrintOrder || payingState,
+    payingState: payingState,
   };
 };
 
@@ -88,20 +85,13 @@ export const PaymentFlow: FC<{
     };
   }, [hoverPurchaseButton, disabled]);
 
-  const { handleCreate } = useNewPrintOrder();
   const { account } = useWeb3React();
-
-  console.log(asset);
 
   const purchaseButtonOnClick = useCallback(async () => {
     if (disabled || !account || !asset) {
       return;
     }
     await handlePay();
-    // await handleCreate({
-    //   wallet: account,
-    //   tokenid: asset.token_id,
-    // })
   }, [disabled]);
 
   return (

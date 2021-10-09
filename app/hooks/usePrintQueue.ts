@@ -2,7 +2,10 @@ import { Record, FieldSet } from 'airtable';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { fetcher } from '../utils/fetcher';
-import { PrintServiceAirtableRecordType } from '../utils/airtable';
+import {
+  PrintServiceAirtableRecordType,
+  PrintServiceOrderType,
+} from '../utils/airtable';
 
 export const usePrintQueueRecords = () => {
   const { data } = useSWR(`/api/airtable/print-queue`, fetcher);
@@ -102,5 +105,42 @@ export const useNewPrintOrder = () => {
     handleCreate,
     isCreating,
     created,
+  };
+};
+
+export const getCollectionName = (raw: string): string => {
+  switch (true) {
+    case raw.includes('london'):
+      return 'london';
+    case raw.includes('hash'):
+      return 'hash';
+    default:
+      return 'error';
+  }
+};
+
+export const getAirtableRecordFromOpenSeaAsset: PrintServiceAirtableRecordType = (
+  asset: any,
+  contact: string,
+  shipping: string,
+  type: PrintServiceOrderType,
+  etherscan: string,
+  amountPaid: string,
+) => {
+  if (!asset) {
+    return undefined;
+  }
+  return {
+    'status': 'new',
+    'wallet': asset.owner?.address,
+    'tokenid': asset.token_id,
+    'name': asset.name,
+    'collection': getCollectionName(asset.asset_contract?.name),
+    'opensea': asset.permalink,
+    contact,
+    shipping,
+    type,
+    etherscan,
+    'amount paid': amountPaid,
   };
 };

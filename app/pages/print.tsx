@@ -74,9 +74,8 @@ const PrintDetails: FC = () => (
         Pro II.
         <br />
         <br />
-        Framing Option: All framing is custom, handcrafted black metal. The
-        paper is set with a slight elevation off the back to create a floating
-        effect. 1 inch wide x 1 inch deep.
+        Framing Option: All framing is custom, handcrafted black metal. 1 inch
+        wide x 1 inch deep.
         <br />
         <br />
       </p>
