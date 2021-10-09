@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, FC } from 'react';
-import { RightSection, SectionBody } from '.';
+import { RightSection, SectionBody, SlapImage } from '.';
 import { useAccountCollections } from '../../hooks/useCollection';
 import { PaymentFlow, ProductsType } from './payment';
 
@@ -48,7 +48,7 @@ export const PrintCheckout = () => {
   const handleShippingChange = (e: any) => setShipping(e.target.value);
 
   const reducer = useMemo(() => {
-    let asset = {};
+    let asset = {} as any;
     let product: ProductsType = 'FAILURE_TO_LAUNCH';
 
     if (artwork === 'london') {
@@ -103,6 +103,9 @@ export const PrintCheckout = () => {
           <select onChange={(e) => handleArtIDChange(e)}>
             {ArtworkIDSelectValues}
           </select>
+          {reducer?.asset && (
+            <SlapImage src={reducer?.asset?.image_url as string} />
+          )}
         </SectionBody>
       </RightSection>
 

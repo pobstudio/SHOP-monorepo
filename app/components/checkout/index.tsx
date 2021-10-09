@@ -5,6 +5,7 @@ export const Split = styled.div`
 `;
 
 export const LeftSide = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid black;
@@ -14,6 +15,14 @@ export const LeftSide = styled.div`
   img {
     width: 100%;
   }
+`;
+
+export const SlapImage = styled.img`
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100px;
+  border: 1px solid black;
 `;
 
 export const RightSide = styled.div`
