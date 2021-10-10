@@ -119,14 +119,14 @@ export const getCollectionName = (raw: string): string => {
   }
 };
 
-export const getAirtableRecordFromOpenSeaAsset: PrintServiceAirtableRecordType = (
+export const getAirtableRecordFromOpenSeaAsset = (
   asset: any,
   contact: string,
   shipping: string,
   type: PrintServiceOrderType,
   etherscan: string,
   amountPaid: string,
-) => {
+): PrintServiceAirtableRecordType | undefined => {
   if (!asset) {
     return undefined;
   }

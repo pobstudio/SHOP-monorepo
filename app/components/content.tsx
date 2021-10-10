@@ -17,10 +17,10 @@ export const ContentWrapper = styled.div`
   overflow: hidden;
 `;
 
-export const MainContent = styled.div`
+export const MainContent = styled.div<{ background?: string }>`
   width: 100%;
   /* background-color: #f9f9f9; */
-  background-color: white;
+  background: ${(p) => (p.background ? p.background : '#fff')};
   min-height: calc(100vh - ${HEADER_HEIGHT}px);
   @media (max-width: ${BREAKPTS.SM}px) {
     min-height: calc(100vh - ${MOBILE_HEADER_HEIGHT}px);

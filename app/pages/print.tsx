@@ -82,19 +82,40 @@ const PrintDetails: FC = () => (
       <figure>
         <figcaption> HASH Prints</figcaption>
         <ul>
+          <li>
+            Resolution: 6000px x 9600px. ( Art may vary slightly due to
+            resolution increase )
+          </li>
           <li>Print Sizing: 18 inches x 24 inches ( 45.72 cm x 60.96 cm )</li>
           <li>Framed Size: 20 inches x 26 inches ( 50.8 cm x 66.04 cm )</li>
+          <li>
+            Photo Info:{' '}
+            <a
+              href={`https://hash.pob.studio/art/0xbdab447ba2fd0a493d93635da202ebcfaa309bcc6a22a95d808c93ce8f1c6c2d`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              "ZRX Genesis"
+            </a>
+          </li>
         </ul>
       </figure>
       <br />
       <figure>
         <figcaption> LONDON GIFT Prints</figcaption>
         <ul>
+          <li>Resolution: 6144px x 6144px</li>
+          <li>Print Sizing: 24 inches x 24 inches ( 60.96 cm x 60.96 cm )</li>
+          <li>Framed Size: 26 inches x 26 inches ( 66.04 cm x 66.04 cm )</li>
           <li>
-            Print Sizing: 24.55 inches x 24.55 inches ( 62.36 cm x 62.36 cm )
-          </li>
-          <li>
-            Framed Size: 26.55 inches x 26.55 inches ( 67.44 cm x 67.44 cm )
+            Photo Info:{' '}
+            <a
+              href={`https://opensea.io/assets/0x7645eec8bb51862a5aa855c40971b2877dae81af/8776`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              "new touted verdant sky"
+            </a>
           </li>
         </ul>
       </figure>

@@ -6,42 +6,73 @@ import { Header } from '../components/header';
 import { Footer } from '../components/footer';
 import { ROUTES } from '../constants/routes';
 import Link from 'next/link';
-import Arrow from '../components/icons/arrow';
 
 const IndexPage: NextPage = () => {
   return (
     <>
       <ContentWrapper>
         <Header />
-        <MainContent>
-          <Pages>
-            <Link href={ROUTES.PRINT} passHref>
-              <PageButton>
-                <h1>Official Print Service</h1>
-                <p>
-                  Select any Proof of Beauty artwork you own to print. All
-                  prints cost $LONDON token.
-                  <br />
-                  Enter your Contact Info and Shipping Address to complete
-                  purchase.
-                </p>
-                <Arrow />
-              </PageButton>
-            </Link>
-          </Pages>
-        </MainContent>
+        <CenterOnPage background={`#991616`}>
+          {/* <FrameOutline /> */}
+          <Link href={ROUTES.PRINT} passHref>
+            <SmallWhiteButton>Print Service</SmallWhiteButton>
+          </Link>
+        </CenterOnPage>
         <Footer />
       </ContentWrapper>
     </>
   );
 };
 
+const CenterOnPage = styled(MainContent)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-bottom: 1px solid black;
+`;
+
+const FrameOutline = styled.div`
+  min-width: 256px;
+  width: 24vw;
+  height: 64vh;
+  background: transparent;
+  border: 2px solid black;
+  position: absolute;
+  z-index: 0;
+`;
+
+const SmallWhiteButton = styled.a`
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: 32px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: bold;
+  &:hover {
+    color: #991616;
+  }
+`;
+
 const Pages = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 64px;
+  padding-top: 64px;
 `;
 
 const PageButton = styled.a`
