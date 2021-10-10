@@ -1,7 +1,18 @@
 import styled from 'styled-components';
+import { BREAKPTS } from '../../styles';
+
+export const HorizontalScrolling = `
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  display: inline-block;
+`;
 
 export const Split = styled.div`
   display: flex;
+  @media (max-width: ${BREAKPTS.MD}px) {
+    flex-direction: column;
+  }
 `;
 
 export const LeftSide = styled.div`
@@ -14,6 +25,14 @@ export const LeftSide = styled.div`
   height: calc(100vh - 80px);
   img {
     width: 100%;
+    @media (max-width: ${BREAKPTS.MD}px) {
+      margin-bottom: -4px;
+    }
+  }
+  @media (max-width: ${BREAKPTS.MD}px) {
+    width: 100%;
+    height: auto;
+    ${HorizontalScrolling}
   }
 `;
 
@@ -33,6 +52,10 @@ export const RightSide = styled.div`
   overflow: scroll;
   width: 50vw;
   height: calc(100vh - 80px);
+  @media (max-width: ${BREAKPTS.MD}px) {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 export const RightSection = styled.div`
