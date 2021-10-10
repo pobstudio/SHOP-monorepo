@@ -40,8 +40,8 @@ const Season = styled.div`
   text-transform: lowercase;
   color: white;
   text-align: center;
-  margin-top: -18px;
-  transform: translateY(-36px);
+  margin-top: -16px;
+  transform: translateY(-32px);
 `;
 
 const SmallWhiteButton = styled.a`
@@ -53,6 +53,7 @@ const SmallWhiteButton = styled.a`
   justify-content: center;
   width: fit-content;
   height: 32px;
+  min-width: 174px;
   padding: 0 20px;
   border-radius: 999px;
   background-color: white;
