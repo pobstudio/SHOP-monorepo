@@ -13,10 +13,12 @@ const IndexPage: NextPage = () => {
       <ContentWrapper>
         <Header />
         <CenterOnPage background={`#991616`}>
-          {/* <FrameOutline /> */}
-          <Link href={ROUTES.PRINT} passHref>
-            <SmallWhiteButton>Print Service</SmallWhiteButton>
-          </Link>
+          <div>
+            <Season>fall 2021</Season>
+            <Link href={ROUTES.PRINT} passHref>
+              <SmallWhiteButton>Print Service</SmallWhiteButton>
+            </Link>
+          </div>
         </CenterOnPage>
         <Footer />
       </ContentWrapper>
@@ -32,14 +34,14 @@ const CenterOnPage = styled(MainContent)`
   border-bottom: 1px solid black;
 `;
 
-const FrameOutline = styled.div`
-  min-width: 256px;
-  width: 24vw;
-  height: 64vh;
-  background: transparent;
-  border: 2px solid black;
-  position: absolute;
-  z-index: 0;
+const Season = styled.div`
+  font-family: 'Computer Modern Serif';
+  font-style: italic;
+  text-transform: lowercase;
+  color: white;
+  text-align: center;
+  margin-top: -18px;
+  transform: translateY(-36px);
 `;
 
 const SmallWhiteButton = styled.a`
