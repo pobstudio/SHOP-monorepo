@@ -28,7 +28,8 @@ export type PrintServiceOrderStatus =
   | 'printing'
   | 'framing'
   | 'shipped'
-  | 'complete';
+  | 'complete'
+  | 'rejected';
 export type PrintServiceOrderType = 'noframe' | 'framed';
 export interface PrintServiceAirtableRecordType {
   'order id'?: string; // incremented number
