@@ -11,11 +11,11 @@ export type ProductsType =
   | 'FAILURE_TO_LAUNCH';
 
 export const PRICING = {
-  PRINT_PAPER_HASH: 0.08,
-  PRINT_FRAME_HASH: 0.25,
-  PRINT_PAPER_LONDON: 0.08,
-  PRINT_FRAME_LONDON: 0.25,
-  FAILURE_TO_LAUNCH: 111111,
+  PRINT_PAPER_HASH: 10000,
+  PRINT_FRAME_HASH: 30000,
+  PRINT_PAPER_LONDON: 10000,
+  PRINT_FRAME_LONDON: 30000,
+  FAILURE_TO_LAUNCH: 1111111,
 };
 
 const usePaymentFlow = (product: ProductsType) => {
@@ -25,7 +25,7 @@ const usePaymentFlow = (product: ProductsType) => {
 
   const token = '$LONDON';
   const rate = 0.0000123; // fake eth rate
-  const amountDue = (price / rate).toFixed(0);
+  const amountDue = price || (price / rate).toFixed(0);
 
   const handlePay = useCallback(async () => {
     if (paying) {
