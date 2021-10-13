@@ -42,7 +42,7 @@ export default React.memo(PrintPage);
 const PrintHero: FC = () => (
   <RightSection>
     <SectionBody style={{ paddingTop: 32 }}>
-      <h1>Official Print Service</h1>
+      <h1>Print Service</h1>
       <br />
       <p>
         Select any Proof of Beauty artwork you own to print. All prints require

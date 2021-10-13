@@ -20,7 +20,8 @@ contract PosterCheckout is Ownable {
       address indexed _customerWallet, 
       uint _orderNum,
       address _collection, 
-      uint256 _tokenid
+      uint256 _tokenid,
+      string orderDetails
     );
 
     constructor (
@@ -43,7 +44,7 @@ contract PosterCheckout is Ownable {
       inStock = _inStock;
     }
 
-    function buy(uint256 _priceIndex, address _collection, uint256 _tokenid) public {
+    function buy(uint256 _priceIndex, address _collection, uint256 _tokenid, string memory _orderDetails) public {
       // ensure approval and conditions are met
       require(inStock, "Not purchasable");
       require(payableErc20.allowance(_msgSender(), address(this)) >= prices[_priceIndex], "Allowance not set to mint");
@@ -53,6 +54,6 @@ contract PosterCheckout is Ownable {
       // increment order count
       orderNum += 1;
       // emit order details
-      emit PosterOrderReceived(_msgSender(), orderNum, _collection, _tokenid);
+      emit PosterOrderReceived(_msgSender(), orderNum, _collection, _tokenid, _orderDetails);
     }
 }

@@ -31,20 +31,21 @@ export type PrintServiceOrderStatus =
   | 'complete'
   | 'rejected';
 export type PrintServiceOrderType = 'noframe' | 'framed';
+export type PrintServiceCollectionType = 'LONDON GIFT' | 'HASH';
 export interface PrintServiceAirtableRecordType {
   'order id'?: string; // incremented number
   'created at'?: string;
   'wallet': string; // customer wallet address
   'tokenid'?: string; // artwork token id
   'name': string; //
-  'collection': string; // artwork collection
+  'collection': PrintServiceCollectionType; // artwork collection
   'opensea': string; // opensea asset url
   'contact': string; // customer contact
   'shipping': string; // customer shipping details
   'type': PrintServiceOrderType;
   'status'?: PrintServiceOrderStatus;
   'etherscan'?: string; // customer payment etherscan receipt
-  'amount paid'?: string; // customer payment amount
+  'amount paid'?: number; // customer payment amount
   [key: string]: number | string | undefined; // for Partial<FieldSet> type compatibility
 }
 

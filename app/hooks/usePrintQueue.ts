@@ -108,24 +108,24 @@ export const useNewPrintOrder = () => {
   };
 };
 
-export const getCollectionName = (raw: string): string => {
+export const getCollectionName = (raw: string): PrintServiceCollectionType => {
   switch (true) {
     case raw.includes('london'):
-      return 'london';
+      return 'LONDON GIFT';
     case raw.includes('hash'):
-      return 'hash';
+      return 'HASH';
     default:
-      return 'error';
+      return 'LONDON GIFT';
   }
 };
 
 export const getAirtableRecordFromOpenSeaAsset = (
-  asset: any,
+  asset: any, // OpenSea Object
+  type: PrintServiceOrderType,
   contact: string,
   shipping: string,
-  type: PrintServiceOrderType,
-  etherscan: string,
-  amountPaid: string,
+  txid: string,
+  amountPaid: number,
 ): PrintServiceAirtableRecordType | undefined => {
   if (!asset) {
     return undefined;
@@ -140,7 +140,7 @@ export const getAirtableRecordFromOpenSeaAsset = (
     contact,
     shipping,
     type,
-    etherscan,
+    'etherscan': `https://etherscan.io/tx/${txid}`,
     'amount paid': amountPaid,
   };
 };

@@ -22,7 +22,7 @@ import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
 
 interface PosterCheckoutInterface extends ethers.utils.Interface {
   functions: {
-    'buy(uint256,address,uint256)': FunctionFragment;
+    'buy(uint256,address,uint256,string)': FunctionFragment;
     'inStock()': FunctionFragment;
     'orderNum()': FunctionFragment;
     'owner()': FunctionFragment;
@@ -37,7 +37,7 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: 'buy',
-    values: [BigNumberish, string, BigNumberish],
+    values: [BigNumberish, string, BigNumberish, string],
   ): string;
   encodeFunctionData(functionFragment: 'inStock', values?: undefined): string;
   encodeFunctionData(functionFragment: 'orderNum', values?: undefined): string;
@@ -85,7 +85,7 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
 
   events: {
     'OwnershipTransferred(address,address)': EventFragment;
-    'PosterOrderReceived(address,uint256,address,uint256)': EventFragment;
+    'PosterOrderReceived(address,uint256,address,uint256,string)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
@@ -110,13 +110,15 @@ export class PosterCheckout extends Contract {
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    'buy(uint256,address,uint256)'(
+    'buy(uint256,address,uint256,string)'(
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
@@ -194,13 +196,15 @@ export class PosterCheckout extends Contract {
     _priceIndex: BigNumberish,
     _collection: string,
     _tokenid: BigNumberish,
+    _orderDetails: string,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'buy(uint256,address,uint256)'(
+  'buy(uint256,address,uint256,string)'(
     _priceIndex: BigNumberish,
     _collection: string,
     _tokenid: BigNumberish,
+    _orderDetails: string,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
@@ -278,13 +282,15 @@ export class PosterCheckout extends Contract {
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    'buy(uint256,address,uint256)'(
+    'buy(uint256,address,uint256,string)'(
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: CallOverrides,
     ): Promise<void>;
 
@@ -363,6 +369,7 @@ export class PosterCheckout extends Contract {
       _orderNum: null,
       _collection: null,
       _tokenid: null,
+      orderDetails: null,
     ): EventFilter;
   };
 
@@ -371,13 +378,15 @@ export class PosterCheckout extends Contract {
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    'buy(uint256,address,uint256)'(
+    'buy(uint256,address,uint256,string)'(
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
@@ -450,13 +459,15 @@ export class PosterCheckout extends Contract {
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    'buy(uint256,address,uint256)'(
+    'buy(uint256,address,uint256,string)'(
       _priceIndex: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
+      _orderDetails: string,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 

@@ -2,20 +2,20 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
 import { SlimSectionBody } from '.';
+import { LONDON_GIFT_CONTRACT } from '../../constants';
+import { usePosterCheckoutContract } from '../../hooks/useContracts';
 
 export type ProductsType =
   | 'PRINT_PAPER_HASH'
   | 'PRINT_FRAME_HASH'
   | 'PRINT_PAPER_LONDON'
-  | 'PRINT_FRAME_LONDON'
-  | 'FAILURE_TO_LAUNCH';
+  | 'PRINT_FRAME_LONDON';
 
 export const PRICING = {
   PRINT_PAPER_HASH: 10000,
   PRINT_FRAME_HASH: 30000,
   PRINT_PAPER_LONDON: 10000,
   PRINT_FRAME_LONDON: 30000,
-  FAILURE_TO_LAUNCH: 1111111,
 };
 
 const usePaymentFlow = (product: ProductsType) => {
@@ -24,19 +24,27 @@ const usePaymentFlow = (product: ProductsType) => {
   const slippage = 0.05;
 
   const token = '$LONDON';
-  const rate = 0.0000123; // fake eth rate
-  const amountDue = price || (price / rate).toFixed(0);
+  const amountDue = price;
+
+  const posterCheckout = usePosterCheckoutContract();
 
   const handlePay = useCallback(async () => {
-    if (paying) {
+    if (paying || !posterCheckout) {
       return;
     }
     setPaying(true);
     console.log('calculate payment stub');
     console.log('approve london tokens needed');
     console.log('start contract interaction to accept payment');
-    setPaying(false);
-  }, [paying]);
+    const res = await posterCheckout?.buy(
+      0,
+      LONDON_GIFT_CONTRACT,
+      8776,
+      'wiggle',
+    );
+    console.log(res);
+    // setPaying(false);
+  }, [paying, posterCheckout]);
 
   const payingState = useMemo(() => {
     switch (true) {
@@ -50,7 +58,6 @@ const usePaymentFlow = (product: ProductsType) => {
   return {
     amountDue,
     price,
-    rate,
     token,
     slippage,
     handlePay,
@@ -107,7 +114,10 @@ export const PaymentFlow: FC<{
         style={{
           background: purchaseButton.color,
           textDecoration: purchaseButton.underline ? 'underline' : 'none',
-          cursor: purchaseButton.disabled ? 'not-allowed' : 'pointer',
+          cursor:
+            payingState !== '' || purchaseButton.disabled
+              ? 'not-allowed'
+              : 'pointer',
         }}
       >
         {payingState || purchaseButton.text}

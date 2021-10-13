@@ -49,7 +49,7 @@ export const PrintCheckout = () => {
 
   const reducer = useMemo(() => {
     let asset = {} as any;
-    let product: ProductsType = 'FAILURE_TO_LAUNCH';
+    let product: ProductsType = 'PRINT_PAPER_LONDON';
 
     if (artwork === 'london') {
       asset = collections['london-gifts'!]?.find(
