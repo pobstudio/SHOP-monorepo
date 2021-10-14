@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { fetcher } from '../utils/fetcher';
 import {
   PrintServiceAirtableRecordType,
+  PrintServiceCollectionType,
   PrintServiceOrderType,
 } from '../utils/airtable';
 

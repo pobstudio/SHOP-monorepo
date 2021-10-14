@@ -23,13 +23,12 @@ import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
 interface PosterCheckoutInterface extends ethers.utils.Interface {
   functions: {
     'buy(uint256,address,uint256,string)': FunctionFragment;
-    'inStock()': FunctionFragment;
     'orderNum()': FunctionFragment;
     'owner()': FunctionFragment;
-    'prices(uint256)': FunctionFragment;
+    'products(uint256)': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
-    'setInStock(bool)': FunctionFragment;
-    'setPrice(uint256,uint256)': FunctionFragment;
+    'setProduct(uint256,tuple)': FunctionFragment;
+    'setProductInStock(uint256,bool)': FunctionFragment;
     'setTreasury(address)': FunctionFragment;
     'transferOwnership(address)': FunctionFragment;
     'treasury()': FunctionFragment;
@@ -39,21 +38,26 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
     functionFragment: 'buy',
     values: [BigNumberish, string, BigNumberish, string],
   ): string;
-  encodeFunctionData(functionFragment: 'inStock', values?: undefined): string;
   encodeFunctionData(functionFragment: 'orderNum', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'prices',
+    functionFragment: 'products',
     values: [BigNumberish],
   ): string;
   encodeFunctionData(
     functionFragment: 'renounceOwnership',
     values?: undefined,
   ): string;
-  encodeFunctionData(functionFragment: 'setInStock', values: [boolean]): string;
   encodeFunctionData(
-    functionFragment: 'setPrice',
-    values: [BigNumberish, BigNumberish],
+    functionFragment: 'setProduct',
+    values: [
+      BigNumberish,
+      { id: string; price: BigNumberish; inStock: boolean },
+    ],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'setProductInStock',
+    values: [BigNumberish, boolean],
   ): string;
   encodeFunctionData(functionFragment: 'setTreasury', values: [string]): string;
   encodeFunctionData(
@@ -63,16 +67,18 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: 'treasury', values?: undefined): string;
 
   decodeFunctionResult(functionFragment: 'buy', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'inStock', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'orderNum', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'prices', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'products', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'renounceOwnership',
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(functionFragment: 'setInStock', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setPrice', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setProduct', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'setProductInStock',
+    data: BytesLike,
+  ): Result;
   decodeFunctionResult(
     functionFragment: 'setTreasury',
     data: BytesLike,
@@ -107,7 +113,7 @@ export class PosterCheckout extends Contract {
 
   'functions': {
     buy(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
@@ -115,16 +121,12 @@ export class PosterCheckout extends Contract {
     ): Promise<ContractTransaction>;
 
     'buy(uint256,address,uint256,string)'(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
-
-    inStock(overrides?: CallOverrides): Promise<[boolean]>;
-
-    'inStock()'(overrides?: CallOverrides): Promise<[boolean]>;
 
     orderNum(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -134,36 +136,53 @@ export class PosterCheckout extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<[string]>;
 
-    prices(arg0: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    'prices(uint256)'(
+    products(
       arg0: BigNumberish,
       overrides?: CallOverrides,
-    ): Promise<[BigNumber]>;
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
+
+    'products(uint256)'(
+      arg0: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
 
     renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
 
     'renounceOwnership()'(overrides?: Overrides): Promise<ContractTransaction>;
 
-    setInStock(
+    setProduct(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: Overrides,
+    ): Promise<ContractTransaction>;
+
+    'setProduct(uint256,(string,uint256,bool))'(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: Overrides,
+    ): Promise<ContractTransaction>;
+
+    setProductInStock(
+      _index: BigNumberish,
       _inStock: boolean,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    'setInStock(bool)'(
+    'setProductInStock(uint256,bool)'(
+      _index: BigNumberish,
       _inStock: boolean,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    setPrice(
-      _price: BigNumberish,
-      _index: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    'setPrice(uint256,uint256)'(
-      _price: BigNumberish,
-      _index: BigNumberish,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
@@ -193,7 +212,7 @@ export class PosterCheckout extends Contract {
   };
 
   'buy'(
-    _priceIndex: BigNumberish,
+    _index: BigNumberish,
     _collection: string,
     _tokenid: BigNumberish,
     _orderDetails: string,
@@ -201,16 +220,12 @@ export class PosterCheckout extends Contract {
   ): Promise<ContractTransaction>;
 
   'buy(uint256,address,uint256,string)'(
-    _priceIndex: BigNumberish,
+    _index: BigNumberish,
     _collection: string,
     _tokenid: BigNumberish,
     _orderDetails: string,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
-
-  'inStock'(overrides?: CallOverrides): Promise<boolean>;
-
-  'inStock()'(overrides?: CallOverrides): Promise<boolean>;
 
   'orderNum'(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -220,36 +235,53 @@ export class PosterCheckout extends Contract {
 
   'owner()'(overrides?: CallOverrides): Promise<string>;
 
-  'prices'(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-  'prices(uint256)'(
+  'products'(
     arg0: BigNumberish,
     overrides?: CallOverrides,
-  ): Promise<BigNumber>;
+  ): Promise<
+    [string, BigNumber, boolean] & {
+      id: string;
+      price: BigNumber;
+      inStock: boolean;
+    }
+  >;
+
+  'products(uint256)'(
+    arg0: BigNumberish,
+    overrides?: CallOverrides,
+  ): Promise<
+    [string, BigNumber, boolean] & {
+      id: string;
+      price: BigNumber;
+      inStock: boolean;
+    }
+  >;
 
   'renounceOwnership'(overrides?: Overrides): Promise<ContractTransaction>;
 
   'renounceOwnership()'(overrides?: Overrides): Promise<ContractTransaction>;
 
-  'setInStock'(
+  'setProduct'(
+    _index: BigNumberish,
+    _product: { id: string; price: BigNumberish; inStock: boolean },
+    overrides?: Overrides,
+  ): Promise<ContractTransaction>;
+
+  'setProduct(uint256,(string,uint256,bool))'(
+    _index: BigNumberish,
+    _product: { id: string; price: BigNumberish; inStock: boolean },
+    overrides?: Overrides,
+  ): Promise<ContractTransaction>;
+
+  'setProductInStock'(
+    _index: BigNumberish,
     _inStock: boolean,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'setInStock(bool)'(
+  'setProductInStock(uint256,bool)'(
+    _index: BigNumberish,
     _inStock: boolean,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  'setPrice'(
-    _price: BigNumberish,
-    _index: BigNumberish,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  'setPrice(uint256,uint256)'(
-    _price: BigNumberish,
-    _index: BigNumberish,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
@@ -279,7 +311,7 @@ export class PosterCheckout extends Contract {
 
   'callStatic': {
     buy(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
@@ -287,16 +319,12 @@ export class PosterCheckout extends Contract {
     ): Promise<void>;
 
     'buy(uint256,address,uint256,string)'(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
       overrides?: CallOverrides,
     ): Promise<void>;
-
-    inStock(overrides?: CallOverrides): Promise<boolean>;
-
-    'inStock()'(overrides?: CallOverrides): Promise<boolean>;
 
     orderNum(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -306,33 +334,53 @@ export class PosterCheckout extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<string>;
 
-    prices(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    'prices(uint256)'(
+    products(
       arg0: BigNumberish,
       overrides?: CallOverrides,
-    ): Promise<BigNumber>;
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
+
+    'products(uint256)'(
+      arg0: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     'renounceOwnership()'(overrides?: CallOverrides): Promise<void>;
 
-    setInStock(_inStock: boolean, overrides?: CallOverrides): Promise<void>;
+    setProduct(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: CallOverrides,
+    ): Promise<void>;
 
-    'setInStock(bool)'(
+    'setProduct(uint256,(string,uint256,bool))'(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    setProductInStock(
+      _index: BigNumberish,
       _inStock: boolean,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    setPrice(
-      _price: BigNumberish,
+    'setProductInStock(uint256,bool)'(
       _index: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    'setPrice(uint256,uint256)'(
-      _price: BigNumberish,
-      _index: BigNumberish,
+      _inStock: boolean,
       overrides?: CallOverrides,
     ): Promise<void>;
 
@@ -375,7 +423,7 @@ export class PosterCheckout extends Contract {
 
   'estimateGas': {
     buy(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
@@ -383,16 +431,12 @@ export class PosterCheckout extends Contract {
     ): Promise<BigNumber>;
 
     'buy(uint256,address,uint256,string)'(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
       overrides?: Overrides,
     ): Promise<BigNumber>;
-
-    inStock(overrides?: CallOverrides): Promise<BigNumber>;
-
-    'inStock()'(overrides?: CallOverrides): Promise<BigNumber>;
 
     orderNum(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -402,9 +446,9 @@ export class PosterCheckout extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<BigNumber>;
 
-    prices(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    products(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    'prices(uint256)'(
+    'products(uint256)'(
       arg0: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
@@ -413,22 +457,27 @@ export class PosterCheckout extends Contract {
 
     'renounceOwnership()'(overrides?: Overrides): Promise<BigNumber>;
 
-    setInStock(_inStock: boolean, overrides?: Overrides): Promise<BigNumber>;
+    setProduct(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: Overrides,
+    ): Promise<BigNumber>;
 
-    'setInStock(bool)'(
+    'setProduct(uint256,(string,uint256,bool))'(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: Overrides,
+    ): Promise<BigNumber>;
+
+    setProductInStock(
+      _index: BigNumberish,
       _inStock: boolean,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    setPrice(
-      _price: BigNumberish,
+    'setProductInStock(uint256,bool)'(
       _index: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    'setPrice(uint256,uint256)'(
-      _price: BigNumberish,
-      _index: BigNumberish,
+      _inStock: boolean,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
@@ -456,7 +505,7 @@ export class PosterCheckout extends Contract {
 
   'populateTransaction': {
     buy(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
@@ -464,16 +513,12 @@ export class PosterCheckout extends Contract {
     ): Promise<PopulatedTransaction>;
 
     'buy(uint256,address,uint256,string)'(
-      _priceIndex: BigNumberish,
+      _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
       _orderDetails: string,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
-
-    inStock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    'inStock()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     orderNum(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -483,12 +528,12 @@ export class PosterCheckout extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    prices(
+    products(
       arg0: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    'prices(uint256)'(
+    'products(uint256)'(
       arg0: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
@@ -497,25 +542,27 @@ export class PosterCheckout extends Contract {
 
     'renounceOwnership()'(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    setInStock(
+    setProduct(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: Overrides,
+    ): Promise<PopulatedTransaction>;
+
+    'setProduct(uint256,(string,uint256,bool))'(
+      _index: BigNumberish,
+      _product: { id: string; price: BigNumberish; inStock: boolean },
+      overrides?: Overrides,
+    ): Promise<PopulatedTransaction>;
+
+    setProductInStock(
+      _index: BigNumberish,
       _inStock: boolean,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    'setInStock(bool)'(
+    'setProductInStock(uint256,bool)'(
+      _index: BigNumberish,
       _inStock: boolean,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    setPrice(
-      _price: BigNumberish,
-      _index: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    'setPrice(uint256,uint256)'(
-      _price: BigNumberish,
-      _index: BigNumberish,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 

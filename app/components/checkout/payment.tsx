@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { SlimSectionBody } from '.';
 import { LONDON_GIFT_CONTRACT } from '../../constants';
 import { usePosterCheckoutContract } from '../../hooks/useContracts';
+import { useSetApprove } from '../../hooks/useSetApproval';
 
 export type ProductsType =
   | 'PRINT_PAPER_HASH'
@@ -26,6 +27,7 @@ const usePaymentFlow = (product: ProductsType) => {
   const token = '$LONDON';
   const amountDue = price;
 
+  const { approve, isApproving, isApproved } = useSetApprove();
   const posterCheckout = usePosterCheckoutContract();
 
   const handlePay = useCallback(async () => {
@@ -46,14 +48,24 @@ const usePaymentFlow = (product: ProductsType) => {
     // setPaying(false);
   }, [paying, posterCheckout]);
 
+  const onButtonClick = useCallback(() => {
+    if (isApproved) {
+      handlePay();
+    } else {
+      approve();
+    }
+  }, [handlePay, approve, isApproved]);
+
   const payingState = useMemo(() => {
     switch (true) {
       case paying:
         return 'Paying...';
+      case isApproving:
+        return 'Approving...';
       default:
         return '';
     }
-  }, [paying]);
+  }, [paying, isApproving]);
 
   return {
     amountDue,
@@ -61,6 +73,7 @@ const usePaymentFlow = (product: ProductsType) => {
     token,
     slippage,
     handlePay,
+    onButtonClick,
     payingState: payingState,
   };
 };
@@ -71,9 +84,13 @@ export const PaymentFlow: FC<{
   disabled: boolean;
 }> = ({ asset, product, disabled }) => {
   const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
-  const { amountDue, handlePay, token, payingState, slippage } = usePaymentFlow(
-    product,
-  );
+  const {
+    amountDue,
+    onButtonClick,
+    token,
+    payingState,
+    slippage,
+  } = usePaymentFlow(product);
 
   const purchaseButton = useMemo(() => {
     if (hoverPurchaseButton) {
@@ -98,7 +115,7 @@ export const PaymentFlow: FC<{
     if (disabled || !account || !asset) {
       return;
     }
-    await handlePay();
+    await onButtonClick();
   }, [disabled]);
 
   return (

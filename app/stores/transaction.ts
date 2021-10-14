@@ -5,11 +5,11 @@ import { useToastsStore } from './toasts';
 
 export type TransactionStatus = 'in-progress' | 'success' | 'failed';
 
-export interface OpenPianoMintingTransactionMetadata {
-  type: 'open-piano-minting';
+export interface ApprovalTransactionMetadata {
+  type: 'approval';
 }
 
-export type TransactionMetadata = OpenPianoMintingTransactionMetadata;
+export type TransactionMetadata = ApprovalTransactionMetadata;
 
 export interface TransactionObject {
   hash: string;

@@ -77,17 +77,7 @@ export const Header: FC = () => {
           </HeaderLogoWrapper>
         </HeaderSideContentWrapper>
         <HeaderRightSideContentWrapper>
-          {!isMobile && <Web3Status />}
-          {isMobile && (
-            <BaseButton
-              onClick={() =>
-                isModalOpen ? dismissAllModals() : setIsMenuModalOpen(true)
-              }
-              style={{ height: 24, width: 24, marginLeft: 6 }}
-            >
-              {isModalOpen ? <CloseIcon /> : <MenuIcon />}
-            </BaseButton>
-          )}
+          <Web3Status />
         </HeaderRightSideContentWrapper>
       </HeaderRow>
     </HeaderWrapper>

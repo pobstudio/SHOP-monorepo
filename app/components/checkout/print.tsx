@@ -129,9 +129,12 @@ export const PrintCheckout = () => {
           <h4>Contact Info</h4>
           <br />
           <input
+            type="email"
+            id="email"
+            name="email"
+            autoComplete="email"
             value={email}
             onChange={handleEmailChange}
-            type="text"
             placeholder="email@pob.studio"
           />
         </SectionBody>
@@ -142,10 +145,13 @@ export const PrintCheckout = () => {
           <h4>Name & Shipping Address</h4>
           <br />
           <input
+            type="street-address"
+            id="street-address"
+            name="street-address"
+            autoComplete="street-address"
             value={shipping}
             onChange={handleShippingChange}
-            type="text"
-            placeholder="Cookie Monster, 123 Sesame St, Kings Park, NY 11754"
+            placeholder="Cookie Monster, 123 Sesame St, Kings Park, NY 11754, USA"
           />
         </SectionBody>
       </RightSection>
