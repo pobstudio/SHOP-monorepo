@@ -118,7 +118,7 @@ export const PrintCheckout = () => {
               No Frame / Print Only - Ships in 2 Weeks
             </option>
             <option value="framed">
-              Custom Black Metal Framing - Ships in 4 Weeks
+              Premium Black Metal Framing - Ships in 4 Weeks
             </option>
           </select>
         </SectionBody>

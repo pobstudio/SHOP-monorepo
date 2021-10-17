@@ -19,14 +19,14 @@ contract PosterCheckout is Ownable {
 
     event PosterOrderReceived(
       address indexed _customerWallet, 
-      uint _orderNum,
+      uint _orderID,
       address _collection, 
       uint256 _tokenid,
-      string orderDetails
+      bytes _orderDetails
     );
 
     mapping (uint256 => PosterProduct) public products;
-    uint256 public orderNum = 0;
+    uint256 public orderID = 0;
 
     constructor (
       address _payableErc20,
@@ -48,7 +48,7 @@ contract PosterCheckout is Ownable {
       products[_index].inStock = _inStock;
     }
 
-    function buy(uint256 _index, address _collection, uint256 _tokenid, string memory _orderDetails) public {
+    function buy(uint256 _index, address _collection, uint256 _tokenid, bytes calldata _orderDetails) public {
       PosterProduct memory product = products[_index];
       uint256 price = product.price;
       // ensure approval and conditions are met
@@ -58,8 +58,8 @@ contract PosterCheckout is Ownable {
       // transfer payableERC20
       payableErc20.transferFrom(_msgSender(), treasury, price);
       // increment order count
-      orderNum += 1;
+      orderID += 1;
       // emit order details
-      emit PosterOrderReceived(_msgSender(), orderNum, _collection, _tokenid, _orderDetails);
+      emit PosterOrderReceived(_msgSender(), orderID, _collection, _tokenid, _orderDetails);
     }
 }
