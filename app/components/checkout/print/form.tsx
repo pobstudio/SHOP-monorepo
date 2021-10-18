@@ -1,10 +1,10 @@
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, FC } from 'react';
-import { RightSection, SectionBody, SlapImage } from '.';
-import { useAccountCollections } from '../../hooks/useCollection';
+import { RightSection, SectionBody, SlapImage } from '..';
+import { useAccountCollections } from '../../../hooks/useCollection';
 import { PaymentFlow, ProductsType } from './payment';
 
-export const PrintCheckout = () => {
+export const PrintCheckout: FC = () => {
   const { account } = useWeb3React();
   const collections = useAccountCollections(account);
 
@@ -38,7 +38,7 @@ export const PrintCheckout = () => {
     );
   }, [artwork, collections]);
 
-  const [frameOption, setFrameOption] = useState<'framed' | 'paper'>('paper');
+  const [frameOption, setFrameOption] = useState<'frame0' | 'frame1'>('frame0');
   const handleFrameChange = (e: any) => setFrameOption(e.target.value);
 
   const [email, setEmail] = useState<string>('');
@@ -49,24 +49,16 @@ export const PrintCheckout = () => {
 
   const reducer = useMemo(() => {
     let asset = {} as any;
-    let product: ProductsType = 'PRINT_PAPER_LONDON';
+    let product: ProductsType = frameOption;
 
     if (artwork === 'london') {
       asset = collections['london-gifts'!]?.find(
         (a: any) => a.token_id === artworkID,
       );
-      product = 'PRINT_PAPER_LONDON';
-      if (frameOption === 'framed') {
-        product = 'PRINT_FRAME_LONDON';
-      }
     }
 
     if (artwork === 'hash') {
       asset = collections?.hash?.find((a: any) => a.token_id === artworkID);
-      product = 'PRINT_PAPER_HASH';
-      if (frameOption === 'framed') {
-        product = 'PRINT_FRAME_HASH';
-      }
     }
 
     return {
@@ -114,10 +106,10 @@ export const PrintCheckout = () => {
           <h4>Choose Package</h4>
           <br />
           <select onChange={(e) => handleFrameChange(e)}>
-            <option value="paper">
+            <option value="frame0">
               No Frame / Print Only - Ships in 2 Weeks
             </option>
-            <option value="framed">
+            <option value="frame1">
               Premium Black Metal Framing - Ships in 4 Weeks
             </option>
           </select>

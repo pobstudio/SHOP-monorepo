@@ -1,31 +1,36 @@
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
-import { SlimSectionBody } from '.';
-import { LONDON_GIFT_CONTRACT } from '../../constants';
-import { usePosterCheckoutContract } from '../../hooks/useContracts';
-import { useSetApprove } from '../../hooks/useSetApproval';
+import { SlimSectionBody } from '..';
+import { NULL_ADDRESS } from '../../../constants';
+import { usePosterCheckoutContract } from '../../../hooks/useContracts';
+import { useSetApprove } from '../../../hooks/useSetApproval';
+import {
+  ONE_TOKEN_IN_BASE_UNITS,
+  POSTER_CHECKOUT_PRODUCTS,
+} from '@pob/protocol/utils';
+import { BigNumber } from 'ethers';
 
-export type ProductsType =
-  | 'PRINT_PAPER_HASH'
-  | 'PRINT_FRAME_HASH'
-  | 'PRINT_PAPER_LONDON'
-  | 'PRINT_FRAME_LONDON';
+export type ProductsType = 'frame0' | 'frame1';
+
+export const getPosterCheckoutProductIndexFromType = (id: ProductsType) =>
+  POSTER_CHECKOUT_PRODUCTS.findIndex((product) => product.id === id);
 
 export const PRICING = {
-  PRINT_PAPER_HASH: 10000,
-  PRINT_FRAME_HASH: 30000,
-  PRINT_PAPER_LONDON: 10000,
-  PRINT_FRAME_LONDON: 30000,
+  frame0: POSTER_CHECKOUT_PRODUCTS[0].price,
+  frame1: POSTER_CHECKOUT_PRODUCTS[1].price,
 };
 
-const usePaymentFlow = (product: ProductsType) => {
+const usePaymentFlow = (
+  product: ProductsType,
+  collection: string,
+  tokenID: BigNumber,
+) => {
   const [paying, setPaying] = useState(false);
   const price = PRICING[product];
-  const slippage = 0.05;
 
   const token = '$LONDON';
-  const amountDue = price;
+  const amountDue = price.div(ONE_TOKEN_IN_BASE_UNITS).toNumber();
 
   const { approve, isApproving, isApproved } = useSetApprove();
   const posterCheckout = usePosterCheckoutContract();
@@ -39,16 +44,16 @@ const usePaymentFlow = (product: ProductsType) => {
     console.log('approve london tokens needed');
     console.log('start contract interaction to accept payment');
     const res = await posterCheckout?.buy(
-      0,
-      LONDON_GIFT_CONTRACT,
-      8776,
-      'wiggle',
+      getPosterCheckoutProductIndexFromType(product),
+      collection,
+      tokenID,
+      '0x01',
     );
     console.log(res);
     // setPaying(false);
   }, [paying, posterCheckout]);
 
-  const onButtonClick = useCallback(() => {
+  const onButtonClick = useCallback(async () => {
     if (isApproved) {
       handlePay();
     } else {
@@ -71,7 +76,6 @@ const usePaymentFlow = (product: ProductsType) => {
     amountDue,
     price,
     token,
-    slippage,
     handlePay,
     onButtonClick,
     payingState: payingState,
@@ -79,18 +83,18 @@ const usePaymentFlow = (product: ProductsType) => {
 };
 
 export const PaymentFlow: FC<{
-  asset: any;
+  asset: any; // OpenSea Object
   product: ProductsType;
   disabled: boolean;
 }> = ({ asset, product, disabled }) => {
   const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
-  const {
-    amountDue,
-    onButtonClick,
-    token,
-    payingState,
-    slippage,
-  } = usePaymentFlow(product);
+  const artCollection = asset?.asset_contract?.address ?? NULL_ADDRESS;
+  const artTokenID = asset?.token_id ?? 666666;
+  const { amountDue, onButtonClick, token, payingState } = usePaymentFlow(
+    product,
+    artCollection,
+    artTokenID,
+  );
 
   const purchaseButton = useMemo(() => {
     if (hoverPurchaseButton) {
@@ -122,7 +126,6 @@ export const PaymentFlow: FC<{
     <>
       <Price>
         {amountDue} {token}
-        {/* <Slippage>Slip 5%</Slippage> */}
       </Price>
       <PurchaseButton
         onClick={purchaseButtonOnClick}
@@ -178,15 +181,4 @@ const Price = styled(SlimSectionBody)`
     font-size: 12px;
     opacity: 0.5;
   }
-`;
-
-const Slippage = styled.div`
-  position: absolute;
-  bottom: 4px;
-  right: 6px;
-  font-size: 10px;
-  font-weight: normal;
-  color: black;
-  opacity: 0.4;
-  text-transform: uppercase;
 `;

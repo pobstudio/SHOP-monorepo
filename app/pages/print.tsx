@@ -10,7 +10,7 @@ import {
   RightSection,
   SectionBody,
 } from '../components/checkout';
-import { PrintCheckout } from '../components/checkout/print';
+import { PrintCheckout } from '../components/checkout/print/form';
 
 const PrintPage: NextPage = () => {
   return (

@@ -1,23 +1,7 @@
-import { utils } from 'ethers';
 import { task } from 'hardhat/config';
 import { deployments } from '../deployments';
 import { PosterCheckout } from '../typechain/PosterCheckout';
-import { NETWORK_NAME_CHAIN_ID } from '../utils';
-
-const ONE_TOKEN_IN_BASE_UNITS = utils.parseEther('1');
-
-export const POSTER_CHECKOUT_PRODUCTS = [
-  {
-    id: 'frame0',
-    price: ONE_TOKEN_IN_BASE_UNITS.mul(10000),
-    inStock: true,
-  },
-  {
-    id: 'frame1',
-    price: ONE_TOKEN_IN_BASE_UNITS.mul(30000),
-    inStock: true,
-  },
-];
+import { NETWORK_NAME_CHAIN_ID, POSTER_CHECKOUT_PRODUCTS } from '../utils';
 
 task('deploy-poster', 'Deploys PosterCheckout', async (args, hre) => {
   const owner = (await hre.ethers.getSigners())[0];

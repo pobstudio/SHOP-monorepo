@@ -4,14 +4,12 @@ import { Signer } from 'ethers';
 import { ERC20Mintable } from '../typechain/ERC20Mintable';
 import { PosterCheckout } from '../typechain/PosterCheckout';
 import { expect } from 'chai';
-import { POSTER_CHECKOUT_PRODUCTS } from '../tasks/poster';
+import { ONE_TOKEN_IN_BASE_UNITS, POSTER_CHECKOUT_PRODUCTS } from '../utils';
 
 const TOKEN_SYMBOL = '$LONDON';
 const TOKEN_NAME = '$LONDON';
 
 const LONDON_GIFT_CONTRACT = '0x7645eec8bb51862a5aa855c40971b2877dae81af';
-
-const ONE_TOKEN_IN_BASE_UNITS = ethers.utils.parseEther('1');
 
 describe('PosterCheckout', function () {
   let erc20Mintable: ERC20Mintable;

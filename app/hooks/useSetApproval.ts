@@ -1,12 +1,12 @@
 import { BigNumber } from 'ethers';
-import { useState } from 'react';
-import { useCallback } from 'react';
-import { useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { TransactionStatus, useTransactionsStore } from '../stores/transaction';
 import { useLondonContract } from './useContracts';
 import { deployments } from '@pob/protocol';
 import { CHAIN_ID, MAX_APPROVAL } from '../constants';
+
+const APPROVE_TIMEOUT = 1000 * 30; //30 seconds;
 
 export const useSetApprove = () => {
   const { account } = useWeb3React();
@@ -34,9 +34,11 @@ export const useSetApprove = () => {
         addTransaction(res.hash, {
           type: 'approval',
         });
-        setIsApproving(false);
-        setIsApproved(true);
-        setError(undefined);
+        setTimeout(() => {
+          setIsApproving(false);
+          setIsApproved(true);
+          setError(undefined);
+        }, APPROVE_TIMEOUT);
       } catch (e) {
         console.error(e);
         setIsApproving(false);
