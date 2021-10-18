@@ -1,20 +1,16 @@
 import { ethers } from 'hardhat';
-import { BigNumber, Signer } from 'ethers';
+import { Signer } from 'ethers';
 
 import { ERC20Mintable } from '../typechain/ERC20Mintable';
 import { PosterCheckout } from '../typechain/PosterCheckout';
 import { expect } from 'chai';
-import { getAddress } from '@ethersproject/address';
 
 const TOKEN_SYMBOL = '$LONDON';
 const TOKEN_NAME = '$LONDON';
 
 const LONDON_GIFT_CONTRACT = '0x7645eec8bb51862a5aa855c40971b2877dae81af';
-const HASH_CONTRACT = '0xe18a32192ed95b0fe9d70d19e5025f103475d7ba';
 
 const ONE_TOKEN_IN_BASE_UNITS = ethers.utils.parseEther('1');
-const ONE_MWEI = ethers.utils.parseUnits('1', 'mwei');
-const ONE_GWEI = ethers.utils.parseUnits('1', 'gwei');
 
 describe('PosterCheckout', function () {
   let erc20Mintable: ERC20Mintable;
@@ -63,7 +59,6 @@ describe('PosterCheckout', function () {
     const PosterCheckout = await ethers.getContractFactory('PosterCheckout');
     posterCheckout = (await PosterCheckout.deploy(
       erc20Mintable.address,
-      treasury,
     )) as PosterCheckout;
     await posterCheckout.deployed();
   });
@@ -71,7 +66,6 @@ describe('PosterCheckout', function () {
   describe('constructor', () => {
     it('should configure variables correctly', async function () {
       expect(await posterCheckout.payableErc20()).to.eq(erc20Mintable.address);
-      expect(await posterCheckout.treasury()).to.eq(treasury);
     });
   });
 
@@ -95,7 +89,7 @@ describe('PosterCheckout', function () {
     it('should set product mapping for all items in array', async function () {
       for (const [index, product] of products.entries()) {
         await posterCheckout.connect(owner).setProduct(index, product);
-        expect(await posterCheckout.products(index)).to.eq(product);
+        expect((await posterCheckout.products(index)).id).to.eq(product.id);
       }
     });
   });

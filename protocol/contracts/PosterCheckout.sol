@@ -8,14 +8,16 @@ import "./utils/Strings.sol";
 
 contract PosterCheckout is Ownable {
 
-    ERC20Mintable internal immutable payableErc20;
+    ERC20Mintable public immutable payableErc20;
     address public treasury;
+    uint256 public orderID = 0;
 
     struct Product { 
       string id;
       uint256 price;
       bool inStock;
     }
+    mapping (uint256 => Product) public products;
 
     event PosterOrderReceived(
       address indexed _customerWallet,
@@ -27,15 +29,10 @@ contract PosterCheckout is Ownable {
       bytes _orderDetails
     );
 
-    mapping (uint256 => Product) public products;
-    uint256 public orderID = 0;
-
     constructor (
-      address _payableErc20,
-      address _treasury
+      address _payableErc20
     ) {
       payableErc20 = ERC20Mintable(_payableErc20);
-      treasury = _treasury;
     }
 
     function setTreasury(address _treasury) public onlyOwner {

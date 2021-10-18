@@ -30,7 +30,7 @@ export type PrintServiceOrderStatus =
   | 'shipped'
   | 'complete'
   | 'rejected';
-export type PrintServiceOrderType = 'noframe' | 'framed';
+export type PrintServiceOrderType = 'frame0' | 'frame1';
 export type PrintServiceCollectionType = 'LONDON GIFT' | 'HASH';
 export interface PrintServiceAirtableRecordType {
   'order id'?: string; // incremented number

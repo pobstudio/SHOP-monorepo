@@ -25,6 +25,7 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
     'buy(uint256,address,uint256,bytes)': FunctionFragment;
     'orderID()': FunctionFragment;
     'owner()': FunctionFragment;
+    'payableErc20()': FunctionFragment;
     'products(uint256)': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
     'setProduct(uint256,tuple)': FunctionFragment;
@@ -41,6 +42,10 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: 'orderID', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: 'payableErc20',
+    values?: undefined,
+  ): string;
   encodeFunctionData(
     functionFragment: 'products',
     values: [BigNumberish],
@@ -74,6 +79,10 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: 'buy', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'orderID', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'payableErc20',
+    data: BytesLike,
+  ): Result;
   decodeFunctionResult(functionFragment: 'products', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'renounceOwnership',
@@ -144,6 +153,10 @@ export class PosterCheckout extends Contract {
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     'owner()'(overrides?: CallOverrides): Promise<[string]>;
+
+    payableErc20(overrides?: CallOverrides): Promise<[string]>;
+
+    'payableErc20()'(overrides?: CallOverrides): Promise<[string]>;
 
     products(
       arg0: BigNumberish,
@@ -256,6 +269,10 @@ export class PosterCheckout extends Contract {
 
   'owner()'(overrides?: CallOverrides): Promise<string>;
 
+  'payableErc20'(overrides?: CallOverrides): Promise<string>;
+
+  'payableErc20()'(overrides?: CallOverrides): Promise<string>;
+
   'products'(
     arg0: BigNumberish,
     overrides?: CallOverrides,
@@ -366,6 +383,10 @@ export class PosterCheckout extends Contract {
     owner(overrides?: CallOverrides): Promise<string>;
 
     'owner()'(overrides?: CallOverrides): Promise<string>;
+
+    payableErc20(overrides?: CallOverrides): Promise<string>;
+
+    'payableErc20()'(overrides?: CallOverrides): Promise<string>;
 
     products(
       arg0: BigNumberish,
@@ -493,6 +514,10 @@ export class PosterCheckout extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<BigNumber>;
 
+    payableErc20(overrides?: CallOverrides): Promise<BigNumber>;
+
+    'payableErc20()'(overrides?: CallOverrides): Promise<BigNumber>;
+
     products(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     'products(uint256)'(
@@ -586,6 +611,10 @@ export class PosterCheckout extends Contract {
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     'owner()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    payableErc20(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    'payableErc20()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     products(
       arg0: BigNumberish,
