@@ -10,6 +10,8 @@ import {
   POSTER_CHECKOUT_PRODUCTS,
 } from '@pob/protocol/utils';
 import { BigNumber } from 'ethers';
+import { useTokensStore } from '../../../stores/token';
+import { useIsApproved } from '../../../hooks/useIsApproved';
 
 export type ProductsType = 'frame0' | 'frame1';
 
@@ -26,14 +28,27 @@ const usePaymentFlow = (
   collection: string,
   tokenID: BigNumber,
 ) => {
+  const [error, setError] = useState<any | undefined>(undefined);
   const [paying, setPaying] = useState(false);
   const price = PRICING[product];
 
-  const token = '$LONDON';
+  const amountDueCurrency = '$LONDON';
   const amountDue = price.div(ONE_TOKEN_IN_BASE_UNITS).toNumber();
 
-  const { approve, isApproving, isApproved } = useSetApprove();
+  const { approve, isApproving } = useSetApprove();
   const posterCheckout = usePosterCheckoutContract();
+
+  const tokenBalance = useTokensStore((s) => s.tokenBalance);
+  const isApproved = useIsApproved(price);
+  const isEnoughBalance = useMemo(() => tokenBalance.gte(price), [
+    tokenBalance,
+    price,
+  ]);
+  const isBuyable = useMemo(() => {
+    return POSTER_CHECKOUT_PRODUCTS[
+      getPosterCheckoutProductIndexFromType(product)
+    ].inStock;
+  }, [isApproved, isEnoughBalance, product]);
 
   const handlePay = useCallback(async () => {
     if (paying || !posterCheckout) {
@@ -43,13 +58,19 @@ const usePaymentFlow = (
     console.log('calculate payment stub');
     console.log('approve london tokens needed');
     console.log('start contract interaction to accept payment');
-    const res = await posterCheckout?.buy(
-      getPosterCheckoutProductIndexFromType(product),
-      collection,
-      tokenID,
-      '0x01',
-    );
-    console.log(res);
+    try {
+      const res = await posterCheckout?.buy(
+        getPosterCheckoutProductIndexFromType(product),
+        collection,
+        tokenID,
+        '0x01',
+      );
+      console.log(res);
+      setError(undefined);
+    } catch (e) {
+      console.error(e);
+      setError(e);
+    }
     setPaying(false);
   }, [paying, posterCheckout]);
 
@@ -73,12 +94,15 @@ const usePaymentFlow = (
   }, [paying, isApproving]);
 
   return {
-    amountDue,
     price,
-    token,
+    amountDue,
+    amountDueCurrency,
     handlePay,
     onButtonClick,
-    payingState: payingState,
+    payingState,
+    error,
+    isEnoughBalance,
+    isBuyable,
   };
 };
 
@@ -90,15 +114,20 @@ export const PaymentFlow: FC<{
   const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
   const artCollection = asset?.asset_contract?.address ?? NULL_ADDRESS;
   const artTokenID = asset?.token_id ?? 666666;
-  const { amountDue, onButtonClick, token, payingState } = usePaymentFlow(
-    product,
-    artCollection,
-    artTokenID,
-  );
+  const {
+    amountDue,
+    onButtonClick,
+    amountDueCurrency,
+    payingState,
+    isEnoughBalance,
+    isBuyable,
+  } = usePaymentFlow(product, artCollection, artTokenID);
+
+  const reduceDisabled = !isEnoughBalance || !isBuyable || disabled;
 
   const purchaseButton = useMemo(() => {
     if (hoverPurchaseButton) {
-      if (disabled) {
+      if (reduceDisabled) {
         return {
           color: RED,
           text: 'Not Ready',
@@ -111,21 +140,21 @@ export const PaymentFlow: FC<{
       color: GREEN,
       text: 'Purchase Now',
     };
-  }, [hoverPurchaseButton, disabled]);
+  }, [hoverPurchaseButton, reduceDisabled]);
 
   const { account } = useWeb3React();
 
   const purchaseButtonOnClick = useCallback(async () => {
-    if (disabled || !account || !asset) {
+    if (reduceDisabled || !account || !asset) {
       return;
     }
     await onButtonClick();
-  }, [disabled]);
+  }, [reduceDisabled]);
 
   return (
     <>
       <Price>
-        {amountDue} {token}
+        {amountDue} {amountDueCurrency}
       </Price>
       <PurchaseButton
         onClick={purchaseButtonOnClick}
