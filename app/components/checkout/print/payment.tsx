@@ -50,7 +50,7 @@ const usePaymentFlow = (
       '0x01',
     );
     console.log(res);
-    // setPaying(false);
+    setPaying(false);
   }, [paying, posterCheckout]);
 
   const onButtonClick = useCallback(async () => {

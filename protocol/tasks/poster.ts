@@ -63,3 +63,24 @@ task(
     );
   },
 );
+
+task(
+  'update-poster-products',
+  'Updates PosterCheckout Products',
+  async (args, hre) => {
+    // connect to PosterCheckout
+    const PosterCheckout = await hre.ethers.getContractFactory(
+      'PosterCheckout',
+    );
+    const posterCheckout = (await PosterCheckout.attach(
+      deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].poster,
+    )) as PosterCheckout;
+
+    console.log('Setting new Products metadata');
+    for (const [index, product] of POSTER_CHECKOUT_PRODUCTS.entries()) {
+      await posterCheckout.setProduct(index, product);
+    }
+
+    console.log('Successfully set new Products ✓');
+  },
+);
