@@ -11,21 +11,23 @@ contract PosterCheckout is Ownable {
     ERC20Mintable internal immutable payableErc20;
     address public treasury;
 
-    struct PosterProduct { 
-      string id; // PRINT_PAPER_HASH | PRINT_FRAME_HASH | PRINT_PAPER_LONDON | PRINT_FRAME_LONDON
+    struct Product { 
+      string id;
       uint256 price;
       bool inStock;
     }
 
     event PosterOrderReceived(
-      address indexed _customerWallet, 
+      address indexed _customerWallet,
       uint _orderID,
+      string _productID,
+      uint256 _amountPaid,
       address _collection, 
       uint256 _tokenid,
       bytes _orderDetails
     );
 
-    mapping (uint256 => PosterProduct) public products;
+    mapping (uint256 => Product) public products;
     uint256 public orderID = 0;
 
     constructor (
@@ -40,7 +42,7 @@ contract PosterCheckout is Ownable {
       treasury = _treasury;
     }
 
-    function setProduct(uint256 _index, PosterProduct memory _product) public onlyOwner {
+    function setProduct(uint256 _index, Product memory _product) public onlyOwner {
       products[_index] = _product;
     }
 
@@ -53,17 +55,17 @@ contract PosterCheckout is Ownable {
     }
 
     function buy(uint256 _index, address _collection, uint256 _tokenid, bytes calldata _orderDetails) public {
-      PosterProduct memory product = products[_index];
+      Product memory product = products[_index];
       uint256 price = product.price;
       // ensure approval and conditions are met
-      require(product.inStock, "Not purchasable");
-      // require(payableErc20.allowance(_msgSender(), address(this)) >= price, "Allowance not set to mint");
-      // require(payableErc20.balanceOf(_msgSender()) >= price, "Not enough token to mint");
+      require(product.inStock, "Product out of stock");
+      require(payableErc20.allowance(_msgSender(), address(this)) >= price, "Not enough allowance for payment");
+      require(payableErc20.balanceOf(_msgSender()) >= price, "Not enough token for payment");
       // transfer payableERC20
       payableErc20.transferFrom(_msgSender(), treasury, price);
       // increment order count
       orderID += 1;
       // emit order details
-      emit PosterOrderReceived(_msgSender(), orderID, _collection, _tokenid, _orderDetails);
+      emit PosterOrderReceived(_msgSender(), orderID, product.id, price, _collection, _tokenid, _orderDetails);
     }
 }

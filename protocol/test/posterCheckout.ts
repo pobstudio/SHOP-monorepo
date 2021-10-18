@@ -9,6 +9,9 @@ import { getAddress } from '@ethersproject/address';
 const TOKEN_SYMBOL = '$LONDON';
 const TOKEN_NAME = '$LONDON';
 
+const LONDON_GIFT_CONTRACT = '0x7645eec8bb51862a5aa855c40971b2877dae81af';
+const HASH_CONTRACT = '0xe18a32192ed95b0fe9d70d19e5025f103475d7ba';
+
 const ONE_TOKEN_IN_BASE_UNITS = ethers.utils.parseEther('1');
 const ONE_MWEI = ethers.utils.parseUnits('1', 'mwei');
 const ONE_GWEI = ethers.utils.parseUnits('1', 'gwei');
@@ -24,26 +27,17 @@ describe('PosterCheckout', function () {
 
   const printPrice = ONE_TOKEN_IN_BASE_UNITS.mul(10000);
   const framedPrice = ONE_TOKEN_IN_BASE_UNITS.mul(30000);
+
   const testPrice = ONE_TOKEN_IN_BASE_UNITS.mul(666666);
 
   const products = [
     {
-      id: 'PRINT_PAPER_HASH',
+      id: 'frame0',
       price: printPrice,
       inStock: true,
     },
     {
-      id: 'PRINT_FRAME_HASH',
-      price: framedPrice,
-      inStock: true,
-    },
-    {
-      id: 'PRINT_PAPER_LONDON',
-      price: printPrice,
-      inStock: true,
-    },
-    {
-      id: 'PRINT_FRAME_LONDON',
+      id: 'frame1',
       price: framedPrice,
       inStock: true,
     },
@@ -124,28 +118,83 @@ describe('PosterCheckout', function () {
     });
   });
 
-  // describe('buy', () => {
-  //   beforeEach(async () => {
-  //     await erc20Mintable
-  //       .connect(minter)
-  //       .mint(await rando.getAddress(), mintPrice.mul(maxMintPerAddress + 1));
-  //     await erc20Mintable
-  //       .connect(rando)
-  //       .approve(londonGift.address, mintPrice.mul(maxMintPerAddress + 1));
-  //     await londonGift.connect(owner).setTreasury(await treasury.getAddress());
-  //     await londonGift
-  //       .connect(owner)
-  //       .setMintStartAtBlockNum(mintStartAtBlockNum);
-  //     await londonGift
-  //       .connect(owner)
-  //       .setUnlockStartAtBlockNum(unlockStartAtBlockNum);
-  //     await erc20Mintable
-  //       .connect(minter)
-  //       .mint(await owner.getAddress(), mintPrice.mul(100));
-  //     await erc20Mintable
-  //       .connect(owner)
-  //       .approve(londonGift.address, mintPrice.mul(100));
-  //   });
+  describe('buy', () => {
+    beforeEach(async () => {
+      // mint $london token => rando wallet
+      await erc20Mintable
+        .connect(minter)
+        .mint(await rando.getAddress(), framedPrice.mul(1));
 
-  // });
+      // approve $london token transfer from rando wallet => to posterCheckout contract
+      await erc20Mintable
+        .connect(rando)
+        .approve(posterCheckout.address, framedPrice.mul(1));
+
+      // set payout / treasury address for incoming payments
+      await posterCheckout
+        .connect(owner)
+        .setTreasury(await treasury.getAddress());
+
+      // mint $london token => to posterCheckout contract owner
+      await erc20Mintable
+        .connect(minter)
+        .mint(await owner.getAddress(), framedPrice.mul(100));
+
+      await erc20Mintable
+        .connect(owner)
+        .approve(posterCheckout.address, framedPrice.mul(100));
+    });
+
+    it('Product 0: Complete $LONDON Payment', async function () {
+      const productIndex = 0;
+      const productPrice = products[productIndex].price;
+      const beforeLondonBalance = await erc20Mintable.balanceOf(
+        await rando.getAddress(),
+      );
+      await posterCheckout
+        .connect(rando)
+        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details');
+      const afterLondonBalance = await erc20Mintable.balanceOf(
+        await rando.getAddress(),
+      );
+      expect(beforeLondonBalance.sub(afterLondonBalance)).to.eq(productPrice);
+    });
+
+    it('Product 1: Complete $LONDON Payment', async function () {
+      const productIndex = 1;
+      const productPrice = products[productIndex].price;
+      const beforeLondonBalance = await erc20Mintable.balanceOf(
+        await rando.getAddress(),
+      );
+      await posterCheckout
+        .connect(rando)
+        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details');
+      const afterLondonBalance = await erc20Mintable.balanceOf(
+        await rando.getAddress(),
+      );
+      expect(beforeLondonBalance.sub(afterLondonBalance)).to.eq(productPrice);
+    });
+
+    it('Reject $LONDON token transfer if not approved', async function () {
+      await erc20Mintable
+        .connect(rando)
+        .approve(posterCheckout.address, printPrice.mul(2).sub(1));
+      await expect(
+        posterCheckout
+          .connect(rando)
+          .buy(1, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details'),
+      ).to.revertedWith('Not enough allowance for payment');
+    });
+
+    it('Reject $LONDON token transfer if not enough balance', async function () {
+      await erc20Mintable
+        .connect(rando)
+        .transfer(await owner.getAddress(), framedPrice.mul(1));
+      await expect(
+        posterCheckout
+          .connect(rando)
+          .buy(1, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details'),
+      ).to.revertedWith('Not enough token to mint');
+    });
+  });
 });
