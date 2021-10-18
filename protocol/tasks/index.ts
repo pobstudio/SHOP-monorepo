@@ -1,3 +1,2 @@
-export * from './createWithMinter';
-export * from './deploy';
+export * from './deploy-poster';
 export * from './verify';

@@ -4,6 +4,7 @@ import { Signer } from 'ethers';
 import { ERC20Mintable } from '../typechain/ERC20Mintable';
 import { PosterCheckout } from '../typechain/PosterCheckout';
 import { expect } from 'chai';
+import { POSTER_CHECKOUT_PRODUCTS } from '../tasks/deploy-poster';
 
 const TOKEN_SYMBOL = '$LONDON';
 const TOKEN_NAME = '$LONDON';
@@ -25,19 +26,6 @@ describe('PosterCheckout', function () {
   const framedPrice = ONE_TOKEN_IN_BASE_UNITS.mul(30000);
 
   const testPrice = ONE_TOKEN_IN_BASE_UNITS.mul(666666);
-
-  const products = [
-    {
-      id: 'frame0',
-      price: printPrice,
-      inStock: true,
-    },
-    {
-      id: 'frame1',
-      price: framedPrice,
-      inStock: true,
-    },
-  ];
 
   before(async function () {
     const accounts = await ethers.getSigners();
@@ -87,7 +75,7 @@ describe('PosterCheckout', function () {
 
   describe('setProduct', () => {
     it('should set product mapping for all items in array', async function () {
-      for (const [index, product] of products.entries()) {
+      for (const [index, product] of POSTER_CHECKOUT_PRODUCTS.entries()) {
         await posterCheckout.connect(owner).setProduct(index, product);
         expect((await posterCheckout.products(index)).id).to.eq(product.id);
       }
@@ -96,7 +84,7 @@ describe('PosterCheckout', function () {
 
   describe('setProductInStock', () => {
     it('should set inStock flag for Product at Index', async function () {
-      for (const [index, _product] of products.entries()) {
+      for (const [index, _product] of POSTER_CHECKOUT_PRODUCTS.entries()) {
         await posterCheckout.connect(owner).setProductInStock(index, false);
         expect((await posterCheckout.products(index)).inStock).to.eq(false);
       }
@@ -105,7 +93,7 @@ describe('PosterCheckout', function () {
 
   describe('setProductPrice', () => {
     it('should set price flag for Product at Index', async function () {
-      for (const [index, _product] of products.entries()) {
+      for (const [index, _product] of POSTER_CHECKOUT_PRODUCTS.entries()) {
         await posterCheckout.connect(owner).setProductPrice(index, testPrice);
         expect((await posterCheckout.products(index)).price).to.eq(testPrice);
       }
@@ -130,7 +118,7 @@ describe('PosterCheckout', function () {
         .setTreasury(await treasury.getAddress());
 
       // set products
-      for (const [index, product] of products.entries()) {
+      for (const [index, product] of POSTER_CHECKOUT_PRODUCTS.entries()) {
         await posterCheckout.connect(owner).setProduct(index, product);
       }
 
@@ -146,7 +134,7 @@ describe('PosterCheckout', function () {
 
     it('Product 0: Complete $LONDON Payment', async function () {
       const productIndex = 0;
-      const productPrice = products[productIndex].price;
+      const productPrice = POSTER_CHECKOUT_PRODUCTS[productIndex].price;
       const beforeLondonBalance = await erc20Mintable.balanceOf(
         await rando.getAddress(),
       );
@@ -161,7 +149,7 @@ describe('PosterCheckout', function () {
 
     it('Product 1: Complete $LONDON Payment', async function () {
       const productIndex = 1;
-      const productPrice = products[productIndex].price;
+      const productPrice = POSTER_CHECKOUT_PRODUCTS[productIndex].price;
       const beforeLondonBalance = await erc20Mintable.balanceOf(
         await rando.getAddress(),
       );
