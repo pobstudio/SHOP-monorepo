@@ -4,7 +4,7 @@ import { Signer } from 'ethers';
 import { ERC20Mintable } from '../typechain/ERC20Mintable';
 import { PosterCheckout } from '../typechain/PosterCheckout';
 import { expect } from 'chai';
-import { POSTER_CHECKOUT_PRODUCTS } from '../tasks/deploy-poster';
+import { POSTER_CHECKOUT_PRODUCTS } from '../tasks/poster';
 
 const TOKEN_SYMBOL = '$LONDON';
 const TOKEN_NAME = '$LONDON';

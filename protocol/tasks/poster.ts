@@ -19,7 +19,7 @@ export const POSTER_CHECKOUT_PRODUCTS = [
   },
 ];
 
-task('deploy-poster', 'Deploys PosterCheckout ', async (args, hre) => {
+task('deploy-poster', 'Deploys PosterCheckout', async (args, hre) => {
   const owner = (await hre.ethers.getSigners())[0];
 
   await hre.run('compile');
@@ -52,8 +52,30 @@ task('deploy-poster', 'Deploys PosterCheckout ', async (args, hre) => {
     await posterCheckout.setProduct(index, product);
   }
 
+  // MAINNET ONLY
   console.log('wiring metadata: transferOwnership to POB Multisig');
   await posterCheckout.transferOwnership(
     deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].multisig,
   );
 });
+
+task(
+  'verify-poster',
+  'Verifies PosterCheckout Deployment',
+  async (args, hre) => {
+    // connect to PosterCheckout
+    const PosterCheckout = await hre.ethers.getContractFactory(
+      'PosterCheckout',
+    );
+    const posterCheckout = (await PosterCheckout.attach(
+      deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].poster,
+    )) as PosterCheckout;
+
+    const contractOwner = await posterCheckout.owner();
+    console.log(
+      `Contract: ${
+        deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].poster
+      } is owned by ${contractOwner}`,
+    );
+  },
+);

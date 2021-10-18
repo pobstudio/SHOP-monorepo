@@ -1,2 +1,1 @@
-export * from './deploy-poster';
-export * from './verify';
+export * from './poster';
