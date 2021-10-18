@@ -127,10 +127,26 @@ export const PaymentFlow: FC<{
 
   const purchaseButton = useMemo(() => {
     if (hoverPurchaseButton) {
-      if (reduceDisabled) {
+      if (!isBuyable) {
         return {
           color: RED,
-          text: 'Not Ready',
+          text: `Out Of Stock`,
+          underline: false,
+          disabled: true,
+        };
+      }
+      if (!isEnoughBalance) {
+        return {
+          color: RED,
+          text: `Not Enough Balance`,
+          underline: false,
+          disabled: true,
+        };
+      }
+      if (disabled) {
+        return {
+          color: RED,
+          text: `Not Ready`,
           underline: false,
           disabled: true,
         };
@@ -140,7 +156,13 @@ export const PaymentFlow: FC<{
       color: GREEN,
       text: 'Purchase Now',
     };
-  }, [hoverPurchaseButton, reduceDisabled]);
+  }, [
+    hoverPurchaseButton,
+    reduceDisabled,
+    isEnoughBalance,
+    isBuyable,
+    disabled,
+  ]);
 
   const { account } = useWeb3React();
 
