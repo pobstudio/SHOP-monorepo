@@ -48,6 +48,10 @@ contract PosterCheckout is Ownable {
       products[_index].inStock = _inStock;
     }
 
+    function setProductPrice(uint256 _index, uint256 _price) public onlyOwner {
+      products[_index].price = _price;
+    }
+
     function buy(uint256 _index, address _collection, uint256 _tokenid, bytes calldata _orderDetails) public {
       PosterProduct memory product = products[_index];
       uint256 price = product.price;

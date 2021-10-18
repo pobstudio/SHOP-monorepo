@@ -22,13 +22,14 @@ import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
 
 interface PosterCheckoutInterface extends ethers.utils.Interface {
   functions: {
-    'buy(uint256,address,uint256,string)': FunctionFragment;
-    'orderNum()': FunctionFragment;
+    'buy(uint256,address,uint256,bytes)': FunctionFragment;
+    'orderID()': FunctionFragment;
     'owner()': FunctionFragment;
     'products(uint256)': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
     'setProduct(uint256,tuple)': FunctionFragment;
     'setProductInStock(uint256,bool)': FunctionFragment;
+    'setProductPrice(uint256,uint256)': FunctionFragment;
     'setTreasury(address)': FunctionFragment;
     'transferOwnership(address)': FunctionFragment;
     'treasury()': FunctionFragment;
@@ -36,9 +37,9 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: 'buy',
-    values: [BigNumberish, string, BigNumberish, string],
+    values: [BigNumberish, string, BigNumberish, BytesLike],
   ): string;
-  encodeFunctionData(functionFragment: 'orderNum', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'orderID', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'products',
@@ -59,6 +60,10 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
     functionFragment: 'setProductInStock',
     values: [BigNumberish, boolean],
   ): string;
+  encodeFunctionData(
+    functionFragment: 'setProductPrice',
+    values: [BigNumberish, BigNumberish],
+  ): string;
   encodeFunctionData(functionFragment: 'setTreasury', values: [string]): string;
   encodeFunctionData(
     functionFragment: 'transferOwnership',
@@ -67,7 +72,7 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: 'treasury', values?: undefined): string;
 
   decodeFunctionResult(functionFragment: 'buy', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'orderNum', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'orderID', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'products', data: BytesLike): Result;
   decodeFunctionResult(
@@ -77,6 +82,10 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: 'setProduct', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'setProductInStock',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'setProductPrice',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -91,7 +100,7 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
 
   events: {
     'OwnershipTransferred(address,address)': EventFragment;
-    'PosterOrderReceived(address,uint256,address,uint256,string)': EventFragment;
+    'PosterOrderReceived(address,uint256,address,uint256,bytes)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
@@ -116,21 +125,21 @@ export class PosterCheckout extends Contract {
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    'buy(uint256,address,uint256,string)'(
+    'buy(uint256,address,uint256,bytes)'(
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    orderNum(overrides?: CallOverrides): Promise<[BigNumber]>;
+    orderID(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    'orderNum()'(overrides?: CallOverrides): Promise<[BigNumber]>;
+    'orderID()'(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -186,6 +195,18 @@ export class PosterCheckout extends Contract {
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
+    setProductPrice(
+      _index: BigNumberish,
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<ContractTransaction>;
+
+    'setProductPrice(uint256,uint256)'(
+      _index: BigNumberish,
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<ContractTransaction>;
+
     setTreasury(
       _treasury: string,
       overrides?: Overrides,
@@ -215,21 +236,21 @@ export class PosterCheckout extends Contract {
     _index: BigNumberish,
     _collection: string,
     _tokenid: BigNumberish,
-    _orderDetails: string,
+    _orderDetails: BytesLike,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'buy(uint256,address,uint256,string)'(
+  'buy(uint256,address,uint256,bytes)'(
     _index: BigNumberish,
     _collection: string,
     _tokenid: BigNumberish,
-    _orderDetails: string,
+    _orderDetails: BytesLike,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'orderNum'(overrides?: CallOverrides): Promise<BigNumber>;
+  'orderID'(overrides?: CallOverrides): Promise<BigNumber>;
 
-  'orderNum()'(overrides?: CallOverrides): Promise<BigNumber>;
+  'orderID()'(overrides?: CallOverrides): Promise<BigNumber>;
 
   'owner'(overrides?: CallOverrides): Promise<string>;
 
@@ -285,6 +306,18 @@ export class PosterCheckout extends Contract {
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
+  'setProductPrice'(
+    _index: BigNumberish,
+    _price: BigNumberish,
+    overrides?: Overrides,
+  ): Promise<ContractTransaction>;
+
+  'setProductPrice(uint256,uint256)'(
+    _index: BigNumberish,
+    _price: BigNumberish,
+    overrides?: Overrides,
+  ): Promise<ContractTransaction>;
+
   'setTreasury'(
     _treasury: string,
     overrides?: Overrides,
@@ -314,21 +347,21 @@ export class PosterCheckout extends Contract {
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    'buy(uint256,address,uint256,string)'(
+    'buy(uint256,address,uint256,bytes)'(
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    orderNum(overrides?: CallOverrides): Promise<BigNumber>;
+    orderID(overrides?: CallOverrides): Promise<BigNumber>;
 
-    'orderNum()'(overrides?: CallOverrides): Promise<BigNumber>;
+    'orderID()'(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -384,6 +417,18 @@ export class PosterCheckout extends Contract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
+    setProductPrice(
+      _index: BigNumberish,
+      _price: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    'setProductPrice(uint256,uint256)'(
+      _index: BigNumberish,
+      _price: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
     setTreasury(_treasury: string, overrides?: CallOverrides): Promise<void>;
 
     'setTreasury(address)'(
@@ -414,10 +459,10 @@ export class PosterCheckout extends Contract {
 
     PosterOrderReceived(
       _customerWallet: string | null,
-      _orderNum: null,
+      _orderID: null,
       _collection: null,
       _tokenid: null,
-      orderDetails: null,
+      _orderDetails: null,
     ): EventFilter;
   };
 
@@ -426,21 +471,21 @@ export class PosterCheckout extends Contract {
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    'buy(uint256,address,uint256,string)'(
+    'buy(uint256,address,uint256,bytes)'(
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    orderNum(overrides?: CallOverrides): Promise<BigNumber>;
+    orderID(overrides?: CallOverrides): Promise<BigNumber>;
 
-    'orderNum()'(overrides?: CallOverrides): Promise<BigNumber>;
+    'orderID()'(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -481,6 +526,18 @@ export class PosterCheckout extends Contract {
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
+    setProductPrice(
+      _index: BigNumberish,
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<BigNumber>;
+
+    'setProductPrice(uint256,uint256)'(
+      _index: BigNumberish,
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<BigNumber>;
+
     setTreasury(_treasury: string, overrides?: Overrides): Promise<BigNumber>;
 
     'setTreasury(address)'(
@@ -508,21 +565,21 @@ export class PosterCheckout extends Contract {
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    'buy(uint256,address,uint256,string)'(
+    'buy(uint256,address,uint256,bytes)'(
       _index: BigNumberish,
       _collection: string,
       _tokenid: BigNumberish,
-      _orderDetails: string,
+      _orderDetails: BytesLike,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    orderNum(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    orderID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    'orderNum()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    'orderID()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -563,6 +620,18 @@ export class PosterCheckout extends Contract {
     'setProductInStock(uint256,bool)'(
       _index: BigNumberish,
       _inStock: boolean,
+      overrides?: Overrides,
+    ): Promise<PopulatedTransaction>;
+
+    setProductPrice(
+      _index: BigNumberish,
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<PopulatedTransaction>;
+
+    'setProductPrice(uint256,uint256)'(
+      _index: BigNumberish,
+      _price: BigNumberish,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 

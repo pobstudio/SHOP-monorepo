@@ -24,6 +24,7 @@ describe('PosterCheckout', function () {
 
   const printPrice = ONE_TOKEN_IN_BASE_UNITS.mul(10000);
   const framedPrice = ONE_TOKEN_IN_BASE_UNITS.mul(30000);
+  const testPrice = ONE_TOKEN_IN_BASE_UNITS.mul(666666);
 
   const products = [
     {
@@ -97,25 +98,29 @@ describe('PosterCheckout', function () {
   });
 
   describe('setProduct', () => {
-    it('should set product mapping: 0', async function () {
-      const index = 0;
-      await posterCheckout.connect(owner).setProduct(index, products[index]);
-      expect(await posterCheckout.products(index)).to.eq(products[index]);
+    it('should set product mapping for all items in array', async function () {
+      for (const [index, product] of products.entries()) {
+        await posterCheckout.connect(owner).setProduct(index, product);
+        expect(await posterCheckout.products(index)).to.eq(product);
+      }
     });
-    it('should set product mapping: 1', async function () {
-      const index = 1;
-      await posterCheckout.connect(owner).setProduct(index, products[index]);
-      expect(await posterCheckout.products(index)).to.eq(products[index]);
+  });
+
+  describe('setProductInStock', () => {
+    it('should set product mapping for all items in array', async function () {
+      for (const [index, _product] of products.entries()) {
+        await posterCheckout.connect(owner).setProductInStock(index, false);
+        expect((await posterCheckout.products(index)).inStock).to.eq(false);
+      }
     });
-    it('should set product mapping: 2', async function () {
-      const index = 2;
-      await posterCheckout.connect(owner).setProduct(index, products[index]);
-      expect(await posterCheckout.products(index)).to.eq(products[index]);
-    });
-    it('should set product mapping: 3', async function () {
-      const index = 3;
-      await posterCheckout.connect(owner).setProduct(index, products[index]);
-      expect(await posterCheckout.products(index)).to.eq(products[index]);
+  });
+
+  describe('setProductPrice', () => {
+    it('should set product mapping for all items in array', async function () {
+      for (const [index, _product] of products.entries()) {
+        await posterCheckout.connect(owner).setProductPrice(index, testPrice);
+        expect((await posterCheckout.products(index)).price).to.eq(testPrice);
+      }
     });
   });
 
