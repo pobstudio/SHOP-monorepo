@@ -95,7 +95,7 @@ describe('PosterCheckout', function () {
   });
 
   describe('setProductInStock', () => {
-    it('should set product mapping for all items in array', async function () {
+    it('should set inStock flag for Product at Index', async function () {
       for (const [index, _product] of products.entries()) {
         await posterCheckout.connect(owner).setProductInStock(index, false);
         expect((await posterCheckout.products(index)).inStock).to.eq(false);
@@ -104,7 +104,7 @@ describe('PosterCheckout', function () {
   });
 
   describe('setProductPrice', () => {
-    it('should set product mapping for all items in array', async function () {
+    it('should set price flag for Product at Index', async function () {
       for (const [index, _product] of products.entries()) {
         await posterCheckout.connect(owner).setProductPrice(index, testPrice);
         expect((await posterCheckout.products(index)).price).to.eq(testPrice);
@@ -129,6 +129,11 @@ describe('PosterCheckout', function () {
         .connect(owner)
         .setTreasury(await treasury.getAddress());
 
+      // set products
+      for (const [index, product] of products.entries()) {
+        await posterCheckout.connect(owner).setProduct(index, product);
+      }
+
       // mint $london token => to posterCheckout contract owner
       await erc20Mintable
         .connect(minter)
@@ -147,7 +152,7 @@ describe('PosterCheckout', function () {
       );
       await posterCheckout
         .connect(rando)
-        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details');
+        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, '0x01');
       const afterLondonBalance = await erc20Mintable.balanceOf(
         await rando.getAddress(),
       );
@@ -162,7 +167,7 @@ describe('PosterCheckout', function () {
       );
       await posterCheckout
         .connect(rando)
-        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details');
+        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, '0x01');
       const afterLondonBalance = await erc20Mintable.balanceOf(
         await rando.getAddress(),
       );
@@ -176,7 +181,7 @@ describe('PosterCheckout', function () {
       await expect(
         posterCheckout
           .connect(rando)
-          .buy(1, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details'),
+          .buy(1, LONDON_GIFT_CONTRACT, 8776, '0x01'),
       ).to.revertedWith('Not enough allowance for payment');
     });
 
@@ -187,8 +192,8 @@ describe('PosterCheckout', function () {
       await expect(
         posterCheckout
           .connect(rando)
-          .buy(1, LONDON_GIFT_CONTRACT, 8776, 'testing_order_details'),
-      ).to.revertedWith('Not enough token to mint');
+          .buy(1, LONDON_GIFT_CONTRACT, 8776, '0x01'),
+      ).to.revertedWith('Not enough token for payment');
     });
   });
 });
