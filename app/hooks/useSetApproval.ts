@@ -6,8 +6,6 @@ import { useLondonContract } from './useContracts';
 import { deployments } from '@pob/protocol';
 import { CHAIN_ID, MAX_APPROVAL } from '../constants';
 
-const APPROVE_TIMEOUT = 1000 * 30; //30 seconds;
-
 export const useSetApprove = () => {
   const { account } = useWeb3React();
   const london = useLondonContract();
@@ -16,7 +14,6 @@ export const useSetApprove = () => {
   const transactionMap = useTransactionsStore((s) => s.transactionMap);
 
   const [isApproving, setIsApproving] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
   const [error, setError] = useState<any | undefined>(undefined);
 
   const approve = useCallback(
@@ -34,17 +31,12 @@ export const useSetApprove = () => {
         addTransaction(res.hash, {
           type: 'approval',
         });
-        setTimeout(() => {
-          setIsApproving(false);
-          setIsApproved(true);
-          setError(undefined);
-        }, APPROVE_TIMEOUT);
+        setError(undefined);
       } catch (e) {
         console.error(e);
-        setIsApproving(false);
-        setIsApproved(false);
         setError(e);
       }
+      setIsApproving(false);
     },
     [london, account],
   );
@@ -73,11 +65,10 @@ export const useSetApprove = () => {
     () => ({
       txStatus,
       approve,
-      isApproved,
       isApproving,
       tx,
       error,
     }),
-    [approve, txStatus, isApproved, isApproving, tx, error],
+    [approve, txStatus, isApproving, tx, error],
   );
 };

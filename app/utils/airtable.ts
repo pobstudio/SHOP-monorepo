@@ -37,7 +37,7 @@ export interface PrintServiceAirtableRecordType {
   'created at'?: string;
   'wallet': string; // customer wallet address
   'tokenid'?: string; // artwork token id
-  'name': string; //
+  'name'?: string; // artwork name
   'collection': PrintServiceCollectionType; // artwork collection
   'opensea': string; // opensea asset url
   'contact': string; // customer contact

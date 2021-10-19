@@ -54,11 +54,8 @@ const usePaymentFlow = (
     if (paying || !posterCheckout) {
       return;
     }
-    setPaying(true);
-    console.log('calculate payment stub');
-    console.log('approve london tokens needed');
-    console.log('start contract interaction to accept payment');
     try {
+      setPaying(true);
       const res = await posterCheckout?.buy(
         getPosterCheckoutProductIndexFromType(product),
         collection,

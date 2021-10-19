@@ -20,10 +20,7 @@ contract PosterCheckout is Ownable {
     mapping (uint256 => Product) public products;
 
     event PosterOrderReceived(
-      address indexed _customerWallet,
-      uint _orderID,
-      string _productID,
-      uint256 _amountPaid,
+      uint indexed _orderID,
       address _collection, 
       uint256 _tokenid,
       bytes _orderDetails
@@ -63,6 +60,6 @@ contract PosterCheckout is Ownable {
       // increment order count
       orderID += 1;
       // emit order details
-      emit PosterOrderReceived(_msgSender(), orderID, product.id, price, _collection, _tokenid, _orderDetails);
+      emit PosterOrderReceived(orderID, _collection, _tokenid, _orderDetails);
     }
 }

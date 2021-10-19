@@ -109,7 +109,7 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
 
   events: {
     'OwnershipTransferred(address,address)': EventFragment;
-    'PosterOrderReceived(address,uint256,string,uint256,address,uint256,bytes)': EventFragment;
+    'PosterOrderReceived(uint256,address,uint256,bytes)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
@@ -479,10 +479,7 @@ export class PosterCheckout extends Contract {
     ): EventFilter;
 
     PosterOrderReceived(
-      _customerWallet: string | null,
-      _orderID: null,
-      _productID: null,
-      _amountPaid: null,
+      _orderID: BigNumberish | null,
       _collection: null,
       _tokenid: null,
       _orderDetails: null,
