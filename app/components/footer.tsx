@@ -11,11 +11,11 @@ import {
   PUBLICO_LINK,
   LONDON_LINK,
   HASH_LINK,
+  OPENSEA_LINK,
 } from '../constants';
 import { BaseAnchor } from './anchor';
 import { Stamp } from './icons/stamp';
 import { Flex } from './flex';
-import { BetweenContentAndFooterSpacer } from './content';
 
 export const Footer: React.FC = () => {
   return (
@@ -34,43 +34,117 @@ export const Footer: React.FC = () => {
           <FooterLinksContainer>
             <FooterLinksColumn>
               <FooterColumnLabel>Proof of Beauty</FooterColumnLabel>
-              <FooterLink href={STUDIO_PROD_LINK} target={'_blank'}>
+              <FooterLink
+                href={STUDIO_PROD_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Studio
               </FooterLink>
-              <FooterLink href={PUBLICO_LINK} target={'_blank'}>
+              <FooterLink
+                href={PUBLICO_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Publico
               </FooterLink>
-              <FooterLink href={LONDON_LINK} target={'_blank'}>
+              <FooterLink
+                href={LONDON_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 London
               </FooterLink>
-              <FooterLink href={HASH_LINK} target={'_blank'}>
+              <FooterLink
+                href={HASH_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Hash
               </FooterLink>
+              {/* <FooterLink
+                href={PROD_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Shop
+              </FooterLink> */}
             </FooterLinksColumn>
             <FooterLinksColumn>
-              <FooterColumnLabel>Contact Us</FooterColumnLabel>
-              <FooterLink href={TWITTER_LINK} target={'_blank'}>
+              <FooterColumnLabel>Social</FooterColumnLabel>
+              <FooterLink
+                href={TWITTER_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Twitter
               </FooterLink>
-              <FooterLink href={DISCORD_LINK} target={'_blank'}>
+              <FooterLink
+                href={DISCORD_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Discord
               </FooterLink>
-              <FooterLink href={BLOG_LINK} target={'_blank'}>
+              <FooterLink
+                href={OPENSEA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                OpenSea
+              </FooterLink>
+              {/* <FooterLink
+                href={GITHUB_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                YouTube
+              </FooterLink> */}
+              {/* <FooterLink
+                href={GITHUB_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </FooterLink> */}
+              <FooterLink
+                href={BLOG_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Blog
               </FooterLink>
-              <FooterLink href={`mailto:team@pob.studio`}>Email</FooterLink>
+              {/* <FooterLink href={`mailto:team@pob.studio`}>Email</FooterLink> */}
+            </FooterLinksColumn>
+            <FooterLinksColumn>
+              <FooterColumnLabel>Customer</FooterColumnLabel>
+              <Link href="/account" passHref>
+                <FooterLink>My Orders</FooterLink>
+              </Link>
+              <FooterLink
+                href="/support"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Support
+              </FooterLink>
+              <FooterLink href="/faq" target="_blank" rel="noopener noreferrer">
+                FAQ
+              </FooterLink>
             </FooterLinksColumn>
             <FooterLinksColumn>
               <FooterColumnLabel>Legal</FooterColumnLabel>
               <FooterLink
                 href="https://hash.pob.studio/terms-of-use"
-                target={'_blank'}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Terms of Use
               </FooterLink>
               <FooterLink
                 href="https://hash.pob.studio/privacy-policy"
-                target={'_blank'}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Privacy Policy
               </FooterLink>
@@ -142,7 +216,7 @@ const FooterLinksContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  grid-gap: 24px;
+  grid-gap: 24px 48px;
   padding-right: 24px;
   @media (max-width: ${BREAKPTS.SM}px) {
     padding-right: 0px;
@@ -154,12 +228,6 @@ const FooterLinksContainer = styled.div`
 
 const FooterLinksColumn = styled.div`
   grid-template-columns: 1fr;
-  @media (max-width: ${BREAKPTS.SM}px) {
-    /* padding-right: 0px;
-    flex-wrap: wrap;
-    justify-content: center;
-    line-height: 150%; */
-  }
 `;
 
 const FooterLink = styled(BaseAnchor)`
@@ -170,7 +238,8 @@ const FooterLink = styled(BaseAnchor)`
   display: block;
   padding: 3px 0;
   text-transform: uppercase;
-  &:focus {
+  &:focus,
+  :hover {
     color: rgba(0, 0, 0, 1);
   }
 `;

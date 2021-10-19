@@ -37,6 +37,12 @@ export const TWITTER_LINK = `https://twitter.com/prrfbeauty`;
 
 export const DISCORD_LINK = `https://discord.gg/x4SH5pGgvj`;
 
+export const OPENSEA_LINK = `https://app.singlelink.co/u/pob`;
+
+export const GITHUB_LINK = `https://github.com/proofofbeauty/`;
+
+export const YOUTUBE_LINK = `https://www.youtube.com/channel/UClOpMmnnEMXibEOLSj2fB2w`;
+
 export const NFT_LICENSE_LINK = `https://www.nftlicense.org`;
 
 export const HASH_LINK = 'https://hash.pob.studio';
