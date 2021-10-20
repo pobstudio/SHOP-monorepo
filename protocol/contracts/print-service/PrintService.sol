@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-import "./ERC20Mintable.sol";
-import "./Ownable.sol";
-import "./utils/Strings.sol";
+import "../ERC20Mintable.sol";
+import "../Ownable.sol";
+import "../utils/Strings.sol";
 
-contract PosterCheckout is Ownable {
+contract PrintService is Ownable {
 
     ERC20Mintable public immutable payableErc20;
     address public treasury;
@@ -19,7 +19,7 @@ contract PosterCheckout is Ownable {
     }
     mapping (uint256 => Product) public products;
 
-    event PosterOrderReceived(
+    event PrintOrderReceived(
       uint indexed _orderID,
       address _collection, 
       uint256 _tokenid,
@@ -60,6 +60,6 @@ contract PosterCheckout is Ownable {
       // increment order count
       orderID += 1;
       // emit order details
-      emit PosterOrderReceived(orderID, _collection, _tokenid, _orderDetails);
+      emit PrintOrderReceived(orderID, _collection, _tokenid, _orderDetails);
     }
 }

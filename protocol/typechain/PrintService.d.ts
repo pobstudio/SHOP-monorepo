@@ -20,7 +20,7 @@ import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
 
-interface PosterCheckoutInterface extends ethers.utils.Interface {
+interface PrintServiceInterface extends ethers.utils.Interface {
   functions: {
     'buy(uint256,address,uint256,bytes)': FunctionFragment;
     'orderID()': FunctionFragment;
@@ -109,14 +109,14 @@ interface PosterCheckoutInterface extends ethers.utils.Interface {
 
   events: {
     'OwnershipTransferred(address,address)': EventFragment;
-    'PosterOrderReceived(uint256,address,uint256,bytes)': EventFragment;
+    'PrintOrderReceived(uint256,address,uint256,bytes)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'PosterOrderReceived'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PrintOrderReceived'): EventFragment;
 }
 
-export class PosterCheckout extends Contract {
+export class PrintService extends Contract {
   'connect'(signerOrProvider: Signer | Provider | string): this;
   'attach'(addressOrName: string): this;
   'deployed'(): Promise<this>;
@@ -127,7 +127,7 @@ export class PosterCheckout extends Contract {
   'removeAllListeners'(eventName: EventFilter | string): this;
   'removeListener'(eventName: any, listener: Listener): this;
 
-  'interface': PosterCheckoutInterface;
+  'interface': PrintServiceInterface;
 
   'functions': {
     buy(
@@ -478,7 +478,7 @@ export class PosterCheckout extends Contract {
       newOwner: string | null,
     ): EventFilter;
 
-    PosterOrderReceived(
+    PrintOrderReceived(
       _orderID: BigNumberish | null,
       _collection: null,
       _tokenid: null,

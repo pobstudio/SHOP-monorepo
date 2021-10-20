@@ -5,7 +5,7 @@ import { fetcher } from '../utils/fetcher';
 import {
   PrintServiceAirtableRecordType,
   PrintServiceCollectionType,
-  PrintServiceOrderType,
+  PrintServiceProductType,
 } from '../utils/airtable';
 
 export const usePrintQueueRecords = () => {
@@ -122,7 +122,7 @@ export const getCollectionName = (raw: string): PrintServiceCollectionType => {
 
 export const getAirtableRecordFromOpenSeaAsset = (
   asset: any, // OpenSea Object
-  type: PrintServiceOrderType,
+  type: PrintServiceProductType,
   contact: string,
   shipping: string,
   txid: string,

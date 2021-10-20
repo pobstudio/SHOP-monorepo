@@ -24,7 +24,7 @@ export const useSetApprove = () => {
       try {
         setIsApproving(true);
         const res = await london.approve(
-          deployments[CHAIN_ID].poster,
+          deployments[CHAIN_ID].printService,
           MAX_APPROVAL,
         );
 

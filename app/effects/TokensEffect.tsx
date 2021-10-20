@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import { deployments } from '@pob/protocol';
 import {
   useLondonContract,
-  usePosterCheckoutContract,
+  usePrintServiceContract,
 } from '../hooks/useContracts';
 import { useTokensStore } from '../stores/token';
 import { useBlockchainStore } from '../stores/blockchain';
@@ -13,14 +13,16 @@ import { CHAIN_ID } from '../constants';
 export const TokensEffect: FC = () => {
   const transactionMap = useTransactionsStore((s) => s.transactionMap);
   const blockNumber = useBlockchainStore((s) => s.blockNumber);
-  const setApprovalBalance = useTokensStore((s) => s.setApprovalBalance);
+  const setPrintServiceApprovalBalance = useTokensStore(
+    (s) => s.setPrintServiceApprovalBalance,
+  );
   const setTokenBalance = useTokensStore((s) => s.setTokenBalance);
   const { account } = useWeb3React();
   const london = useLondonContract();
-  const posterCheckout = usePosterCheckoutContract();
+  const printServiceContract = usePrintServiceContract();
 
   useEffect(() => {
-    if (!posterCheckout) {
+    if (!printServiceContract) {
       return;
     }
     if (!london) {
@@ -30,16 +32,13 @@ export const TokensEffect: FC = () => {
       return;
     }
     london
-      .allowance(account, deployments[CHAIN_ID].poster)
+      .allowance(account, deployments[CHAIN_ID].printService)
       .then((allowance: any) => {
-        console.log(
-          '$LONDON Allowance for PosterCheckout',
-          allowance.toString(),
-        );
-        setApprovalBalance(allowance);
+        console.log('$LONDON Allowance for PrintService', allowance.toString());
+        setPrintServiceApprovalBalance(allowance);
       });
     london.balanceOf(account).then(setTokenBalance);
-  }, [posterCheckout, account, london, blockNumber]);
+  }, [printServiceContract, account, london, blockNumber]);
 
   return <></>;
 };

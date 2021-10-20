@@ -3,61 +3,57 @@ import React, { useState, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
 import { SlimSectionBody } from '..';
 import { NULL_ADDRESS } from '../../../constants';
-import { usePosterCheckoutContract } from '../../../hooks/useContracts';
+import { usePrintServiceContract } from '../../../hooks/useContracts';
 import { useSetApprove } from '../../../hooks/useSetApproval';
-import {
-  ONE_TOKEN_IN_BASE_UNITS,
-  POSTER_CHECKOUT_PRODUCTS,
-} from '@pob/protocol/utils';
+import { ONE_TOKEN_IN_BASE_UNITS } from '@pob/protocol/utils';
+import { PRINT_SERVICE_PRODUCTS } from '@pob/protocol/contracts/print-service/constants';
 import { BigNumber } from 'ethers';
 import { useTokensStore } from '../../../stores/token';
-import { useIsApproved } from '../../../hooks/useIsApproved';
+import { useIsPrintServiceApproved } from '../../../hooks/useIsApproved';
+import { PrintServiceProductType } from '../../../utils/airtable';
 
-export type ProductsType = 'frame0' | 'frame1';
+export const getPrintServiceProductIndexFromType = (
+  id: PrintServiceProductType,
+) => PRINT_SERVICE_PRODUCTS.findIndex((product) => product.id === id);
 
-export const getPosterCheckoutProductIndexFromType = (id: ProductsType) =>
-  POSTER_CHECKOUT_PRODUCTS.findIndex((product) => product.id === id);
-
-export const PRICING = {
-  frame0: POSTER_CHECKOUT_PRODUCTS[0].price,
-  frame1: POSTER_CHECKOUT_PRODUCTS[1].price,
-};
+export const getPricingFromProductType = (id: PrintServiceProductType) =>
+  PRINT_SERVICE_PRODUCTS.find((product) => product.id === id)?.price ??
+  PRINT_SERVICE_PRODUCTS[0].price;
 
 const usePaymentFlow = (
-  product: ProductsType,
+  product: PrintServiceProductType,
   collection: string,
   tokenID: BigNumber,
 ) => {
   const [error, setError] = useState<any | undefined>(undefined);
   const [paying, setPaying] = useState(false);
-  const price = PRICING[product];
+  const price = getPricingFromProductType(product);
 
   const amountDueCurrency = '$LONDON';
   const amountDue = price.div(ONE_TOKEN_IN_BASE_UNITS).toNumber();
 
   const { approve, isApproving } = useSetApprove();
-  const posterCheckout = usePosterCheckoutContract();
+  const printServiceContract = usePrintServiceContract();
 
   const tokenBalance = useTokensStore((s) => s.tokenBalance);
-  const isApproved = useIsApproved(price);
+  const isApproved = useIsPrintServiceApproved(price);
   const isEnoughBalance = useMemo(() => tokenBalance.gte(price), [
     tokenBalance,
     price,
   ]);
   const isBuyable = useMemo(() => {
-    return POSTER_CHECKOUT_PRODUCTS[
-      getPosterCheckoutProductIndexFromType(product)
-    ].inStock;
+    return PRINT_SERVICE_PRODUCTS[getPrintServiceProductIndexFromType(product)]
+      .inStock;
   }, [isApproved, isEnoughBalance, product]);
 
   const handlePay = useCallback(async () => {
-    if (paying || !posterCheckout) {
+    if (paying || !printServiceContract) {
       return;
     }
     try {
       setPaying(true);
-      const res = await posterCheckout?.buy(
-        getPosterCheckoutProductIndexFromType(product),
+      const res = await printServiceContract?.buy(
+        getPrintServiceProductIndexFromType(product),
         collection,
         tokenID,
         '0x01',
@@ -69,7 +65,7 @@ const usePaymentFlow = (
       setError(e);
     }
     setPaying(false);
-  }, [paying, posterCheckout]);
+  }, [paying, printServiceContract]);
 
   const onButtonClick = useCallback(async () => {
     if (isApproved) {
@@ -105,7 +101,7 @@ const usePaymentFlow = (
 
 export const PaymentFlow: FC<{
   asset: any; // OpenSea Object
-  product: ProductsType;
+  product: PrintServiceProductType;
   disabled: boolean;
 }> = ({ asset, product, disabled }) => {
   const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);

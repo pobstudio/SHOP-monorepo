@@ -1,1 +1,1 @@
-export * from './poster';
+export * from './printService';

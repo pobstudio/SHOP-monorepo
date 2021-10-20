@@ -4,14 +4,16 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { ZERO } from '../constants';
 
 type State = {
-  approvalBalance: BigNumber;
+  printServiceApprovalBalance: BigNumber;
   tokenBalance: BigNumber;
-  setApprovalBalance: (approvalBalance: BigNumber) => void;
+  setPrintServiceApprovalBalance: (
+    printServiceApprovalBalance: BigNumber,
+  ) => void;
   setTokenBalance: (tokenBalance: BigNumber) => void;
 };
 
 export const useTokensStore = create<State>((set, get) => ({
-  approvalBalance: ZERO,
+  printServiceApprovalBalance: ZERO,
   tokenBalance: ZERO,
   setTokenBalance: (tokenBalance: BigNumber) => {
     set(
@@ -20,10 +22,10 @@ export const useTokensStore = create<State>((set, get) => ({
       }),
     );
   },
-  setApprovalBalance: (approvalBalance: BigNumber) => {
+  setPrintServiceApprovalBalance: (printServiceApprovalBalance: BigNumber) => {
     set(
       produce((s) => {
-        s.approvalBalance = approvalBalance;
+        s.printServiceApprovalBalance = printServiceApprovalBalance;
       }),
     );
   },

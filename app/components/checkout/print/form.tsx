@@ -2,7 +2,8 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, FC } from 'react';
 import { RightSection, SectionBody, SlapImage } from '..';
 import { useAccountCollections } from '../../../hooks/useCollection';
-import { PaymentFlow, ProductsType } from './payment';
+import { PrintServiceProductType } from '../../../utils/airtable';
+import { PaymentFlow } from './payment';
 
 export const PrintCheckout: FC = () => {
   const { account } = useWeb3React();
@@ -38,8 +39,10 @@ export const PrintCheckout: FC = () => {
     );
   }, [artwork, collections]);
 
-  const [frameOption, setFrameOption] = useState<'frame0' | 'frame1'>('frame0');
-  const handleFrameChange = (e: any) => setFrameOption(e.target.value);
+  const [printOption, setPrintOption] = useState<PrintServiceProductType>(
+    'print0',
+  );
+  const handlePrintOptionChange = (e: any) => setPrintOption(e.target.value);
 
   const [email, setEmail] = useState<string>('');
   const handleEmailChange = (e: any) => setEmail(e.target.value);
@@ -49,7 +52,7 @@ export const PrintCheckout: FC = () => {
 
   const reducer = useMemo(() => {
     let asset = {} as any;
-    let product: ProductsType = frameOption;
+    let product: PrintServiceProductType = printOption;
 
     if (artwork === 'london') {
       asset = collections['london-gifts'!]?.find(
@@ -65,10 +68,10 @@ export const PrintCheckout: FC = () => {
       asset,
       product,
     };
-  }, [artwork, frameOption, artworkID, collections]);
+  }, [artwork, printOption, artworkID, collections]);
 
   const paymentDisabled =
-    !artwork || !artworkID || !frameOption || !email || !shipping;
+    !artwork || !artworkID || !printOption || !email || !shipping;
 
   return (
     <>
@@ -105,11 +108,11 @@ export const PrintCheckout: FC = () => {
         <SectionBody>
           <h4>Choose Package</h4>
           <br />
-          <select onChange={(e) => handleFrameChange(e)}>
-            <option value="frame0">
+          <select onChange={(e) => handlePrintOptionChange(e)}>
+            <option value="print0">
               No Frame / Print Only - Ships in 2 Weeks
             </option>
-            <option value="frame1">
+            <option value="print1">
               Premium Black Metal Framing - Ships in 4 Weeks
             </option>
           </select>

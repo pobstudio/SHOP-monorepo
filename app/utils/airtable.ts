@@ -30,7 +30,7 @@ export type PrintServiceOrderStatus =
   | 'shipped'
   | 'complete'
   | 'rejected';
-export type PrintServiceOrderType = 'frame0' | 'frame1';
+export type PrintServiceProductType = 'print0' | 'print1';
 export type PrintServiceCollectionType = 'LONDON GIFT' | 'HASH';
 export interface PrintServiceAirtableRecordType {
   'order id'?: string; // incremented number
@@ -42,7 +42,7 @@ export interface PrintServiceAirtableRecordType {
   'opensea': string; // opensea asset url
   'contact': string; // customer contact
   'shipping': string; // customer shipping details
-  'type': PrintServiceOrderType;
+  'type': PrintServiceProductType;
   'status'?: PrintServiceOrderStatus;
   'etherscan'?: string; // customer payment etherscan receipt
   'amount paid'?: number; // customer payment amount

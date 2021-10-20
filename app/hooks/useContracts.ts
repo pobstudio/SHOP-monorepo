@@ -1,7 +1,7 @@
 import {
   deployments,
   ERC20Mintable__factory,
-  PosterCheckout__factory,
+  PrintService__factory,
 } from '@pob/protocol';
 import { useMemo } from 'react';
 import { CHAIN_ID } from '../constants';
@@ -26,9 +26,7 @@ export const useLondonContract = (shouldUseFallback: boolean = false) => {
   }, [account, provider]);
 };
 
-export const usePosterCheckoutContract = (
-  shouldUseFallback: boolean = false,
-) => {
+export const usePrintServiceContract = (shouldUseFallback: boolean = false) => {
   const { account } = useWeb3React();
   const provider = useProvider(shouldUseFallback);
 
@@ -37,8 +35,8 @@ export const usePosterCheckoutContract = (
       return;
     }
 
-    return PosterCheckout__factory.connect(
-      deployments[CHAIN_ID].poster,
+    return PrintService__factory.connect(
+      deployments[CHAIN_ID].printService,
       getProviderOrSigner(provider as JsonRpcProvider, account as string),
     );
   }, [account, provider]);
