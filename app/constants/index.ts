@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 
 // env
-export const CHAIN_ID = 4 ?? parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1');
+export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1');
 
 // keys
 export const OPENSEA_API_KEY = 'fc09ae6245fb40ab8afbcff451553345';

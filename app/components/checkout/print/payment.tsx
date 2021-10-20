@@ -2,15 +2,21 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
 import { SlimSectionBody } from '..';
-import { NULL_ADDRESS } from '../../../constants';
+import { CHAIN_ID, NULL_ADDRESS } from '../../../constants';
 import { usePrintServiceContract } from '../../../hooks/useContracts';
 import { useSetApprove } from '../../../hooks/useSetApproval';
 import { ONE_TOKEN_IN_BASE_UNITS } from '@pob/protocol/utils';
-import { PRINT_SERVICE_PRODUCTS } from '@pob/protocol/contracts/print-service/constants';
+import {
+  PRINT_SERVICE_PRODUCTS as PRINT_SERVICE_PRODUCTS_PROD,
+  PRINT_SERVICE_PRODUCTS_TEST,
+} from '@pob/protocol/contracts/print-service/constants';
 import { BigNumber } from 'ethers';
 import { useTokensStore } from '../../../stores/token';
 import { useIsPrintServiceApproved } from '../../../hooks/useIsApproved';
 import { PrintServiceProductType } from '../../../utils/airtable';
+
+const PRINT_SERVICE_PRODUCTS =
+  CHAIN_ID == 1 ? PRINT_SERVICE_PRODUCTS_PROD : PRINT_SERVICE_PRODUCTS_TEST;
 
 export const getPrintServiceProductIndexFromType = (
   id: PrintServiceProductType,

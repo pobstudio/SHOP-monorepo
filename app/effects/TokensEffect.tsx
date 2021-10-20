@@ -34,7 +34,6 @@ export const TokensEffect: FC = () => {
     london
       .allowance(account, deployments[CHAIN_ID].printService)
       .then((allowance: any) => {
-        console.log('$LONDON Allowance for PrintService', allowance.toString());
         setPrintServiceApprovalBalance(allowance);
       });
     london.balanceOf(account).then(setTokenBalance);
