@@ -20,9 +20,10 @@ export const useOpenSeaOrder = (
   tokenId: string | undefined,
 ): PrettyOrder | undefined => {
   const { data } = useSWR(
-    useMemo(() => (!!tokenId ? `/api/os-metadata?&id=${tokenId}` : null), [
-      tokenId,
-    ]),
+    useMemo(
+      () => (!!tokenId ? `/api/os-metadata?&id=${tokenId}` : null),
+      [tokenId],
+    ),
     fetcher,
     {},
   );

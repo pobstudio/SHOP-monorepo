@@ -6,9 +6,10 @@ import { lowerCaseCheck } from '../utils/format';
 
 export const usePobCollection = (account: string | undefined | null) => {
   const { data } = useSWR(
-    useMemo(() => (!!account ? `/api/collections?owner=${account}` : null), [
-      account,
-    ]),
+    useMemo(
+      () => (!!account ? `/api/collections?owner=${account}` : null),
+      [account],
+    ),
     fetcher,
     {},
   );

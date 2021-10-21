@@ -39,9 +39,8 @@ export const PrintCheckout: FC = () => {
     );
   }, [artwork, collections]);
 
-  const [printOption, setPrintOption] = useState<PrintServiceProductType>(
-    'print0',
-  );
+  const [printOption, setPrintOption] =
+    useState<PrintServiceProductType>('print0');
   const handlePrintOptionChange = (e: any) => setPrintOption(e.target.value);
 
   const [email, setEmail] = useState<string>('');

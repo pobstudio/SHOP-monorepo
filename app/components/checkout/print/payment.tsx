@@ -43,10 +43,10 @@ const usePaymentFlow = (
 
   const tokenBalance = useTokensStore((s) => s.tokenBalance);
   const isApproved = useIsPrintServiceApproved(price);
-  const isEnoughBalance = useMemo(() => tokenBalance.gte(price), [
-    tokenBalance,
-    price,
-  ]);
+  const isEnoughBalance = useMemo(
+    () => tokenBalance.gte(price),
+    [tokenBalance, price],
+  );
   const isBuyable = useMemo(() => {
     return PRINT_SERVICE_PRODUCTS[getPrintServiceProductIndexFromType(product)]
       .inStock;
