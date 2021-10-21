@@ -12,10 +12,10 @@
     "@ethersproject/providers": "^5.1.0",
     "@pob/common": "1.0.0",
     "@pob/protocol": "1.0.0",
-    "chrome-aws-lambda": "^8.0.1",
+    "chrome-aws-lambda": "^10.1.0",
     "ethers": "^5.1.0",
     "isomorphic-fetch": "^3.0.0",
-    "puppeteer-core": "^8.0.0"
+    "puppeteer-core": "^10.4.0"
   },
   "devDependencies": {
     "@types/puppeteer": "^5.4.3",
