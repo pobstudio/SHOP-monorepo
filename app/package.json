@@ -38,7 +38,7 @@
     "graphql": "^15.5.0",
     "immer": "^9.0.6",
     "jimp": "^0.16.1",
-    "moralis": "^0.0.98",
+    "moralis": "0.0.104",
     "next": "^11.1.2",
     "next-seo": "^4.17.0",
     "next-transpile-modules": "^8.0.0",
@@ -50,7 +50,7 @@
     "react-fast-marquee": "^1.1.2",
     "react-hooks-visible": "^1.1.1",
     "react-mixpanel-browser": "3.2.1",
-    "react-moralis": "^0.2.6",
+    "react-moralis": "0.2.6",
     "react-spring": "^9.3.0",
     "react-use": "^17.3.1",
     "react-use-measure": "^2.0.3",
@@ -61,7 +61,7 @@
     "three": "^0.133.1",
     "use-analytics": "^0.0.5",
     "use-wallet": "^0.12.1",
-    "zustand": "^3.5.14"
+    "zustand": "^3.6.0"
   },
   "devDependencies": {
     "@types/downloadjs": "^1.4.2",

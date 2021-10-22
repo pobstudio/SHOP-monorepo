@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
 import { Signer } from 'ethers';
 
-import { ERC20Mintable } from '../typechain/ERC20Mintable';
+import { Erc20Mintable } from '../typechain/ERC20Mintable';
 import { PrintService } from '../typechain/PrintService';
 import { expect } from 'chai';
 import { ONE_TOKEN_IN_BASE_UNITS } from '../utils';
@@ -13,7 +13,7 @@ const TOKEN_NAME = '$LONDON';
 const LONDON_GIFT_CONTRACT = '0x7645eec8bb51862a5aa855c40971b2877dae81af';
 
 describe('PrintService', function () {
-  let erc20Mintable: ERC20Mintable;
+  let erc20Mintable: Erc20Mintable;
   let printService: PrintService;
 
   let owner: Signer;
@@ -40,7 +40,7 @@ describe('PrintService', function () {
       await minter.getAddress(),
       TOKEN_NAME,
       TOKEN_SYMBOL,
-    )) as ERC20Mintable;
+    )) as Erc20Mintable;
     await erc20Mintable.deployed();
 
     const PrintService = await ethers.getContractFactory('PrintService');

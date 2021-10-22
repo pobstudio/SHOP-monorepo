@@ -19,8 +19,9 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
-interface IERC20Interface extends ethers.utils.Interface {
+interface Ierc20Interface extends ethers.utils.Interface {
   functions: {
     'allowance(address,address)': FunctionFragment;
     'approve(address,uint256)': FunctionFragment;
@@ -74,18 +75,46 @@ interface IERC20Interface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
 }
 
-export class IERC20 extends Contract {
+export class Ierc20 extends Contract {
   'connect'(signerOrProvider: Signer | Provider | string): this;
   'attach'(addressOrName: string): this;
   'deployed'(): Promise<this>;
 
-  'on'(event: EventFilter | string, listener: Listener): this;
-  'once'(event: EventFilter | string, listener: Listener): this;
-  'addListener'(eventName: EventFilter | string, listener: Listener): this;
-  'removeAllListeners'(eventName: EventFilter | string): this;
-  'removeListener'(eventName: any, listener: Listener): this;
+  'listeners'(eventName?: string): Array<Listener>;
+  'off'(eventName: string, listener: Listener): this;
+  'on'(eventName: string, listener: Listener): this;
+  'once'(eventName: string, listener: Listener): this;
+  'removeListener'(eventName: string, listener: Listener): this;
+  'removeAllListeners'(eventName?: string): this;
 
-  'interface': IERC20Interface;
+  'listeners'<T, G>(
+    eventFilter?: TypedEventFilter<T, G>,
+  ): Array<TypedListener<T, G>>;
+  'off'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'on'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'once'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'removeListener'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'removeAllListeners'<T, G>(eventFilter: TypedEventFilter<T, G>): this;
+
+  'queryFilter'<T, G>(
+    event: TypedEventFilter<T, G>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined,
+  ): Promise<Array<TypedEvent<T & G>>>;
+
+  'interface': Ierc20Interface;
 
   'functions': {
     allowance(
@@ -279,9 +308,19 @@ export class IERC20 extends Contract {
       owner: string | null,
       spender: string | null,
       value: null,
-    ): EventFilter;
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
 
-    Transfer(from: string | null, to: string | null, value: null): EventFilter;
+    Transfer(
+      from: string | null,
+      to: string | null,
+      value: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
+    >;
   };
 
   'estimateGas': {

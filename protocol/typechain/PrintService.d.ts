@@ -19,6 +19,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface PrintServiceInterface extends ethers.utils.Interface {
   functions: {
@@ -121,11 +122,39 @@ export class PrintService extends Contract {
   'attach'(addressOrName: string): this;
   'deployed'(): Promise<this>;
 
-  'on'(event: EventFilter | string, listener: Listener): this;
-  'once'(event: EventFilter | string, listener: Listener): this;
-  'addListener'(eventName: EventFilter | string, listener: Listener): this;
-  'removeAllListeners'(eventName: EventFilter | string): this;
-  'removeListener'(eventName: any, listener: Listener): this;
+  'listeners'(eventName?: string): Array<Listener>;
+  'off'(eventName: string, listener: Listener): this;
+  'on'(eventName: string, listener: Listener): this;
+  'once'(eventName: string, listener: Listener): this;
+  'removeListener'(eventName: string, listener: Listener): this;
+  'removeAllListeners'(eventName?: string): this;
+
+  'listeners'<T, G>(
+    eventFilter?: TypedEventFilter<T, G>,
+  ): Array<TypedListener<T, G>>;
+  'off'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'on'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'once'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'removeListener'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'removeAllListeners'<T, G>(eventFilter: TypedEventFilter<T, G>): this;
+
+  'queryFilter'<T, G>(
+    event: TypedEventFilter<T, G>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined,
+  ): Promise<Array<TypedEvent<T & G>>>;
 
   'interface': PrintServiceInterface;
 
@@ -190,7 +219,7 @@ export class PrintService extends Contract {
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    'setProduct(uint256,(string,uint256,bool))'(
+    'setProduct(uint256,tuple)'(
       _index: BigNumberish,
       _product: { id: string; price: BigNumberish; inStock: boolean },
       overrides?: Overrides,
@@ -305,7 +334,7 @@ export class PrintService extends Contract {
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'setProduct(uint256,(string,uint256,bool))'(
+  'setProduct(uint256,tuple)'(
     _index: BigNumberish,
     _product: { id: string; price: BigNumberish; inStock: boolean },
     overrides?: Overrides,
@@ -420,7 +449,7 @@ export class PrintService extends Contract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    'setProduct(uint256,(string,uint256,bool))'(
+    'setProduct(uint256,tuple)'(
       _index: BigNumberish,
       _product: { id: string; price: BigNumberish; inStock: boolean },
       overrides?: CallOverrides,
@@ -476,14 +505,25 @@ export class PrintService extends Contract {
     OwnershipTransferred(
       previousOwner: string | null,
       newOwner: string | null,
-    ): EventFilter;
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
 
     PrintOrderReceived(
       _orderID: BigNumberish | null,
       _collection: null,
       _tokenid: null,
       _orderDetails: null,
-    ): EventFilter;
+    ): TypedEventFilter<
+      [BigNumber, string, BigNumber, string],
+      {
+        _orderID: BigNumber;
+        _collection: string;
+        _tokenid: BigNumber;
+        _orderDetails: string;
+      }
+    >;
   };
 
   'estimateGas': {
@@ -532,7 +572,7 @@ export class PrintService extends Contract {
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    'setProduct(uint256,(string,uint256,bool))'(
+    'setProduct(uint256,tuple)'(
       _index: BigNumberish,
       _product: { id: string; price: BigNumberish; inStock: boolean },
       overrides?: Overrides,
@@ -633,7 +673,7 @@ export class PrintService extends Contract {
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    'setProduct(uint256,(string,uint256,bool))'(
+    'setProduct(uint256,tuple)'(
       _index: BigNumberish,
       _product: { id: string; price: BigNumberish; inStock: boolean },
       overrides?: Overrides,

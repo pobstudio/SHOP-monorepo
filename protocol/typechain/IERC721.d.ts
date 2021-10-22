@@ -19,8 +19,9 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
-interface IERC721Interface extends ethers.utils.Interface {
+interface Ierc721Interface extends ethers.utils.Interface {
   functions: {
     'approve(address,uint256)': FunctionFragment;
     'balanceOf(address)': FunctionFragment;
@@ -106,18 +107,46 @@ interface IERC721Interface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
 }
 
-export class IERC721 extends Contract {
+export class Ierc721 extends Contract {
   'connect'(signerOrProvider: Signer | Provider | string): this;
   'attach'(addressOrName: string): this;
   'deployed'(): Promise<this>;
 
-  'on'(event: EventFilter | string, listener: Listener): this;
-  'once'(event: EventFilter | string, listener: Listener): this;
-  'addListener'(eventName: EventFilter | string, listener: Listener): this;
-  'removeAllListeners'(eventName: EventFilter | string): this;
-  'removeListener'(eventName: any, listener: Listener): this;
+  'listeners'(eventName?: string): Array<Listener>;
+  'off'(eventName: string, listener: Listener): this;
+  'on'(eventName: string, listener: Listener): this;
+  'once'(eventName: string, listener: Listener): this;
+  'removeListener'(eventName: string, listener: Listener): this;
+  'removeAllListeners'(eventName?: string): this;
 
-  'interface': IERC721Interface;
+  'listeners'<T, G>(
+    eventFilter?: TypedEventFilter<T, G>,
+  ): Array<TypedListener<T, G>>;
+  'off'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'on'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'once'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'removeListener'<T, G>(
+    eventFilter: TypedEventFilter<T, G>,
+    listener: TypedListener<T, G>,
+  ): this;
+  'removeAllListeners'<T, G>(eventFilter: TypedEventFilter<T, G>): this;
+
+  'queryFilter'<T, G>(
+    event: TypedEventFilter<T, G>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined,
+  ): Promise<Array<TypedEvent<T & G>>>;
+
+  'interface': Ierc721Interface;
 
   'functions': {
     approve(
@@ -431,19 +460,28 @@ export class IERC721 extends Contract {
       owner: string | null,
       approved: string | null,
       tokenId: BigNumberish | null,
-    ): EventFilter;
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; approved: string; tokenId: BigNumber }
+    >;
 
     ApprovalForAll(
       owner: string | null,
       operator: string | null,
       approved: null,
-    ): EventFilter;
+    ): TypedEventFilter<
+      [string, string, boolean],
+      { owner: string; operator: string; approved: boolean }
+    >;
 
     Transfer(
       from: string | null,
       to: string | null,
       tokenId: BigNumberish | null,
-    ): EventFilter;
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; tokenId: BigNumber }
+    >;
   };
 
   'estimateGas': {
