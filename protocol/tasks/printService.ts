@@ -55,7 +55,9 @@ task(
       );
     }
 
-    console.log(`Successfully deployed PrintService ✓: ${hre.network.name}`);
+    console.log(
+      `Successfully deployed PrintService ✓: ${hre.network.name} @ ${printService.address}`,
+    );
   },
 );
 

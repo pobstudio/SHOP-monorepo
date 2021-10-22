@@ -45,7 +45,7 @@
     "polished": "^4.1.1",
     "query-string": "^7.0.1",
     "react": "^17.0.1",
-    "react-device-detect": "^2.0.1",
+    "react-device-detect": "^2.1.1",
     "react-dom": "^17.0.1",
     "react-fast-marquee": "^1.1.2",
     "react-hooks-visible": "^1.1.1",
@@ -60,7 +60,7 @@
     "swr": "^1.0.1",
     "three": "^0.133.1",
     "use-analytics": "^0.0.5",
-    "use-wallet": "^0.12.1",
+    "use-wallet": "^0.12.2",
     "zustand": "^3.6.0"
   },
   "devDependencies": {

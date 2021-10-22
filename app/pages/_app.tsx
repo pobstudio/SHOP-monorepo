@@ -75,22 +75,22 @@ export default class PobApp extends App {
         <ThemedGlobalStyle />
         <AppProvider>
           {/* <ApolloProvider client={subgraphClient}> */}
-          <MoralisProvider
+          {/* <MoralisProvider
             appId={MORALIS_CONFIG.SHOP[CHAIN_ID].appId}
             serverUrl={MORALIS_CONFIG.SHOP[CHAIN_ID].serverUrl}
-          >
-            <Web3ReactProvider getLibrary={getLibrary}>
-              {/** Effects are any tasks that strictly only makes state changes to stores */}
-              <LocalStorageEffect />
-              <BlockchainEffect />
-              <EagerConnectEffect />
-              <TokensEffect />
-              <TransactionsEffect />
-              <WalletEffect />
-              <ToastsEffect />
-              <Component {...modifiedPageProps} />
-            </Web3ReactProvider>
-          </MoralisProvider>
+          > */}
+          <Web3ReactProvider getLibrary={getLibrary}>
+            {/** Effects are any tasks that strictly only makes state changes to stores */}
+            <LocalStorageEffect />
+            <BlockchainEffect />
+            <EagerConnectEffect />
+            <TokensEffect />
+            <TransactionsEffect />
+            <WalletEffect />
+            <ToastsEffect />
+            <Component {...modifiedPageProps} />
+          </Web3ReactProvider>
+          {/* </MoralisProvider> */}
           {/* </ApolloProvider> */}
         </AppProvider>
       </>
