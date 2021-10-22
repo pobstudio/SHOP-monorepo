@@ -13,7 +13,7 @@ export interface AirtableData {
   view: string;
 }
 
-const SHOP_BASE_ID = 'appE14hHaCodzTThF';
+const SHOP_BASE_ID = 'appt7VsIrP00ndon6';
 const ShopBase = Airtable.base(SHOP_BASE_ID);
 
 export const PrintServiceAirtable: AirtableData = {

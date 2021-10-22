@@ -75,7 +75,7 @@ const PrintDetails: FC = () => (
         <br />
         <br />
         Framing Option: All framing is custom, handcrafted black metal with
-        museum glass covering the paper. 1 inch wide x 1 inch deep.
+        plexiglass covering the print. 1 inch wide x 1 inch deep.
         <br />
         <br />
       </p>
