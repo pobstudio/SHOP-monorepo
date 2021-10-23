@@ -10,7 +10,7 @@ import {
   PRINT_SERVICE_PRODUCTS as PRINT_SERVICE_PRODUCTS_PROD,
   PRINT_SERVICE_PRODUCTS_TEST,
 } from '@pob/protocol/contracts/print-service/constants';
-import { BigNumber } from 'ethers';
+import { BigNumberish } from 'ethers';
 import { useTokensStore } from '../../../stores/token';
 import { useIsPrintServiceApproved } from '../../../hooks/useIsApproved';
 import { PrintServiceProductType } from '../../../utils/airtable';
@@ -29,7 +29,7 @@ export const getPricingFromProductType = (id: PrintServiceProductType) =>
 const usePaymentFlow = (
   product: PrintServiceProductType,
   collection: string,
-  tokenID: BigNumber,
+  tokenID: BigNumberish,
 ) => {
   const [error, setError] = useState<any | undefined>(undefined);
   const [paying, setPaying] = useState(false);
@@ -76,10 +76,10 @@ const usePaymentFlow = (
   const onButtonClick = useCallback(async () => {
     if (isApproved) {
       handlePay();
-    } else {
+    } else if (!isApproving) {
       approve();
     }
-  }, [handlePay, approve, isApproved]);
+  }, [handlePay, approve, isApproved, isApproving]);
 
   const payingState = useMemo(() => {
     switch (true) {
@@ -106,13 +106,12 @@ const usePaymentFlow = (
 };
 
 export const PaymentFlow: FC<{
-  asset: any; // OpenSea Object
+  artCollection: string;
+  artTokenID: string;
   product: PrintServiceProductType;
   disabled: boolean;
-}> = ({ asset, product, disabled }) => {
+}> = ({ artCollection, artTokenID, product, disabled }) => {
   const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
-  const artCollection = asset?.asset_contract?.address ?? NULL_ADDRESS;
-  const artTokenID = asset?.token_id ?? 666666;
   const {
     amountDue,
     onButtonClick,
@@ -120,7 +119,7 @@ export const PaymentFlow: FC<{
     payingState,
     isEnoughBalance,
     isBuyable,
-  } = usePaymentFlow(product, artCollection, artTokenID);
+  } = usePaymentFlow(product, artCollection, BigInt(artTokenID));
 
   const reduceDisabled = !isEnoughBalance || !isBuyable || disabled;
 
@@ -166,7 +165,7 @@ export const PaymentFlow: FC<{
   const { account } = useWeb3React();
 
   const purchaseButtonOnClick = useCallback(async () => {
-    if (reduceDisabled || !account || !asset) {
+    if (reduceDisabled || !account || !artCollection || !artTokenID) {
       return;
     }
     await onButtonClick();

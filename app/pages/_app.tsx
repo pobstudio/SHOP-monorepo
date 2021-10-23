@@ -10,18 +10,10 @@ import { ToastsEffect } from '../effects/ToastEffect';
 import { WalletEffect } from '../effects/WalletEffect';
 import { DefaultSeo } from 'next-seo';
 import { Web3ReactProvider } from '@web3-react/core';
-import { MoralisProvider } from 'react-moralis';
 import { ethers } from 'ethers';
 import { AppProvider } from '../contexts/app';
-// import { subgraphClient } from '../clients/graph';
-import {
-  PROD_LINK,
-  SEO_TITLE,
-  SEO_DESCRIPTION,
-  OG_BANNER,
-  CHAIN_ID,
-} from '../constants';
-import { MORALIS_CONFIG } from '../utils/moralis';
+
+import { PROD_LINK, SEO_TITLE, SEO_DESCRIPTION, OG_BANNER } from '../constants';
 
 const getLibrary = (provider: any) => {
   const library = new ethers.providers.Web3Provider(provider);

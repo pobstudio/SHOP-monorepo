@@ -1,7 +1,11 @@
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, FC } from 'react';
 import { RightSection, SectionBody, SlapImage } from '..';
-import { useAccountCollections } from '../../../hooks/useCollection';
+import { HASH_CONTRACT, LONDON_GIFT_CONTRACT } from '../../../constants';
+import {
+  COLLECTION_MAP,
+  useAccountCollections,
+} from '../../../hooks/useCollection';
 import { PrintServiceProductType } from '../../../utils/airtable';
 import { PaymentFlow } from './payment';
 
@@ -9,7 +13,9 @@ export const PrintCheckout: FC = () => {
   const { account } = useWeb3React();
   const collections = useAccountCollections(account);
 
-  const [artwork, setArtworkOption] = useState<'london' | 'hash'>('london');
+  const [artwork, setArtworkOption] = useState<'london-gifts' | 'hash'>(
+    'london-gifts',
+  );
   const handleArtChange = (e: any) => setArtworkOption(e.target.value);
 
   const [artworkID, setArtworkID] = useState<string>('');
@@ -49,24 +55,8 @@ export const PrintCheckout: FC = () => {
   const [shipping, setShipping] = useState<string>('');
   const handleShippingChange = (e: any) => setShipping(e.target.value);
 
-  const reducer = useMemo(() => {
-    let asset = {} as any;
-    let product: PrintServiceProductType = printOption;
-
-    if (artwork === 'london') {
-      asset = collections['london-gifts'!]?.find(
-        (a: any) => a.token_id === artworkID,
-      );
-    }
-
-    if (artwork === 'hash') {
-      asset = collections?.hash?.find((a: any) => a.token_id === artworkID);
-    }
-
-    return {
-      asset,
-      product,
-    };
+  const artworkAsset = useMemo(() => {
+    return collections[artwork]?.find((a: any) => a.token_id === artworkID);
   }, [artwork, printOption, artworkID, collections]);
 
   const paymentDisabled =
@@ -76,8 +66,9 @@ export const PrintCheckout: FC = () => {
     <>
       <RightSection>
         <PaymentFlow
-          asset={reducer.asset}
-          product={reducer.product}
+          artCollection={COLLECTION_MAP[artwork]}
+          artTokenID={artworkID}
+          product={printOption}
           disabled={paymentDisabled}
         />
       </RightSection>
@@ -87,7 +78,7 @@ export const PrintCheckout: FC = () => {
           <h4>Collection</h4>
           <br />
           <select onChange={(e) => handleArtChange(e)}>
-            <option value="london">LONDON GIFT</option>
+            <option value="london-gifts">LONDON GIFT</option>
             <option value="hash">HASH</option>
           </select>
         </SectionBody>
@@ -97,8 +88,8 @@ export const PrintCheckout: FC = () => {
           <select onChange={(e) => handleArtIDChange(e)}>
             {ArtworkIDSelectValues}
           </select>
-          {reducer?.asset && (
-            <SlapImage src={reducer?.asset?.image_url as string} />
+          {artworkAsset?.asset && (
+            <SlapImage src={artworkAsset?.asset?.image_url as string} />
           )}
         </SectionBody>
       </RightSection>

@@ -4,6 +4,11 @@ import { HASH_CONTRACT, LONDON_GIFT_CONTRACT } from '../constants';
 import { fetcher } from '../utils/fetcher';
 import { lowerCaseCheck } from '../utils/format';
 
+export const COLLECTION_MAP = {
+  'london-gifts': LONDON_GIFT_CONTRACT,
+  'hash': HASH_CONTRACT,
+};
+
 export const usePobCollection = (account: string | undefined | null) => {
   const { data } = useSWR(
     useMemo(

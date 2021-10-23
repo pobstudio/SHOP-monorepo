@@ -5,6 +5,7 @@ import { TransactionStatus, useTransactionsStore } from '../stores/transaction';
 import { useLondonContract } from './useContracts';
 import { deployments } from '@pob/protocol';
 import { CHAIN_ID, MAX_APPROVAL } from '../constants';
+import { useTokensStore } from '../stores/token';
 
 export const useSetApprove = () => {
   const { account } = useWeb3React();
@@ -12,6 +13,9 @@ export const useSetApprove = () => {
 
   const addTransaction = useTransactionsStore((s) => s.addTransaction);
   const transactionMap = useTransactionsStore((s) => s.transactionMap);
+  const setPrintServiceApprovalBalance = useTokensStore(
+    (s) => s.setPrintServiceApprovalBalance,
+  );
 
   const [isApproving, setIsApproving] = useState(false);
   const [error, setError] = useState<any | undefined>(undefined);
@@ -28,6 +32,8 @@ export const useSetApprove = () => {
           MAX_APPROVAL,
         );
 
+        setPrintServiceApprovalBalance(MAX_APPROVAL);
+
         addTransaction(res.hash, {
           type: 'approval',
         });
@@ -36,7 +42,9 @@ export const useSetApprove = () => {
         console.error(e);
         setError(e);
       }
-      setIsApproving(false);
+      setTimeout(() => {
+        setIsApproving(false);
+      }, 15 * 1000);
     },
     [london, account],
   );
