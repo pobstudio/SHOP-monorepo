@@ -24,7 +24,7 @@ import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 interface PrintServiceInterface extends ethers.utils.Interface {
   functions: {
     'buy(uint256,address,uint256,bytes)': FunctionFragment;
-    'orderID()': FunctionFragment;
+    'orderId()': FunctionFragment;
     'owner()': FunctionFragment;
     'payableErc20()': FunctionFragment;
     'products(uint256)': FunctionFragment;
@@ -41,7 +41,7 @@ interface PrintServiceInterface extends ethers.utils.Interface {
     functionFragment: 'buy',
     values: [BigNumberish, string, BigNumberish, BytesLike],
   ): string;
-  encodeFunctionData(functionFragment: 'orderID', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'orderId', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'payableErc20',
@@ -78,7 +78,7 @@ interface PrintServiceInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: 'treasury', values?: undefined): string;
 
   decodeFunctionResult(functionFragment: 'buy', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'orderID', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'orderId', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'payableErc20',
@@ -110,7 +110,7 @@ interface PrintServiceInterface extends ethers.utils.Interface {
 
   events: {
     'OwnershipTransferred(address,address)': EventFragment;
-    'PrintOrderReceived(uint256,address,uint256,bytes)': EventFragment;
+    'PrintOrderReceived(uint256,bytes,address,uint256,string)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
@@ -160,24 +160,24 @@ export class PrintService extends Contract {
 
   'functions': {
     buy(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
     'buy(uint256,address,uint256,bytes)'(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    orderID(overrides?: CallOverrides): Promise<[BigNumber]>;
+    orderId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    'orderID()'(overrides?: CallOverrides): Promise<[BigNumber]>;
+    'orderId()'(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -275,24 +275,24 @@ export class PrintService extends Contract {
   };
 
   'buy'(
-    _index: BigNumberish,
+    _productIndex: BigNumberish,
     _collection: string,
-    _tokenid: BigNumberish,
-    _orderDetails: BytesLike,
+    _tokenId: BigNumberish,
+    _orderHash: BytesLike,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
   'buy(uint256,address,uint256,bytes)'(
-    _index: BigNumberish,
+    _productIndex: BigNumberish,
     _collection: string,
-    _tokenid: BigNumberish,
-    _orderDetails: BytesLike,
+    _tokenId: BigNumberish,
+    _orderHash: BytesLike,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'orderID'(overrides?: CallOverrides): Promise<BigNumber>;
+  'orderId'(overrides?: CallOverrides): Promise<BigNumber>;
 
-  'orderID()'(overrides?: CallOverrides): Promise<BigNumber>;
+  'orderId()'(overrides?: CallOverrides): Promise<BigNumber>;
 
   'owner'(overrides?: CallOverrides): Promise<string>;
 
@@ -390,24 +390,24 @@ export class PrintService extends Contract {
 
   'callStatic': {
     buy(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: CallOverrides,
     ): Promise<void>;
 
     'buy(uint256,address,uint256,bytes)'(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    orderID(overrides?: CallOverrides): Promise<BigNumber>;
+    orderId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    'orderID()'(overrides?: CallOverrides): Promise<BigNumber>;
+    'orderId()'(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -511,41 +511,43 @@ export class PrintService extends Contract {
     >;
 
     PrintOrderReceived(
-      _orderID: BigNumberish | null,
+      _orderId: BigNumberish | null,
+      _orderHash: BytesLike | null,
       _collection: null,
-      _tokenid: null,
-      _orderDetails: null,
+      _tokenId: null,
+      _productId: null,
     ): TypedEventFilter<
-      [BigNumber, string, BigNumber, string],
+      [BigNumber, string, string, BigNumber, string],
       {
-        _orderID: BigNumber;
+        _orderId: BigNumber;
+        _orderHash: string;
         _collection: string;
-        _tokenid: BigNumber;
-        _orderDetails: string;
+        _tokenId: BigNumber;
+        _productId: string;
       }
     >;
   };
 
   'estimateGas': {
     buy(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
     'buy(uint256,address,uint256,bytes)'(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    orderID(overrides?: CallOverrides): Promise<BigNumber>;
+    orderId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    'orderID()'(overrides?: CallOverrides): Promise<BigNumber>;
+    'orderId()'(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -626,24 +628,24 @@ export class PrintService extends Contract {
 
   'populateTransaction': {
     buy(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
     'buy(uint256,address,uint256,bytes)'(
-      _index: BigNumberish,
+      _productIndex: BigNumberish,
       _collection: string,
-      _tokenid: BigNumberish,
-      _orderDetails: BytesLike,
+      _tokenId: BigNumberish,
+      _orderHash: BytesLike,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    orderID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    orderId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    'orderID()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    'orderId()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

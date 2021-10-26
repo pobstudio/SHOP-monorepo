@@ -38,13 +38,14 @@ export const useSetApprove = () => {
           type: 'approval',
         });
         setError(undefined);
+        setTimeout(() => {
+          setIsApproving(false);
+        }, 15 * 1000);
       } catch (e) {
         console.error(e);
+        setIsApproving(false);
         setError(e);
       }
-      setTimeout(() => {
-        setIsApproving(false);
-      }, 15 * 1000);
     },
     [london, account],
   );

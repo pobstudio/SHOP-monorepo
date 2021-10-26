@@ -10,7 +10,7 @@ contract PrintService is Ownable {
 
     ERC20Mintable public immutable payableErc20;
     address public treasury;
-    uint256 public orderID = 0;
+    uint256 public orderId = 0;
 
     struct Product { 
       string id;
@@ -20,10 +20,11 @@ contract PrintService is Ownable {
     mapping (uint256 => Product) public products;
 
     event PrintOrderReceived(
-      uint indexed _orderID,
+      uint indexed _orderId,
+      bytes indexed _orderHash,
       address _collection, 
-      uint256 _tokenid,
-      bytes _orderDetails
+      uint256 _tokenId,
+      string _productId
     );
 
     constructor (
@@ -48,8 +49,8 @@ contract PrintService is Ownable {
       products[_index].price = _price;
     }
 
-    function buy(uint256 _index, address _collection, uint256 _tokenid, bytes calldata _orderDetails) public {
-      Product memory product = products[_index];
+    function buy(uint256 _productIndex, address _collection, uint256 _tokenId, bytes calldata _orderHash) public {
+      Product memory product = products[_productIndex];
       uint256 price = product.price;
       // ensure approval and conditions are met
       require(product.inStock, "Product out of stock");
@@ -58,8 +59,8 @@ contract PrintService is Ownable {
       // transfer payableERC20
       payableErc20.transferFrom(_msgSender(), treasury, price);
       // increment order count
-      orderID += 1;
+      orderId += 1;
       // emit order details
-      emit PrintOrderReceived(orderID, _collection, _tokenid, _orderDetails);
+      emit PrintOrderReceived(orderId, _orderHash, _collection, _tokenId, product.id);
     }
 }

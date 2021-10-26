@@ -1,13 +1,13 @@
-import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, FC } from 'react';
+import { useWeb3React } from '@web3-react/core';
 import { RightSection, SectionBody, SlapImage } from '..';
-import { HASH_CONTRACT, LONDON_GIFT_CONTRACT } from '../../../constants';
 import {
   COLLECTION_MAP,
   useAccountCollections,
 } from '../../../hooks/useCollection';
 import { PrintServiceProductType } from '../../../utils/airtable';
 import { PaymentFlow } from './payment';
+import { FIRESTORE_PRINT_SERVICE_RECORD } from '../../../clients/firebase';
 
 export const PrintCheckout: FC = () => {
   const { account } = useWeb3React();
@@ -62,6 +62,21 @@ export const PrintCheckout: FC = () => {
   const paymentDisabled =
     !artwork || !artworkID || !printOption || !email || !shipping;
 
+  const orderDetails: FIRESTORE_PRINT_SERVICE_RECORD = useMemo(
+    () => ({
+      collectionName: artwork,
+      collectionContract: COLLECTION_MAP[artwork],
+      productType: printOption,
+      customerContact: email,
+      customerShipping: shipping,
+      customerWallet: account,
+      status: 'pending',
+      timestamp: new Date(),
+      tokenId: artworkID,
+    }),
+    [artwork, artworkID, printOption, email, shipping, account],
+  );
+
   return (
     <>
       <RightSection>
@@ -70,6 +85,7 @@ export const PrintCheckout: FC = () => {
           artTokenID={artworkID}
           product={printOption}
           disabled={paymentDisabled}
+          orderDetails={orderDetails}
         />
       </RightSection>
 

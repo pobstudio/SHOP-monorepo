@@ -18,7 +18,6 @@ task(
 
     console.log(`deploying with ${await owner.getAddress()}`);
 
-    // deploy erc1155
     const Erc20Mintable = await hre.ethers.getContractFactory('ERC20Mintable');
 
     const erc20 = await Erc20Mintable.attach(

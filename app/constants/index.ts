@@ -3,6 +3,8 @@ import { BigNumber } from 'ethers';
 // env
 export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1');
 
+export const FIREBASE_ADMIN_CERT = process.env.FIREBASE_ADMIN_CERT ?? '{}';
+
 // keys
 export const OPENSEA_API_KEY = 'fc09ae6245fb40ab8afbcff451553345';
 
@@ -12,6 +14,8 @@ export const ALCHEMY_KEY =
   CHAIN_ID === 1
     ? process.env.NEXT_PUBLIC_ALCHEMY_KEY
     : process.env.NEXT_PUBLIC_TEST_ALCHEMY_KEY ?? '';
+
+export const MAINNET_ALCHEMY_KEY = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
 
 // constants
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';

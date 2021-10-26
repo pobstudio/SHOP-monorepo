@@ -1,8 +1,13 @@
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useMemo, useCallback, FC } from 'react';
 import styled from 'styled-components';
+import { utils } from 'ethers';
 import { SlimSectionBody } from '..';
-import { CHAIN_ID, NULL_ADDRESS } from '../../../constants';
+import {
+  CHAIN_ID,
+  HASH_CONTRACT,
+  LONDON_GIFT_CONTRACT,
+} from '../../../constants';
 import { usePrintServiceContract } from '../../../hooks/useContracts';
 import { useSetApprove } from '../../../hooks/useSetApproval';
 import { ONE_TOKEN_IN_BASE_UNITS } from '@pob/protocol/utils';
@@ -10,10 +15,16 @@ import {
   PRINT_SERVICE_PRODUCTS as PRINT_SERVICE_PRODUCTS_PROD,
   PRINT_SERVICE_PRODUCTS_TEST,
 } from '@pob/protocol/contracts/print-service/constants';
-import { BigNumberish } from 'ethers';
+import { BigNumber } from 'ethers';
 import { useTokensStore } from '../../../stores/token';
 import { useIsPrintServiceApproved } from '../../../hooks/useIsApproved';
 import { PrintServiceProductType } from '../../../utils/airtable';
+import { FIRESTORE_PRINT_SERVICE_RECORD } from '../../../clients/firebase';
+
+const CONTRACTS = [
+  LONDON_GIFT_CONTRACT.toLowerCase(),
+  HASH_CONTRACT.toLowerCase(),
+];
 
 const PRINT_SERVICE_PRODUCTS =
   CHAIN_ID == 1 ? PRINT_SERVICE_PRODUCTS_PROD : PRINT_SERVICE_PRODUCTS_TEST;
@@ -29,8 +40,10 @@ export const getPricingFromProductType = (id: PrintServiceProductType) =>
 const usePaymentFlow = (
   product: PrintServiceProductType,
   collection: string,
-  tokenID: BigNumberish,
+  tokenID: string,
+  orderDetails: FIRESTORE_PRINT_SERVICE_RECORD,
 ) => {
+  const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<any | undefined>(undefined);
   const [paying, setPaying] = useState(false);
   const price = getPricingFromProductType(product);
@@ -41,8 +54,22 @@ const usePaymentFlow = (
   const { approve, isApproving } = useSetApprove();
   const printServiceContract = usePrintServiceContract();
 
+  const orderDetailsHash = (obj: any) =>
+    utils.solidityKeccak256(
+      Object.keys(obj).map(() => 'string'),
+      [...Object.values(obj)],
+    );
+
   const tokenBalance = useTokensStore((s) => s.tokenBalance);
   const isApproved = useIsPrintServiceApproved(price);
+  const isReady = useMemo(() => {
+    if (tokenID !== '' && collection !== '' && orderDetails.customerContact) {
+      if (CONTRACTS.includes(collection.toLowerCase())) {
+        return true;
+      }
+    }
+    return false;
+  }, [tokenID, collection, orderDetails]);
   const isEnoughBalance = useMemo(
     () => tokenBalance.gte(price),
     [tokenBalance, price],
@@ -50,28 +77,52 @@ const usePaymentFlow = (
   const isBuyable = useMemo(() => {
     return PRINT_SERVICE_PRODUCTS[getPrintServiceProductIndexFromType(product)]
       .inStock;
-  }, [isApproved, isEnoughBalance, product]);
+  }, [product]);
 
   const handlePay = useCallback(async () => {
-    if (paying || !printServiceContract) {
+    if (!isReady || paying || !printServiceContract) {
       return;
     }
-    try {
-      setPaying(true);
-      const res = await printServiceContract?.buy(
-        getPrintServiceProductIndexFromType(product),
-        collection,
-        tokenID,
-        '0x01',
-      );
-      console.log(res);
-      setError(undefined);
-    } catch (e) {
-      console.error(e);
-      setError(e);
+    setPaying(true);
+    const hash = orderDetailsHash(orderDetails);
+    const record = orderDetails;
+    const pushFirebase = await fetch(`/api/new-print`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        hash,
+        record,
+      }),
+    });
+    if (pushFirebase.ok) {
+      try {
+        const startPay = await printServiceContract?.buy(
+          getPrintServiceProductIndexFromType(product),
+          collection,
+          BigNumber.from(tokenID),
+          hash,
+        );
+        console.log(startPay);
+        setError(undefined);
+        setTimeout(() => {
+          setPaying(false);
+          setSuccess(true);
+        }, 15 * 1000);
+      } catch (e) {
+        console.error(e);
+        setPaying(false);
+        setSuccess(false);
+        setError(e);
+      }
+    } else {
+      console.error(pushFirebase);
+      setPaying(false);
+      setSuccess(false);
+      setError(new Error('Unable to create new Print Order in Firebase'));
     }
-    setPaying(false);
-  }, [paying, printServiceContract]);
+  }, [paying, printServiceContract, isReady]);
 
   const onButtonClick = useCallback(async () => {
     if (isApproved) {
@@ -100,8 +151,10 @@ const usePaymentFlow = (
     onButtonClick,
     payingState,
     error,
+    success,
     isEnoughBalance,
     isBuyable,
+    isReady,
   };
 };
 
@@ -109,8 +162,9 @@ export const PaymentFlow: FC<{
   artCollection: string;
   artTokenID: string;
   product: PrintServiceProductType;
+  orderDetails: FIRESTORE_PRINT_SERVICE_RECORD;
   disabled: boolean;
-}> = ({ artCollection, artTokenID, product, disabled }) => {
+}> = ({ artCollection, artTokenID, product, orderDetails, disabled }) => {
   const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
   const {
     amountDue,
@@ -119,9 +173,12 @@ export const PaymentFlow: FC<{
     payingState,
     isEnoughBalance,
     isBuyable,
-  } = usePaymentFlow(product, artCollection, BigInt(artTokenID));
+    isReady,
+    success,
+    error,
+  } = usePaymentFlow(product, artCollection, artTokenID, orderDetails);
 
-  const reduceDisabled = !isEnoughBalance || !isBuyable || disabled;
+  const reduceDisabled = !isEnoughBalance || !isBuyable || !isReady || disabled;
 
   const purchaseButton = useMemo(() => {
     if (hoverPurchaseButton) {
@@ -141,7 +198,7 @@ export const PaymentFlow: FC<{
           disabled: true,
         };
       }
-      if (disabled) {
+      if (!isReady || disabled) {
         return {
           color: RED,
           text: `Not Ready`,
@@ -149,6 +206,15 @@ export const PaymentFlow: FC<{
           disabled: true,
         };
       }
+    }
+    if (error) {
+      return {
+        color: RED,
+        text: 'Error',
+      };
+    }
+    if (success) {
+      return { color: GREEN, text: 'Success!' };
     }
     return {
       color: GREEN,
@@ -159,6 +225,7 @@ export const PaymentFlow: FC<{
     reduceDisabled,
     isEnoughBalance,
     isBuyable,
+    isReady,
     disabled,
   ]);
 
