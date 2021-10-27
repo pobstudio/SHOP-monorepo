@@ -56,32 +56,52 @@ const Order: FC<{ order?: PrintServiceAirtableRecordType }> = ({ order }) => (
   <OrderBox>
     <OrderRow>
       <div>Order ID</div>
-      <div>{order ? order['order id'] : '-'}</div>
+      <div>{order ? order['order id'] : '––'}</div>
     </OrderRow>
 
     <OrderRow>
-      <div>Order Created</div>
-      <div>{order ? order['created at'] : '-'}</div>
+      <div>Created</div>
+      <div>{order ? order['created at'] : '––'}</div>
+    </OrderRow>
+
+    <OrderRow>
+      <div>Receipt</div>
+      <div>{order ? order['etherscan'] : '––'}</div>
     </OrderRow>
 
     <OrderRow>
       <div>Collection</div>
-      <div>{order ? order['collection'] : '-'}</div>
+      <div>{order ? order['collection'] : '––'}</div>
     </OrderRow>
 
     <OrderRow>
-      <div>Artwork Name</div>
-      <div>{order ? order['name'] : '-'}</div>
+      <div>Artwork</div>
+      {order ? (
+        <a
+          href={`${order['opensea']}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {order['name']}
+        </a>
+      ) : (
+        '––'
+      )}
     </OrderRow>
 
-    <OrderRow>
+    {/* <OrderRow>
       <div>Token ID</div>
       <div>{order ? order['tokenid'] : '-'}</div>
+    </OrderRow> */}
+
+    <OrderRow>
+      <div>Status</div>
+      <div>{order ? order['status'] : '––'}</div>
     </OrderRow>
 
     <OrderRow>
-      <div>Order Status</div>
-      <div>{order ? order['status'] : '-'}</div>
+      <div>Tracking</div>
+      <div>{order ? order['tracking number'] : '––'}</div>
     </OrderRow>
   </OrderBox>
 );
@@ -137,6 +157,24 @@ const OrderRow = styled.div`
   align-items: center;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+
+  a {
+    color: black;
+    font-family: Roboto Mono;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 13px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    &:hover,
+    :visited {
+      color: black;
+    }
+  }
 
   &:not(:first-child) {
     margin-top: 12px;
