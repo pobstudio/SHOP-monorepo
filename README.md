@@ -16,7 +16,7 @@ The POB repo is structured as a monorepo containing many packages that reach all
 
 | Package                 | Description                                                                                  |
 | ----------------------- | -------------------------------------------------------------------------------------------- |
-| [`app`](/app)           | Core next.js webapp of pob.studio and HASH and lambdas                                       |
+| [`app`](/app)           | Core next.js webapp and lambdas                                                              |
 | [`protocol`](/protocol) | Core protocol of POB, contains the ERC1155 token, minter contracts, and other future things. |
 | [`sketches`](/sketches) | Shared generative algorithm utils                                                            |
 | [`scripts`](/scripts)   | Some administrative scripts to help with running POB (ie refresh opensea metadata)           |
@@ -72,7 +72,7 @@ NETWORK_RPC_URL="OPTIONAL"
 PRIVATE_KEY="OPTIONAL"
 ```
 
-The private key and rpc is used if you want to deploy the algorithmn to the Ethereum blockchain.
+The private key and rpc is used if you want to deploy the algorithm to the Ethereum blockchain.
 
 `protocol`
 

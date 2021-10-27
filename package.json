@@ -1,17 +1,14 @@
 {
-  "name": "pob",
+  "name": "shop.pob.studio",
   "version": "1.0.0",
   "main": "",
   "repository": "",
-  "author": "<me@bydavidsun.com>",
+  "author": "<team@pob.studio>",
   "license": "MIT",
   "private": true,
   "workspaces": [
     "protocol",
-    "app",
-    "scripts",
-    "common",
-    "preview"
+    "app"
   ],
   "scripts": {
     "build": "yarn workspaces run build",
