@@ -5,14 +5,14 @@
 import { Contract, Signer } from 'ethers';
 import { Provider } from '@ethersproject/providers';
 
-import type { Ierc20Metadata } from '../Ierc20Metadata';
+import type { IERC20Metadata } from '../IERC20Metadata';
 
-export class Ierc20Metadata__factory {
+export class IERC20Metadata__factory {
   static connect(
     address: string,
     signerOrProvider: Signer | Provider,
-  ): Ierc20Metadata {
-    return new Contract(address, _abi, signerOrProvider) as Ierc20Metadata;
+  ): IERC20Metadata {
+    return new Contract(address, _abi, signerOrProvider) as IERC20Metadata;
   }
 }
 

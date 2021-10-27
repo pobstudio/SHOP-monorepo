@@ -6,9 +6,9 @@ import { Signer } from 'ethers';
 import { Provider, TransactionRequest } from '@ethersproject/providers';
 import { Contract, ContractFactory, Overrides } from '@ethersproject/contracts';
 
-import type { Erc20Mintable } from '../Erc20Mintable';
+import type { ERC20Mintable } from '../ERC20Mintable';
 
-export class Erc20Mintable__factory extends ContractFactory {
+export class ERC20Mintable__factory extends ContractFactory {
   constructor(signer?: Signer) {
     super(_abi, _bytecode, signer);
   }
@@ -18,13 +18,13 @@ export class Erc20Mintable__factory extends ContractFactory {
     name_: string,
     symbol_: string,
     overrides?: Overrides,
-  ): Promise<Erc20Mintable> {
+  ): Promise<ERC20Mintable> {
     return super.deploy(
       minter_,
       name_,
       symbol_,
       overrides || {},
-    ) as Promise<Erc20Mintable>;
+    ) as Promise<ERC20Mintable>;
   }
   getDeployTransaction(
     minter_: string,
@@ -34,17 +34,17 @@ export class Erc20Mintable__factory extends ContractFactory {
   ): TransactionRequest {
     return super.getDeployTransaction(minter_, name_, symbol_, overrides || {});
   }
-  attach(address: string): Erc20Mintable {
-    return super.attach(address) as Erc20Mintable;
+  attach(address: string): ERC20Mintable {
+    return super.attach(address) as ERC20Mintable;
   }
-  connect(signer: Signer): Erc20Mintable__factory {
-    return super.connect(signer) as Erc20Mintable__factory;
+  connect(signer: Signer): ERC20Mintable__factory {
+    return super.connect(signer) as ERC20Mintable__factory;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider,
-  ): Erc20Mintable {
-    return new Contract(address, _abi, signerOrProvider) as Erc20Mintable;
+  ): ERC20Mintable {
+    return new Contract(address, _abi, signerOrProvider) as ERC20Mintable;
   }
 }
 

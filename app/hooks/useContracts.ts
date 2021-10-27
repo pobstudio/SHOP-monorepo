@@ -1,6 +1,6 @@
 import {
   deployments,
-  Erc20Mintable__factory,
+  ERC20Mintable__factory,
   PrintService__factory,
 } from '@pob/protocol';
 import { useMemo } from 'react';
@@ -19,7 +19,7 @@ export const useLondonContract = (shouldUseFallback: boolean = false) => {
       return;
     }
 
-    return Erc20Mintable__factory.connect(
+    return ERC20Mintable__factory.connect(
       deployments[CHAIN_ID].erc20,
       getProviderOrSigner(provider as JsonRpcProvider, account as string),
     );

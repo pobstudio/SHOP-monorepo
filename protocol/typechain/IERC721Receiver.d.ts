@@ -19,9 +19,8 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
-interface Ierc721ReceiverInterface extends ethers.utils.Interface {
+interface IERC721ReceiverInterface extends ethers.utils.Interface {
   functions: {
     'onERC721Received(address,address,uint256,bytes)': FunctionFragment;
   };
@@ -39,46 +38,18 @@ interface Ierc721ReceiverInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class Ierc721Receiver extends Contract {
+export class IERC721Receiver extends Contract {
   'connect'(signerOrProvider: Signer | Provider | string): this;
   'attach'(addressOrName: string): this;
   'deployed'(): Promise<this>;
 
-  'listeners'(eventName?: string): Array<Listener>;
-  'off'(eventName: string, listener: Listener): this;
-  'on'(eventName: string, listener: Listener): this;
-  'once'(eventName: string, listener: Listener): this;
-  'removeListener'(eventName: string, listener: Listener): this;
-  'removeAllListeners'(eventName?: string): this;
+  'on'(event: EventFilter | string, listener: Listener): this;
+  'once'(event: EventFilter | string, listener: Listener): this;
+  'addListener'(eventName: EventFilter | string, listener: Listener): this;
+  'removeAllListeners'(eventName: EventFilter | string): this;
+  'removeListener'(eventName: any, listener: Listener): this;
 
-  'listeners'<T, G>(
-    eventFilter?: TypedEventFilter<T, G>,
-  ): Array<TypedListener<T, G>>;
-  'off'<T, G>(
-    eventFilter: TypedEventFilter<T, G>,
-    listener: TypedListener<T, G>,
-  ): this;
-  'on'<T, G>(
-    eventFilter: TypedEventFilter<T, G>,
-    listener: TypedListener<T, G>,
-  ): this;
-  'once'<T, G>(
-    eventFilter: TypedEventFilter<T, G>,
-    listener: TypedListener<T, G>,
-  ): this;
-  'removeListener'<T, G>(
-    eventFilter: TypedEventFilter<T, G>,
-    listener: TypedListener<T, G>,
-  ): this;
-  'removeAllListeners'<T, G>(eventFilter: TypedEventFilter<T, G>): this;
-
-  'queryFilter'<T, G>(
-    event: TypedEventFilter<T, G>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined,
-  ): Promise<Array<TypedEvent<T & G>>>;
-
-  'interface': Ierc721ReceiverInterface;
+  'interface': IERC721ReceiverInterface;
 
   'functions': {
     onERC721Received(
