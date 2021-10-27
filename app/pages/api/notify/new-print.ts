@@ -8,6 +8,11 @@ const printServiceContract = PrintService__factory.connect(
   PROVIDER,
 );
 
+const PrintOrderReceivedTopic0 =
+  CHAIN_ID === 1
+    ? ''
+    : '0x683b8e58d3b4c62460d6e6df4524f97da8c68e6fce307d96b224461ca40b6869';
+
 const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   const activity = body?.activity;
@@ -30,9 +35,7 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
     const receipt = await PROVIDER.getTransactionReceipt(txid);
     console.log(receipt.logs, 'receipt.logs');
     const printOrdersReceived = receipt.logs.filter(
-      (l) =>
-        l.topics[0] ===
-        '0x044bd17d60a80f68fbbeaf80d405c51fc0254ddecb9dcec4054d350e2bb147fb',
+      (l) => l.topics[0] === PrintOrderReceivedTopic0,
     );
     console.log(printOrdersReceived, 'printOrdersReceived');
 
