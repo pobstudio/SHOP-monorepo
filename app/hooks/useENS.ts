@@ -10,7 +10,11 @@ export const useENSLookup = (address?: string | undefined | null) => {
     if (!address || !provider) {
       return;
     }
-    provider.lookupAddress(address).then(setEnsName);
+    provider.lookupAddress(address).then((value: string | null) => {
+      if (value) {
+        setEnsName(value);
+      }
+    });
   }, [provider, setEnsName, address]);
 
   const result = useMemo(() => ensName, [ensName, address]);
