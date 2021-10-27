@@ -38,6 +38,11 @@ const AccountPage: NextPage = () => {
               <Web3Status />
             )}
           </Orders>
+          <br />
+          <br />
+          <PageCaption>
+            Don't see your order? Refresh the page in 1 minute.
+          </PageCaption>
         </MainContent>
         <Footer />
       </ContentWrapper>
@@ -84,6 +89,14 @@ const Order: FC<{ order?: PrintServiceAirtableRecordType }> = ({ order }) => (
 const PageTitle = styled.h4`
   text-align: center;
   font-size: 16px;
+  font-weight: lighter;
+  color: black;
+  text-transform: uppercase;
+`;
+
+const PageCaption = styled.h4`
+  text-align: center;
+  font-size: 12px;
   font-weight: lighter;
   color: black;
   text-transform: uppercase;

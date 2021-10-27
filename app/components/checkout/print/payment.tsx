@@ -1,7 +1,13 @@
 import { useWeb3React } from '@web3-react/core';
-import React, { useState, useMemo, useCallback, FC } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, FC } from 'react';
 import styled from 'styled-components';
-import { utils } from 'ethers';
+import { utils, BigNumber } from 'ethers';
+import { useRouter } from 'next/dist/client/router';
+import { ONE_TOKEN_IN_BASE_UNITS } from '@pob/protocol/utils';
+import {
+  PRINT_SERVICE_PRODUCTS as PRINT_SERVICE_PRODUCTS_PROD,
+  PRINT_SERVICE_PRODUCTS_TEST,
+} from '@pob/protocol/contracts/print-service/constants';
 import { SlimSectionBody } from '..';
 import {
   CHAIN_ID,
@@ -10,16 +16,11 @@ import {
 } from '../../../constants';
 import { usePrintServiceContract } from '../../../hooks/useContracts';
 import { useSetApprove } from '../../../hooks/useSetApproval';
-import { ONE_TOKEN_IN_BASE_UNITS } from '@pob/protocol/utils';
-import {
-  PRINT_SERVICE_PRODUCTS as PRINT_SERVICE_PRODUCTS_PROD,
-  PRINT_SERVICE_PRODUCTS_TEST,
-} from '@pob/protocol/contracts/print-service/constants';
-import { BigNumber } from 'ethers';
 import { useTokensStore } from '../../../stores/token';
 import { useIsPrintServiceApproved } from '../../../hooks/useIsApproved';
 import { PrintServiceProductType } from '../../../utils/airtable';
 import { FIRESTORE_PRINT_SERVICE_RECORD } from '../../../clients/firebase';
+import { ROUTES } from '../../../constants/routes';
 
 const CONTRACTS = [
   LONDON_GIFT_CONTRACT.toLowerCase(),
@@ -253,6 +254,15 @@ export const PaymentFlow: FC<{
     }
     await onButtonClick();
   }, [reduceDisabled]);
+
+  const router = useRouter();
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => {
+        router.push(ROUTES.ACCOUNT);
+      }, 5 * 1000);
+    }
+  }, [success]);
 
   return (
     <>

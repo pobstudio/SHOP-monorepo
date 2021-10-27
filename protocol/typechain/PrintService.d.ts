@@ -109,7 +109,7 @@ interface PrintServiceInterface extends ethers.utils.Interface {
 
   events: {
     'OwnershipTransferred(address,address)': EventFragment;
-    'PrintOrderReceived(uint256,bytes32,address,uint256,string)': EventFragment;
+    'PrintOrderReceived(uint256,bytes32,uint256,address,uint256)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
@@ -481,9 +481,9 @@ export class PrintService extends Contract {
     PrintOrderReceived(
       _orderId: BigNumberish | null,
       _orderHash: BytesLike | null,
+      _productId: null,
       _collection: null,
       _tokenId: null,
-      _productId: null,
     ): EventFilter;
   };
 

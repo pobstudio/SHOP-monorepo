@@ -22,9 +22,9 @@ contract PrintService is Ownable {
     event PrintOrderReceived(
       uint indexed _orderId,
       bytes32 indexed _orderHash,
+      uint256 _productId,
       address _collection, 
-      uint256 _tokenId,
-      string _productId
+      uint256 _tokenId
     );
 
     constructor (
@@ -61,6 +61,6 @@ contract PrintService is Ownable {
       // increment order count
       orderId += 1;
       // emit order details
-      emit PrintOrderReceived(orderId, _orderHash, _collection, _tokenId, product.id);
+      emit PrintOrderReceived(orderId, _orderHash, _productIndex, _collection, _tokenId);
     }
 }

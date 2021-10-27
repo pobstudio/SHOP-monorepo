@@ -11,6 +11,6 @@ export const deployments: Deployments = {
     erc20: '0x243901455D1B8ef76678b32b4459602CC6B730ae', // $LONDON
     multisig: '0x28558Ba4343FeB2709ed7A9531B72402a7794D8D', // POB Multisig
     deployer: '0x0B7056e2D9064f2ec8647F1ae556BAcc06da6Db4', // deployer.pob.eth
-    printService: '0xF85f829E9f5334179A55A215faedc8616C91B992', // PrintService
+    printService: '0x2eD18dF7240082E514F86C4CCdBD8DA2f615EC0e', // PrintService
   },
 };
