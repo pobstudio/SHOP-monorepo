@@ -40,7 +40,7 @@ export const useSetApprove = () => {
         setError(undefined);
         setTimeout(() => {
           setIsApproving(false);
-        }, 15 * 1000);
+        }, 30 * 1000);
       } catch (e) {
         console.error(e);
         setIsApproving(false);

@@ -16,7 +16,6 @@ export interface FIRESTORE_PRINT_SERVICE_RECORD {
   customerWallet?: string | null;
   paymentUrl?: string;
   productType: PrintServiceProductType;
-  status: 'pending' | 'paid';
   timestamp: Date;
   tokenId: string;
 }

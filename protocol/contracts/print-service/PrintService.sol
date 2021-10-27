@@ -21,7 +21,7 @@ contract PrintService is Ownable {
 
     event PrintOrderReceived(
       uint indexed _orderId,
-      bytes indexed _orderHash,
+      bytes32 indexed _orderHash,
       address _collection, 
       uint256 _tokenId,
       string _productId
@@ -49,7 +49,7 @@ contract PrintService is Ownable {
       products[_index].price = _price;
     }
 
-    function buy(uint256 _productIndex, address _collection, uint256 _tokenId, bytes calldata _orderHash) public {
+    function buy(uint256 _productIndex, address _collection, uint256 _tokenId, bytes32 _orderHash) public {
       Product memory product = products[_productIndex];
       uint256 price = product.price;
       // ensure approval and conditions are met

@@ -64,17 +64,18 @@ export const PrintCheckout: FC = () => {
 
   const orderDetails: FIRESTORE_PRINT_SERVICE_RECORD = useMemo(
     () => ({
-      collectionName: artwork,
+      artworkName: artworkAsset?.name ?? '',
+      artworkUrl: artworkAsset?.permalink ?? '',
       collectionContract: COLLECTION_MAP[artwork],
-      productType: printOption,
+      collectionName: artwork,
       customerContact: email,
       customerShipping: shipping,
       customerWallet: account,
-      status: 'pending',
+      productType: printOption,
       timestamp: new Date(),
       tokenId: artworkID,
     }),
-    [artwork, artworkID, printOption, email, shipping, account],
+    [artwork, artworkID, printOption, email, shipping, account, artworkAsset],
   );
 
   return (

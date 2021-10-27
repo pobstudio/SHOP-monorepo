@@ -137,7 +137,12 @@ describe('PrintService', function () {
       );
       await printService
         .connect(rando)
-        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, '0x01');
+        .buy(
+          productIndex,
+          LONDON_GIFT_CONTRACT,
+          8776,
+          '0x0000000000000000000000000000000000000000000000000000000000000001',
+        );
       const afterLondonBalance = await erc20Mintable.balanceOf(
         await rando.getAddress(),
       );
@@ -152,7 +157,12 @@ describe('PrintService', function () {
       );
       await printService
         .connect(rando)
-        .buy(productIndex, LONDON_GIFT_CONTRACT, 8776, '0x01');
+        .buy(
+          productIndex,
+          LONDON_GIFT_CONTRACT,
+          8776,
+          '0x0000000000000000000000000000000000000000000000000000000000000001',
+        );
       const afterLondonBalance = await erc20Mintable.balanceOf(
         await rando.getAddress(),
       );
@@ -164,7 +174,14 @@ describe('PrintService', function () {
         .connect(rando)
         .approve(printService.address, printPrice.mul(2).sub(1));
       await expect(
-        printService.connect(rando).buy(1, LONDON_GIFT_CONTRACT, 8776, '0x01'),
+        printService
+          .connect(rando)
+          .buy(
+            1,
+            LONDON_GIFT_CONTRACT,
+            8776,
+            '0x0000000000000000000000000000000000000000000000000000000000000001',
+          ),
       ).to.revertedWith('Not enough allowance for payment');
     });
 
@@ -173,7 +190,14 @@ describe('PrintService', function () {
         .connect(rando)
         .transfer(await owner.getAddress(), framedPrice.mul(1));
       await expect(
-        printService.connect(rando).buy(1, LONDON_GIFT_CONTRACT, 8776, '0x01'),
+        printService
+          .connect(rando)
+          .buy(
+            1,
+            LONDON_GIFT_CONTRACT,
+            8776,
+            '0x0000000000000000000000000000000000000000000000000000000000000001',
+          ),
       ).to.revertedWith('Not enough token for payment');
     });
   });

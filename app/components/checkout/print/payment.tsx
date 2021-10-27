@@ -86,6 +86,7 @@ const usePaymentFlow = (
     setPaying(true);
     const hash = orderDetailsHash(orderDetails);
     const record = orderDetails;
+    console.log(hash, 'orderDetailsHash');
     const pushFirebase = await fetch(`/api/new-print`, {
       method: 'POST',
       headers: {
@@ -109,7 +110,7 @@ const usePaymentFlow = (
         setTimeout(() => {
           setPaying(false);
           setSuccess(true);
-        }, 15 * 1000);
+        }, 30 * 1000);
       } catch (e) {
         console.error(e);
         setPaying(false);
@@ -122,7 +123,15 @@ const usePaymentFlow = (
       setSuccess(false);
       setError(new Error('Unable to create new Print Order in Firebase'));
     }
-  }, [paying, printServiceContract, isReady]);
+  }, [
+    paying,
+    printServiceContract,
+    isReady,
+    orderDetails,
+    product,
+    collection,
+    tokenID,
+  ]);
 
   const onButtonClick = useCallback(async () => {
     if (isApproved) {
@@ -178,7 +187,13 @@ export const PaymentFlow: FC<{
     error,
   } = usePaymentFlow(product, artCollection, artTokenID, orderDetails);
 
-  const reduceDisabled = !isEnoughBalance || !isBuyable || !isReady || disabled;
+  const reduceDisabled =
+    !isEnoughBalance ||
+    !isBuyable ||
+    !isReady ||
+    disabled ||
+    success ||
+    payingState;
 
   const purchaseButton = useMemo(() => {
     if (hoverPurchaseButton) {
@@ -211,10 +226,11 @@ export const PaymentFlow: FC<{
       return {
         color: RED,
         text: 'Error',
+        disabled: true,
       };
     }
     if (success) {
-      return { color: GREEN, text: 'Success!' };
+      return { color: GREEN, text: 'Success!', disabled: true };
     }
     return {
       color: GREEN,
@@ -251,7 +267,7 @@ export const PaymentFlow: FC<{
           background: purchaseButton.color,
           textDecoration: purchaseButton.underline ? 'underline' : 'none',
           cursor:
-            payingState !== '' || purchaseButton.disabled
+            reduceDisabled || purchaseButton.disabled
               ? 'not-allowed'
               : 'pointer',
         }}

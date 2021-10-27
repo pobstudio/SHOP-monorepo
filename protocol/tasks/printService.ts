@@ -43,7 +43,7 @@ task(
       ? PRINT_SERVICE_PRODUCTS
       : PRINT_SERVICE_PRODUCTS_TEST
     ).entries()) {
-      await printService.setProduct(index, product);
+      await printService.setProduct(index, product, { gasLimit: 111111 });
     }
 
     // MAINNET ONLY
@@ -95,11 +95,13 @@ task(
       ? PRINT_SERVICE_PRODUCTS
       : PRINT_SERVICE_PRODUCTS_TEST
     ).entries()) {
-      await printService.setProduct(index, product);
+      await printService.setProduct(index, product, { gasLimit: 111111 });
     }
 
     console.log(
-      `Successfully updated Products for PrintService ✓: ${hre.network.name}`,
+      `Successfully updated Products for PrintService ✓: ${
+        hre.network.name
+      } @ ${deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].printService}`,
     );
   },
 );

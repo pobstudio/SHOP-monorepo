@@ -23,7 +23,7 @@ import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface PrintServiceInterface extends ethers.utils.Interface {
   functions: {
-    'buy(uint256,address,uint256,bytes)': FunctionFragment;
+    'buy(uint256,address,uint256,bytes32)': FunctionFragment;
     'orderId()': FunctionFragment;
     'owner()': FunctionFragment;
     'payableErc20()': FunctionFragment;
@@ -110,7 +110,7 @@ interface PrintServiceInterface extends ethers.utils.Interface {
 
   events: {
     'OwnershipTransferred(address,address)': EventFragment;
-    'PrintOrderReceived(uint256,bytes,address,uint256,string)': EventFragment;
+    'PrintOrderReceived(uint256,bytes32,address,uint256,string)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
@@ -167,7 +167,7 @@ export class PrintService extends Contract {
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    'buy(uint256,address,uint256,bytes)'(
+    'buy(uint256,address,uint256,bytes32)'(
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -282,7 +282,7 @@ export class PrintService extends Contract {
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'buy(uint256,address,uint256,bytes)'(
+  'buy(uint256,address,uint256,bytes32)'(
     _productIndex: BigNumberish,
     _collection: string,
     _tokenId: BigNumberish,
@@ -397,7 +397,7 @@ export class PrintService extends Contract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    'buy(uint256,address,uint256,bytes)'(
+    'buy(uint256,address,uint256,bytes32)'(
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -537,7 +537,7 @@ export class PrintService extends Contract {
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    'buy(uint256,address,uint256,bytes)'(
+    'buy(uint256,address,uint256,bytes32)'(
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -635,7 +635,7 @@ export class PrintService extends Contract {
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    'buy(uint256,address,uint256,bytes)'(
+    'buy(uint256,address,uint256,bytes32)'(
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
