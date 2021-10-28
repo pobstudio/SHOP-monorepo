@@ -24,29 +24,30 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  console.log(activity, 'activity');
-
-  const tokenTransferActivity = activity.filter(
-    (a: any) => a.category === 'token' && a.asset === 'LONDON',
-  );
+  // ARRAY OF SENDS/RECEIVE TXS
+  const tokenTransferActivity = activity.map((a: any) => ({
+    hash: a.hash,
+    from: a.fromAddress,
+    blockNum: a.blockNum,
+  }));
   const transactionIds = tokenTransferActivity.map((a: any) => a.hash);
-
   for (const txid of transactionIds) {
+    // GET TRANSACTION DATA FROM TXID
     const receipt = await PROVIDER.getTransactionReceipt(txid);
-    console.log(receipt.logs, 'receipt.logs');
+    console.log(receipt, 'receipt');
+
     const printOrdersReceived = receipt.logs.filter(
       (l) => l.topics[0] === PrintOrderReceivedTopic0,
     );
     console.log(printOrdersReceived, 'printOrdersReceived');
 
+    // EXTRACT PRINT ORDER DETAILS (ORDER ID, ORDER HASH, ARTWORK COLLECTION, ARTWORK ID)
     const orderIds = printOrdersReceived
       .map((l) => l.topics[1])
-      .map((m) => m.slice(-40));
-
+      .map((m) => parseInt(m, 16));
     console.log(orderIds, 'orderIds');
 
     const orderHashes = printOrdersReceived.map((l) => l.topics[2]);
-
     console.log(orderHashes, 'orderHashes');
 
     const productTypes = printOrdersReceived
@@ -55,10 +56,9 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
           printServiceContract.interface.decodeEventLog(
             'PrintOrderReceived',
             l.data,
-          )[3],
+          )[2],
       )
       .map((m) => parseInt(m, 16));
-
     console.log(productTypes, 'productTypes');
 
     const collectionContracts = printOrdersReceived.map(
@@ -66,23 +66,22 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
         printServiceContract.interface.decodeEventLog(
           'PrintOrderReceived',
           l.data,
-        )[4],
+        )[3],
     );
-
     console.log(collectionContracts, 'collectionContracts');
 
-    const tokenIds = printOrdersReceived
-      .map(
-        (l) =>
-          printServiceContract.interface.decodeEventLog(
-            'PrintOrderReceived',
-            l.data,
-          )[5],
-      )
-      .map((m) => parseInt(m, 16));
-
+    const tokenIds = printOrdersReceived.map(
+      (l) =>
+        printServiceContract.interface.decodeEventLog(
+          'PrintOrderReceived',
+          l.data,
+        )[4],
+    );
     console.log(tokenIds, 'tokenIds');
+
+    // INDEX FIREBASE W/ HASH, GRAB DATA => PUSH AIRTABLE RECORD + EMIT EMAIL
   }
+
   res.status(200).json({
     statusCode: 200,
   });

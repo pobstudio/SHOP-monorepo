@@ -260,7 +260,7 @@ export const PaymentFlow: FC<{
     if (success) {
       setTimeout(() => {
         router.push(ROUTES.ACCOUNT);
-      }, 3 * 1000);
+      }, 1.5 * 1000);
     }
   }, [success]);
 

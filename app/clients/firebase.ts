@@ -14,7 +14,9 @@ export interface FIRESTORE_PRINT_SERVICE_RECORD {
   customerContact: string;
   customerShipping: string;
   customerWallet?: string | null;
-  paymentUrl?: string;
+  orderId?: number; // resolve when paid
+  orderHash?: string; // resolve when paid
+  paymentUrl?: string; // resolve when paid
   productType: PrintServiceProductType;
   timestamp: Date;
   tokenId: string;
