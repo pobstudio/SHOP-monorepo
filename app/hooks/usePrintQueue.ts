@@ -126,7 +126,7 @@ export const getAirtableRecordFromOpenSeaAsset = (
   contact: string,
   shipping: string,
   txid: string,
-  amountPaid: number,
+  amountPaid: string,
 ): PrintServiceAirtableRecordType | undefined => {
   if (!asset) {
     return undefined;

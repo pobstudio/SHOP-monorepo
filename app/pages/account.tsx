@@ -7,12 +7,17 @@ import { Footer } from '../components/footer';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Status } from '../components/web3Status';
 import { usePrintOrdersByAccount } from '../hooks/usePrintQueue';
-import { PrintServiceAirtableRecordType } from '../utils/airtable';
+import {
+  getPrintServicePackageNameFromProductType,
+  PrintServiceAirtableRecordType,
+  PrintServiceProductType,
+} from '../utils/airtable';
+import { shortenHexString } from '../utils/hex';
 
 const AccountPage: NextPage = () => {
   const { account } = useWeb3React();
-  const orders = usePrintOrdersByAccount(account);
-  const noOrdersFound = !orders || orders?.length === 0;
+  const records = usePrintOrdersByAccount(account);
+  const noOrdersFound = !records || records?.length === 0;
   return (
     <>
       <ContentWrapper>
@@ -28,9 +33,20 @@ const AccountPage: NextPage = () => {
                   <Order />
                 ) : (
                   <>
-                    {orders?.map((order: PrintServiceAirtableRecordType) => (
-                      <Order key={order['order id']} order={order} />
-                    ))}
+                    {records?.map(
+                      (
+                        record: {
+                          fields: PrintServiceAirtableRecordType;
+                          id: string;
+                        },
+                        index: number,
+                      ) => (
+                        <Order
+                          key={`order-cell-${index}`}
+                          data={record.fields}
+                        />
+                      ),
+                    )}
                   </>
                 )}
               </>
@@ -52,59 +68,81 @@ const AccountPage: NextPage = () => {
 
 export default React.memo(AccountPage);
 
-const Order: FC<{ order?: PrintServiceAirtableRecordType }> = ({ order }) => (
-  <OrderBox>
-    <OrderRow>
-      <div>Order ID</div>
-      <div>{order ? order['order id'] : '––'}</div>
-    </OrderRow>
+const Order: FC<{ data?: PrintServiceAirtableRecordType }> = ({ data }) => {
+  console.log('Order: ', data);
+  const order = (key: string): any => (data ? data[key] ?? '––' : '––');
+  return (
+    <OrderBox>
+      <OrderRow>
+        <div>Order ID</div>
+        <div>{order('order id')}</div>
+      </OrderRow>
 
-    <OrderRow>
-      <div>Created</div>
-      <div>{order ? order['created at'] : '––'}</div>
-    </OrderRow>
+      <OrderRow>
+        <div>Status</div>
+        <div>{order('status')}</div>
+      </OrderRow>
 
-    <OrderRow>
-      <div>Receipt</div>
-      <div>{order ? order['etherscan'] : '––'}</div>
-    </OrderRow>
+      <OrderRow>
+        <div>Created</div>
+        <div>
+          {data
+            ? new Date(Date.parse(order('created at'))).toUTCString()
+            : order('created at')}
+        </div>
+      </OrderRow>
 
-    <OrderRow>
-      <div>Collection</div>
-      <div>{order ? order['collection'] : '––'}</div>
-    </OrderRow>
+      <OrderRow>
+        <div>Package</div>
+        <div>
+          {data
+            ? getPrintServicePackageNameFromProductType[
+                order('type') as PrintServiceProductType
+              ]
+            : order('type')}
+        </div>
+      </OrderRow>
 
-    <OrderRow>
-      <div>Artwork</div>
-      {order ? (
-        <a
-          href={`${order['opensea']}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {order['name']}
-        </a>
-      ) : (
-        '––'
+      <OrderRow>
+        <div>Collection</div>
+        <div>{order('collection')}</div>
+      </OrderRow>
+
+      <OrderRow>
+        <div>Artwork</div>
+        {order('opensea').includes('http') ? (
+          <a href={order('opensea')} target="_blank" rel="noopener noreferrer">
+            {order('name')}
+          </a>
+        ) : (
+          <div>{order('name')}</div>
+        )}
+      </OrderRow>
+
+      <OrderRow>
+        <div>Receipt</div>
+        {order('etherscan').includes('http') ? (
+          <a
+            href={order('etherscan')}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {shortenHexString(order('etherscan'), 12)}
+          </a>
+        ) : (
+          <div>{order('etherscan')}</div>
+        )}
+      </OrderRow>
+
+      {data && data['tracking'] && (
+        <OrderRow>
+          <div>Tracking ID</div>
+          <div>{order('tracking')}</div>
+        </OrderRow>
       )}
-    </OrderRow>
-
-    {/* <OrderRow>
-      <div>Token ID</div>
-      <div>{order ? order['tokenid'] : '-'}</div>
-    </OrderRow> */}
-
-    <OrderRow>
-      <div>Status</div>
-      <div>{order ? order['status'] : '––'}</div>
-    </OrderRow>
-
-    <OrderRow>
-      <div>Tracking</div>
-      <div>{order ? order['tracking number'] : '––'}</div>
-    </OrderRow>
-  </OrderBox>
-);
+    </OrderBox>
+  );
+};
 
 const PageTitle = styled.h4`
   text-align: center;
@@ -148,19 +186,8 @@ const OrderRow = styled.div`
   flex-direction: row;
   justify-content: space-between;
 
-  font-family: Roboto Mono;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 10px;
-  line-height: 13px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-
-  a {
+  * {
     color: black;
-    font-family: Roboto Mono;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -169,6 +196,9 @@ const OrderRow = styled.div`
     align-items: center;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+  }
+
+  a {
     text-decoration: underline;
     &:hover,
     :visited {
