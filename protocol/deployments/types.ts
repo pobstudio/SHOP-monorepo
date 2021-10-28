@@ -6,3 +6,5 @@ export interface Deployment {
 }
 
 export type Deployments = { [chainId: number]: Deployment };
+
+export type ContractEvents = { [chainId: number]: any };

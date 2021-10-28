@@ -13,6 +13,8 @@ import {
   PrintServiceProductType,
 } from '../utils/airtable';
 import { shortenHexString } from '../utils/hex';
+import { ROUTES } from '../constants/routes';
+import Link from 'next/link';
 
 const AccountPage: NextPage = () => {
   const { account } = useWeb3React();
@@ -58,6 +60,11 @@ const AccountPage: NextPage = () => {
           <br />
           <PageCaption>
             Don't see your order? Refresh the page in 1 minute.
+          </PageCaption>
+          <PageCaption>
+            <Link href={ROUTES.SUPPORT} passHref>
+              <a>Contact Support</a>
+            </Link>
           </PageCaption>
         </MainContent>
         <Footer />
@@ -158,6 +165,20 @@ const PageCaption = styled.h4`
   font-weight: lighter;
   color: black;
   text-transform: uppercase;
+  * {
+    text-align: center;
+    font-size: 12px;
+    font-weight: lighter;
+    color: black;
+    text-transform: uppercase;
+  }
+  a {
+    text-decoration: underline;
+    &:hover,
+    :visited {
+      color: black;
+    }
+  }
 `;
 
 const Orders = styled.div`

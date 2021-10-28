@@ -1,4 +1,4 @@
-import { Deployments } from './types';
+import { Deployments, ContractEvents } from './types';
 
 export const deployments: Deployments = {
   1: {
@@ -12,5 +12,20 @@ export const deployments: Deployments = {
     multisig: '0x28558Ba4343FeB2709ed7A9531B72402a7794D8D', // POB Multisig
     deployer: '0x0B7056e2D9064f2ec8647F1ae556BAcc06da6Db4', // deployer.pob.eth
     printService: '0x2eD18dF7240082E514F86C4CCdBD8DA2f615EC0e', // PrintService
+  },
+};
+
+export const events: ContractEvents = {
+  1: {
+    printService: {
+      printOrderReceived:
+        '0x683b8e58d3b4c62460d6e6df4524f97da8c68e6fce307d96b224461ca40b6869',
+    },
+  },
+  4: {
+    printService: {
+      printOrderReceived:
+        '0x683b8e58d3b4c62460d6e6df4524f97da8c68e6fce307d96b224461ca40b6869',
+    },
   },
 };

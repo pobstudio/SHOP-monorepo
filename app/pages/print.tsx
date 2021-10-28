@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { NextPage } from 'next';
 import { ContentWrapper, MainContent } from '../components/content';
 import { Header } from '../components/header';
@@ -11,6 +11,7 @@ import {
   SectionBody,
 } from '../components/checkout';
 import { PrintCheckout } from '../components/checkout/print/form';
+import { useCheckoutStore } from '../stores/checkout';
 
 const PrintPage: NextPage = () => {
   return (
@@ -20,10 +21,7 @@ const PrintPage: NextPage = () => {
         <MainContent>
           <Split>
             <LeftSide>
-              <img src="/imgs/zrx-framed-photos/frame-1.jpg" />
-              <img src="/imgs/zrx-framed-photos/frame-2.jpg" />
-              <img src="/imgs/zrx-framed-photos/frame-3.jpg" />
-              <img src="/imgs/zrx-framed-photos/frame-4.jpg" />
+              <Photos />
             </LeftSide>
             <RightSide>
               <PrintHero />
@@ -71,7 +69,8 @@ const PrintDetails: FC = () => (
       <p>
         All prints are done on Hahnemühle Photo Rag 308g paper with
         archival-grade ink. Printed via a fine art 74 inch wide Roland Hi-Fi Jet
-        Pro II.
+        Pro II. All orders also receive an official POB Providence Certificate,
+        8 in x 8 in.
         <br />
         <br />
         Framing Option: All framing is custom, handcrafted black metal with
@@ -86,8 +85,8 @@ const PrintDetails: FC = () => (
             Resolution: 6000px x 9600px. ( Art may vary slightly due to
             resolution increase )
           </li>
-          <li>Print Sizing: 18 inches x 24 inches ( 45.72 cm x 60.96 cm )</li>
-          <li>Framed Size: 20 inches x 26 inches ( 50.8 cm x 66.04 cm )</li>
+          <li>Print Sizing: 18 in x 24 in ( 45.72 cm x 60.96 cm )</li>
+          <li>Framed Size: 20 in x 26 in ( 50.8 cm x 66.04 cm )</li>
           <li>
             Photo Info:{' '}
             <a
@@ -105,8 +104,8 @@ const PrintDetails: FC = () => (
         <figcaption> LONDON GIFT Prints</figcaption>
         <ul>
           <li>Resolution: 6144px x 6144px</li>
-          <li>Print Sizing: 24 inches x 24 inches ( 60.96 cm x 60.96 cm )</li>
-          <li>Framed Size: 26 inches x 26 inches ( 66.04 cm x 66.04 cm )</li>
+          <li>Print Sizing: 24 in x 24 in ( 60.96 cm x 60.96 cm )</li>
+          <li>Framed Size: 26 in x 26 in ( 66.04 cm x 66.04 cm )</li>
           <li>
             Photo Info:{' '}
             <a
@@ -150,3 +149,34 @@ const PrintDetails: FC = () => (
     </SectionBody>
   </RightSection>
 );
+
+const LondonPhotos: FC = () => (
+  <>
+    <img src="/imgs/gallery16/london/frame-1.jpg" />
+    <img src="/imgs/gallery16/london/frame-2.jpg" />
+    <img src="/imgs/gallery16/london/frame-3.jpg" />
+    <img src="/imgs/gallery16/london/certificate.jpg" />
+  </>
+);
+
+const HashPhotos: FC = () => (
+  <>
+    <img src="/imgs/gallery16/hash/frame-1.jpg" />
+    <img src="/imgs/gallery16/hash/frame-2.jpg" />
+    <img src="/imgs/gallery16/hash/frame-3.jpg" />
+    <img src="/imgs/gallery16/hash/frame-4.jpg" />
+    <img src="/imgs/gallery16/hash/certificate.jpg" />
+  </>
+);
+
+const Photos: FC = () => {
+  const collection = useCheckoutStore((s) => s.collection);
+  switch (true) {
+    case collection.includes('london'):
+      return <LondonPhotos />;
+    case collection.includes('hash'):
+      return <HashPhotos />;
+    default:
+      return <LondonPhotos />;
+  }
+};

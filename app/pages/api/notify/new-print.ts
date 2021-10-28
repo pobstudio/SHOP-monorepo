@@ -1,4 +1,4 @@
-import { deployments, PrintService__factory } from '@pob/protocol';
+import { deployments, events, PrintService__factory } from '@pob/protocol';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ethers } from 'ethers';
 import { CHAIN_ID } from '../../../constants';
@@ -25,9 +25,7 @@ const printServiceContract = PrintService__factory.connect(
 const firestore = admin.firestore();
 
 const PrintOrderReceivedTopic0 =
-  CHAIN_ID === 1
-    ? ''
-    : '0x683b8e58d3b4c62460d6e6df4524f97da8c68e6fce307d96b224461ca40b6869';
+  events[CHAIN_ID].printService.printOrderReceived;
 
 const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;

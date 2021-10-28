@@ -8,15 +8,20 @@ import {
 import { PrintServiceProductType } from '../../../utils/airtable';
 import { PaymentFlow } from './payment';
 import { FIRESTORE_PRINT_SERVICE_RECORD } from '../../../clients/firebase';
+import { useCheckoutStore } from '../../../stores/checkout';
 
 export const PrintCheckout: FC = () => {
   const { account } = useWeb3React();
   const collections = useAccountCollections(account);
 
+  const setCollection = useCheckoutStore((s) => s.setCollection);
   const [artwork, setArtworkOption] = useState<'london-gifts' | 'hash'>(
     'london-gifts',
   );
-  const handleArtChange = (e: any) => setArtworkOption(e.target.value);
+  const handleArtChange = (e: any) => {
+    setArtworkOption(e.target.value);
+    setCollection(e.target.value);
+  };
 
   const [artworkID, setArtworkID] = useState<string>('');
   const handleArtIDChange = (e: any) => setArtworkID(e.target.value);
