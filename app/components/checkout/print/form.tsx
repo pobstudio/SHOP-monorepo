@@ -51,7 +51,7 @@ export const PrintCheckout: FC = () => {
   }, [artwork, collections]);
 
   const [printOption, setPrintOption] =
-    useState<PrintServiceProductType>('print0');
+    useState<PrintServiceProductType>('print1');
   const handlePrintOptionChange = (e: any) => setPrintOption(e.target.value);
 
   const [email, setEmail] = useState<string>('');
@@ -99,7 +99,7 @@ export const PrintCheckout: FC = () => {
         <SectionBody>
           <h4>Collection</h4>
           <br />
-          <select onChange={(e) => handleArtChange(e)}>
+          <select value={artwork} onChange={(e) => handleArtChange(e)}>
             <option value="london-gifts">LONDON GIFT</option>
             <option value="hash">HASH</option>
           </select>
@@ -110,9 +110,7 @@ export const PrintCheckout: FC = () => {
           <select onChange={(e) => handleArtIDChange(e)}>
             {ArtworkIDSelectValues}
           </select>
-          {artworkAsset?.asset && (
-            <SlapImage src={artworkAsset?.asset?.image_url as string} />
-          )}
+          {artworkAsset && <SlapImage src={artworkAsset.image_url as string} />}
         </SectionBody>
       </RightSection>
 
@@ -120,7 +118,10 @@ export const PrintCheckout: FC = () => {
         <SectionBody>
           <h4>Choose Package</h4>
           <br />
-          <select onChange={(e) => handlePrintOptionChange(e)}>
+          <select
+            value={printOption}
+            onChange={(e) => handlePrintOptionChange(e)}
+          >
             <option value="print0">
               No Frame / Print Only - Ships in 2 Weeks
             </option>

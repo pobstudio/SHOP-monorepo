@@ -30,6 +30,7 @@ const PrintOrderReceivedTopic0 =
 const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   const activity = body?.activity;
+  console.log(activity, 'activity');
 
   if (!activity || activity?.length < 1) {
     console.log('Alchemy Notify: No Activity Found');
@@ -48,6 +49,7 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
     value: a.value,
     asset: a.asset,
   }));
+  console.log(tokenTransferActivity, 'tokenTransferActivity');
 
   for (const [index, transaction] of tokenTransferActivity.entries()) {
     // GET TRANSACTION DATA FROM TXID

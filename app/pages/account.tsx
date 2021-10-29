@@ -15,6 +15,7 @@ import {
 import { shortenHexString } from '../utils/hex';
 import { ROUTES } from '../constants/routes';
 import Link from 'next/link';
+import { PageTitle, PageCaption, PageBody } from '../components/common';
 
 const AccountPage: NextPage = () => {
   const { account } = useWeb3React();
@@ -27,7 +28,7 @@ const AccountPage: NextPage = () => {
         <MainContent>
           <br />
           <br />
-          <PageTitle style={{ textAlign: 'center' }}>My Orders</PageTitle>
+          <PageTitle>My Orders</PageTitle>
           <Orders>
             {!!account ? (
               <>
@@ -43,10 +44,13 @@ const AccountPage: NextPage = () => {
                         },
                         index: number,
                       ) => (
-                        <Order
-                          key={`order-cell-${index}`}
-                          data={record.fields}
-                        />
+                        <>
+                          <Order
+                            key={`order-cell-${index}`}
+                            data={record.fields}
+                          />
+                          <br />
+                        </>
                       ),
                     )}
                   </>
@@ -56,8 +60,7 @@ const AccountPage: NextPage = () => {
               <Web3Status />
             )}
           </Orders>
-          <br />
-          <br />
+
           <PageCaption>
             Don't see your order? Refresh the page in 1 minute.
           </PageCaption>
@@ -66,6 +69,8 @@ const AccountPage: NextPage = () => {
               <a>Contact Support</a>
             </Link>
           </PageCaption>
+          <br />
+          <br />
         </MainContent>
         <Footer />
       </ContentWrapper>
@@ -151,42 +156,10 @@ const Order: FC<{ data?: PrintServiceAirtableRecordType }> = ({ data }) => {
   );
 };
 
-const PageTitle = styled.h4`
-  text-align: center;
-  font-size: 16px;
-  font-weight: lighter;
-  color: black;
-  text-transform: uppercase;
-`;
-
-const PageCaption = styled.h4`
-  text-align: center;
-  font-size: 12px;
-  font-weight: lighter;
-  color: black;
-  text-transform: uppercase;
-  * {
-    text-align: center;
-    font-size: 12px;
-    font-weight: lighter;
-    color: black;
-    text-transform: uppercase;
-  }
-  a {
-    text-decoration: underline;
-    &:hover,
-    :visited {
-      color: black;
-    }
-  }
-`;
-
-const Orders = styled.div`
-  display: flex;
-  flex-direction: column;
+const Orders = styled(PageBody)`
+  flex-direction: column-reverse;
   align-items: center;
   justify-content: center;
-  margin-top: 56px;
 `;
 
 const OrderBox = styled.div`
