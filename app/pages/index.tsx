@@ -14,7 +14,7 @@ const IndexPage: NextPage = () => {
         <Header />
         <CenterOnPage background={`#991616`}>
           <div>
-            <Season>fall 2021</Season>
+            <Season>now available</Season>
             <Link href={ROUTES.PRINT} passHref>
               <SmallWhiteButton>Print Service</SmallWhiteButton>
             </Link>
@@ -41,7 +41,7 @@ const Season = styled.div`
   color: white;
   text-align: center;
   margin-top: -16px;
-  transform: translateY(-32px);
+  transform: translateY(-16px);
 `;
 
 const SmallWhiteButton = styled.a`

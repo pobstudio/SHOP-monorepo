@@ -94,7 +94,7 @@ const SupportPage: NextPage = () => {
                 printing service Gallery 16 and stored in both a restricted
                 Firestore database and Airtable. The POB Shop experience is both
                 experimental and a work in progress; please be advised. The
-                primary parties responsible over your data is{' '}
+                primary parties responsible over your data are{' '}
                 <a
                   href={`https://twitter.com/ash_bhimasani`}
                   target="_blank"
