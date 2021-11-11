@@ -1,4 +1,4 @@
-import React, { useState, useMemo, FC } from 'react';
+import React, { useEffect, useState, useMemo, FC } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { RightSection, SectionBody, SlapImage } from '..';
 import {
@@ -8,7 +8,7 @@ import {
 import { PrintServiceProductType } from '../../../utils/airtable';
 import { PaymentFlow } from './payment';
 import { FIRESTORE_PRINT_SERVICE_RECORD } from '../../../clients/firebase';
-import { useCheckoutStore } from '../../../stores/checkout';
+import { defaultCollection, useCheckoutStore } from '../../../stores/checkout';
 
 export const PrintCheckout: FC = () => {
   const { account } = useWeb3React();
@@ -16,12 +16,15 @@ export const PrintCheckout: FC = () => {
 
   const setCollection = useCheckoutStore((s) => s.setCollection);
   const [artwork, setArtworkOption] = useState<'london-gifts' | 'hash'>(
-    'london-gifts',
+    defaultCollection,
   );
   const handleArtChange = (e: any) => {
     setArtworkOption(e.target.value);
     setCollection(e.target.value);
   };
+  useEffect(() => {
+    setCollection(defaultCollection);
+  }, []);
 
   const [artworkID, setArtworkID] = useState<string>('');
   const handleArtIDChange = (e: any) => setArtworkID(e.target.value);

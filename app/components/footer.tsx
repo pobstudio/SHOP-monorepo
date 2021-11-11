@@ -121,16 +121,12 @@ export const Footer: React.FC = () => {
               <Link href="/account" passHref>
                 <FooterLink>My Orders</FooterLink>
               </Link>
-              <FooterLink
-                href="/support"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Support
-              </FooterLink>
-              <FooterLink href="/faq" target="_blank" rel="noopener noreferrer">
-                FAQ
-              </FooterLink>
+              <Link href="/support" passHref>
+                <FooterLink>Support</FooterLink>
+              </Link>
+              <Link href="/faq" passHref>
+                <FooterLink>FAQ</FooterLink>
+              </Link>
             </FooterLinksColumn>
             <FooterLinksColumn>
               <FooterColumnLabel>Legal</FooterColumnLabel>
