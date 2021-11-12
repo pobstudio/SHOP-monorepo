@@ -6,6 +6,7 @@ import { Header } from '../components/header';
 import { Footer } from '../components/footer';
 import { ROUTES } from '../constants/routes';
 import Link from 'next/link';
+import { ZoraShaderCanvas } from '../components/canvas/zora/loader';
 
 const IndexPage: NextPage = () => {
   return (
@@ -13,6 +14,7 @@ const IndexPage: NextPage = () => {
       <ContentWrapper>
         <Header />
         <CenterOnPage background={`#991616`}>
+          <ZoraShaderCanvas />
           <div>
             <Season>now available</Season>
             <Link href={ROUTES.PRINT} passHref>
