@@ -4,19 +4,20 @@ import { ZoraFragment } from './fragment';
 import { useBlockchainStore } from '../../../stores/blockchain';
 
 export const ZoraShaderCanvas: FC = () => {
-  if (typeof window !== 'undefined') {
-    const GlslCanvas = require('glslCanvas').default;
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const blockNumber = useBlockchainStore((s) => s.blockNumber);
-    useEffect(() => {
-      if (canvasRef && canvasRef.current) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const blockNumber = useBlockchainStore((s) => s.blockNumber);
+  useEffect(() => {
+    if (canvasRef && canvasRef.current) {
+      if (typeof window !== 'undefined') {
+        const GlslCanvas = require('glslCanvas').default;
         const sandbox = new GlslCanvas(canvasRef.current);
         sandbox.load(ZoraFragment);
         sandbox.setUniform('u_seed', Math.pow(blockNumber ?? 21021021, 0.5));
+        canvasRef.current.style.display = 'block';
       }
-    }, [canvasRef]);
-    return <StretchCanvas ref={canvasRef} />;
-  } else return <></>;
+    }
+  }, [canvasRef]);
+  return <ResetCanvas id="glslCanvas" ref={canvasRef} />;
 };
 
 const Canvas = styled.canvas`
@@ -32,4 +33,8 @@ const StretchCanvas = styled(Canvas)`
   bottom: 0;
   left: 0;
   height: 100%;
+`;
+
+const ResetCanvas = styled(StretchCanvas)`
+  display: none;
 `;
