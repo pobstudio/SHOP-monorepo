@@ -48,6 +48,7 @@ vec3 stop7 = vec3(45. / 255., 28. / 255., 19. / 255.); // #2d1c13
 // RED THEME
 vec3 stop8 = vec3(153. / 255., 22. / 255., 22. / 255.); // #991616
 vec3 stop9 = vec3(255. / 255., 133. / 255., 180. / 255.); // #ff85b4
+vec3 stop10 = vec3(64. / 255., 0. / 255., 0. / 255.); // #400000
 
 // yeah this will probably break if you don't use greyscale
 vec3 mapColor(vec3 c) {
@@ -78,7 +79,7 @@ vec3 mapColor(vec3 c) {
         // w7 = (c - 0.05) / (0.1 - 0.05)
 		return mix(stop7, stop6, 20. * c + -1.);
 	}
-	return stop7;
+	return stop10;
 }
 
 void main() {
