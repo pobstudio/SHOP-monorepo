@@ -69,15 +69,15 @@ vec3 mapColor(vec3 c) {
 	}
 	else if (c.x > 0.25) {
         // w5 = (c - 0.25) / (0.5 - 0.25)
-		return mix(stop5, stop8, 4. * c + -1.);
+		return mix(stop3, stop8, 4. * c + -1.);
 	}
 	else if (c.x > 0.1) {
         // w6 = (c - 0.1) / (0.25 - 0.1)
-		return mix(stop6, stop5, 6.66666666667 * c + -0.6666667);
+		return mix(stop10, stop8, 6.66666666667 * c + -0.6666667);
 	}
 	else if (c.x > 0.05) {
         // w7 = (c - 0.05) / (0.1 - 0.05)
-		return mix(stop7, stop6, 20. * c + -1.);
+		return mix(stop8, stop9, 20. * c + -1.);
 	}
 	return stop10;
 }

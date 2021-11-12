@@ -70,7 +70,7 @@ export const Header: FC = () => {
             {!isMobile && (
               <Link href={'/'} passHref>
                 <LightNavLink style={{ transform: 'translateY(-1px)' }}>
-                  Q421: CATALOG
+                  V1: CATALOG
                 </LightNavLink>
               </Link>
             )}

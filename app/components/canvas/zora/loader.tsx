@@ -12,7 +12,7 @@ export const ZoraShaderCanvas: FC = () => {
       if (canvasRef && canvasRef.current) {
         const sandbox = new GlslCanvas(canvasRef.current);
         sandbox.load(ZoraFragment);
-        sandbox.setUniform('u_seed', Math.pow(blockNumber ?? 11111111, 0.5));
+        sandbox.setUniform('u_seed', Math.pow(blockNumber ?? 10101010, 0.5));
       }
     }, [canvasRef]);
     return <StretchCanvas ref={canvasRef} />;
