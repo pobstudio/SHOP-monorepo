@@ -37,13 +37,18 @@ mediump float fbm( vec2 p )
     return f/0.96875;
 }
 
-vec3 stop1 = vec3(220. / 255., 200. / 255., 208. / 255.);
-vec3 stop2 = vec3(120. / 255., 200. / 255., 207. / 255.);
-vec3 stop3 = vec3(77. / 255., 149. / 255., 158. / 255.);
-vec3 stop4 = vec3(48. / 255., 94. / 255., 185. / 255.);
-vec3 stop5 = vec3(49. / 255., 31. / 255., 18. / 255.);
-vec3 stop6 = vec3(104. / 255., 66. / 255., 50. / 255.);
-vec3 stop7 = vec3(45. / 255., 28. / 255., 19. / 255.);
+vec3 stop1 = vec3(220. / 255., 200. / 255., 208. / 255.); // ##dcc8d0
+vec3 stop2 = vec3(120. / 255., 200. / 255., 207. / 255.); // #78c8cf 
+vec3 stop3 = vec3(77. / 255., 149. / 255., 158. / 255.); // #4d959e (teal)
+vec3 stop4 = vec3(48. / 255., 94. / 255., 185. / 255.); // #305eb9 (blue)
+vec3 stop5 = vec3(49. / 255., 31. / 255., 18. / 255.); // #311f12
+vec3 stop6 = vec3(104. / 255., 66. / 255., 50. / 255.); // #684232
+vec3 stop7 = vec3(45. / 255., 28. / 255., 19. / 255.); // #2d1c13
+
+// RED THEME
+vec3 stop8 = vec3(153. / 255., 22. / 255., 22. / 255.); // #991616
+vec3 stop9 = vec3(255. / 255., 133. / 255., 180. / 255.); // #ff85b4
+
 // yeah this will probably break if you don't use greyscale
 vec3 mapColor(vec3 c) {
 	if (c.x > 0.9) {
@@ -55,15 +60,15 @@ vec3 mapColor(vec3 c) {
 	}
 	else if (c.x > 0.6) {
         // w3 = (c - 0.6) / (0.75 - 0.6)
-		return mix(stop3, stop2, 6.66666666667 * c + -4.);
+		return mix(stop9, stop8, 6.66666666667 * c + -4.);
 	}
 	else if (c.x > 0.5) {
         // w4 = (c - 0.5) / (0.6 - 0.5)
-		return mix(stop4, stop3, 10. * c + -5.);
+		return mix(stop8, stop9, 10. * c + -5.);
 	}
 	else if (c.x > 0.25) {
         // w5 = (c - 0.25) / (0.5 - 0.25)
-		return mix(stop5, stop4, 4. * c + -1.);
+		return mix(stop5, stop8, 4. * c + -1.);
 	}
 	else if (c.x > 0.1) {
         // w6 = (c - 0.1) / (0.25 - 0.1)
