@@ -63,4 +63,5 @@ export const PageBody = styled.div`
   flex-direction: column;
   max-width: ${256 * 3}px;
   margin: 40px auto;
+  padding: 0 18px;
 `;
