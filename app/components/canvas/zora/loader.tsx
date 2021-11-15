@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ZoraFragment } from './fragment';
 import { useBlockchainStore } from '../../../stores/blockchain';
 
-export const ZoraShaderCanvas: FC = () => {
+export const ZoraShaderCanvas = React.memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blockNumber = useBlockchainStore((s) => s.blockNumber);
   useEffect(() => {
@@ -16,9 +16,9 @@ export const ZoraShaderCanvas: FC = () => {
         canvasRef.current.style.display = 'block';
       }
     }
-  }, [canvasRef]);
+  }, [canvasRef, blockNumber]);
   return <ResetCanvas id="glslCanvas" ref={canvasRef} />;
-};
+});
 
 const Canvas = styled.canvas`
   backface-visibility: hidden;
