@@ -60,7 +60,7 @@ export const SEO_TITLE = 'SHOP by POB';
 
 export const SEO_DESCRIPTION = 'The home for POB merchandise and printing';
 
-export const OG_BANNER = `${PROD_LINK}/social/print-service.png`;
+export const OG_BANNER = `${PROD_LINK}/social/print-service.jpg`;
 
 // dimensions
 export const HEADER_HEIGHT = 80;
