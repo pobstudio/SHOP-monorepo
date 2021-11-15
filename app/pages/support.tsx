@@ -13,6 +13,7 @@ import {
   PageText,
   PageBodySection,
 } from '../components/common';
+import { DISCORD_LINK, EMAIL_LINK, TWITTER_LINK } from '../constants';
 
 const SupportPage: NextPage = () => {
   return (
@@ -29,7 +30,7 @@ const SupportPage: NextPage = () => {
               <PageText>
                 1. Join the official POB Discord:{' '}
                 <a
-                  href={`https://discord.gg/pob`}
+                  href={DISCORD_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -39,13 +40,12 @@ const SupportPage: NextPage = () => {
                 2. Follow the necessary steps to view all channels in the
                 General section.
                 <br />
-                3. In the #support channel, please use the
+                3. In the #support channel, please use the{' '}
                 <a
                   href="https://discord.com/channels/797978413691305995/798782663313195020/874358061840601098"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {' '}
                   Support bot
                 </a>{' '}
                 and file a ticket.
@@ -117,22 +117,18 @@ const SupportPage: NextPage = () => {
             <PageBodySection>
               <PageSubheader>Contact Us</PageSubheader>
               <PageText>
-                <a
-                  href={`mailto:team@pob.studio`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={EMAIL_LINK} target="_blank" rel="noopener noreferrer">
                   Email
                 </a>{' '}
                 <a
-                  href={`https://twitter.com/prrfbeauty`}
+                  href={TWITTER_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Twitter
                 </a>{' '}
                 <a
-                  href={`https://discord.gg/pob`}
+                  href={DISCORD_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

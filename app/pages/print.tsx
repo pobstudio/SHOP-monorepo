@@ -12,6 +12,7 @@ import {
 } from '../components/checkout';
 import { PrintCheckout } from '../components/checkout/print/form';
 import { useCheckoutStore } from '../stores/checkout';
+import { TRADE_LONDON_LINK, PRINT_SERVICE_BLOG_POST } from '../constants';
 
 const PrintPage: NextPage = () => {
   return (
@@ -45,17 +46,20 @@ const PrintHero: FC = () => (
       <p>
         Select any Proof of Beauty artwork you own to print. All prints require
         $LONDON token to purchase. Enter your Contact Info and Shipping Address
-        correctly to ensure delivery. Use as much detail as possible when
-        providing your address.
+        correctly to ensure delivery.
         <br />
         <br />
         Free International Shipping •{' '}
+        <a href={TRADE_LONDON_LINK} target="_blank" rel="noopener noreferrer">
+          Get $LONDON
+        </a>{' '}
+        •{' '}
         <a
-          href="https://matcha.xyz/markets/1/0x491d6b7d6822d5d4bc88a1264e1b47791fd8e904"
+          href={PRINT_SERVICE_BLOG_POST}
           target="_blank"
           rel="noopener noreferrer"
         >
-          Get $LONDON
+          Learn More
         </a>
       </p>
     </SectionBody>

@@ -39,7 +39,9 @@ export const BLOG_LINK = `https://pob.mirror.xyz`;
 
 export const TWITTER_LINK = `https://twitter.com/prrfbeauty`;
 
-export const DISCORD_LINK = `https://discord.gg/x4SH5pGgvj`;
+export const EMAIL_LINK = `mailto:team@pob.studio`;
+
+export const DISCORD_LINK = `https://discord.gg/pob`;
 
 export const OPENSEA_LINK = `https://app.singlelink.co/u/pob`;
 
@@ -54,6 +56,10 @@ export const HASH_LINK = 'https://hash.pob.studio';
 export const LONDON_LINK = 'https://london.pob.studio';
 
 export const PUBLICO_LINK = 'https://publico.pob.studio';
+
+export const TRADE_LONDON_LINK = `https://matcha.xyz/markets/1/0x491d6b7d6822d5d4bc88a1264e1b47791fd8e904`;
+
+export const PRINT_SERVICE_BLOG_POST = `https://pob.mirror.xyz/2dadb8skiKb5k1L7z1gVKZlnmLUK_-HOzH-lUPzpQhY`;
 
 // SEO
 export const SEO_TITLE = 'SHOP by POB';

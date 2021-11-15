@@ -13,6 +13,7 @@ import {
   PageText,
   PageBodySection,
 } from '../components/common';
+import { PRINT_SERVICE_BLOG_POST, TRADE_LONDON_LINK } from '../constants';
 
 const FaqPage: NextPage = () => {
   return (
@@ -24,6 +25,32 @@ const FaqPage: NextPage = () => {
           <br />
           <PageTitle>FAQ</PageTitle>
           <PageBody>
+            <PageBodySection>
+              <PageSubheader>Learn More</PageSubheader>
+              <PageText>
+                <a
+                  href={PRINT_SERVICE_BLOG_POST}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Print Service Grand Opening Blog Post
+                </a>
+              </PageText>
+            </PageBodySection>
+
+            <PageBodySection>
+              <PageSubheader>Get $LONDON</PageSubheader>
+              <PageText>
+                <a
+                  href={TRADE_LONDON_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Buy $LONDON via Matcha.xyz
+                </a>
+              </PageText>
+            </PageBodySection>
+
             <PageBodySection>
               <PageSubheader>Can I print other art?</PageSubheader>
               <PageText>

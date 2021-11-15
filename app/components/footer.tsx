@@ -5,6 +5,7 @@ import {
   FOOTER_HEIGHT,
   MOBILE_FOOTER_HEIGHT,
   BLOG_LINK,
+  EMAIL_LINK,
   TWITTER_LINK,
   DISCORD_LINK,
   STUDIO_PROD_LINK,
@@ -114,7 +115,7 @@ export const Footer: React.FC = () => {
               >
                 Blog
               </FooterLink>
-              {/* <FooterLink href={`mailto:team@pob.studio`}>Email</FooterLink> */}
+              {/* <FooterLink href={EMAIL_LINK}>Email</FooterLink> */}
             </FooterLinksColumn>
             <FooterLinksColumn>
               <FooterColumnLabel>Customer</FooterColumnLabel>
