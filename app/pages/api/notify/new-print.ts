@@ -17,18 +17,23 @@ import {
 } from '../../../utils/airtable';
 import { PRINT_SERVICE_PRODUCTS } from '@pob/protocol/contracts/print-service/constants';
 
-const printServiceContract = PrintService__factory.connect(
-  deployments[CHAIN_ID].printService,
-  PROVIDER,
-);
-
 const firestore = admin.firestore();
-
-const PrintOrderReceivedTopic0 =
-  events[CHAIN_ID].printService.printOrderReceived;
 
 const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
+
+  const network = body?.network;
+  const chainId = network?.toLowerCase()?.includes('MAINNET'.toLowerCase())
+    ? 1
+    : 4;
+  const printServiceContract = PrintService__factory.connect(
+    deployments[chainId].printService,
+    PROVIDER,
+  );
+  const PrintOrderReceivedTopic0 =
+    events[chainId].printService.printOrderReceived;
+  console.log(network, 'network');
+
   const activity = body?.activity;
   console.log(activity, 'activity');
 
@@ -147,7 +152,7 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
             'contact': newOrderDetails.customerContact,
             'shipping': newOrderDetails.customerShipping,
             'type': PRINT_SERVICE_PRODUCTS[productType!]?.id,
-            'status': CHAIN_ID === 1 ? 'new' : 'rejected',
+            'status': chainId === 1 ? 'new' : 'rejected',
             'etherscan': paymentUrl,
             'order hash': orderHash,
           });
