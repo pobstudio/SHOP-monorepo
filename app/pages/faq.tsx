@@ -64,7 +64,8 @@ const FaqPage: NextPage = () => {
               <PageSubheader>Can I print in other sizes?</PageSubheader>
               <PageText>
                 To standardize how our art is displayed, we only provide 1 size
-                for HASH and LONDON GIFT respectively.
+                for HASH and LONDON GIFT respectively. If you think we should
+                provide multiple sizes, please contact us or tweet at us.
               </PageText>
             </PageBodySection>
           </PageBody>
