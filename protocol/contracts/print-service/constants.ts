@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { ONE_TOKEN_IN_BASE_UNITS } from '../../utils';
 import { PrintServiceProductType } from '../../../app/utils/airtable';
 
@@ -7,6 +7,19 @@ interface PrintServiceProductContractType {
   price: BigNumber;
   inStock: boolean;
 }
+
+export const PRINT_SERVICE_ETH_PRODUCTS: PrintServiceProductContractType[] = [
+  {
+    id: 'print0',
+    price: utils.parseEther('0.08'),
+    inStock: true,
+  },
+  {
+    id: 'print1',
+    price: utils.parseEther('0.24'),
+    inStock: true,
+  },
+];
 
 export const PRINT_SERVICE_PRODUCTS: PrintServiceProductContractType[] = [
   {

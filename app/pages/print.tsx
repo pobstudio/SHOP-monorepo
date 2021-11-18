@@ -45,13 +45,13 @@ const PrintHero: FC = () => (
       <br />
       <p>
         Select any Proof of Beauty artwork you own to print. All prints require
-        $LONDON token to purchase. Enter your Contact Info and Shipping Address
+        LONDON token to purchase. Enter your Contact Info and Shipping Address
         correctly to ensure delivery.
         <br />
         <br />
         Free International Shipping •{' '}
         <a href={TRADE_LONDON_LINK} target="_blank" rel="noopener noreferrer">
-          Get $LONDON
+          Get LONDON
         </a>{' '}
         •{' '}
         <a
