@@ -91,8 +91,10 @@ describe('PrintService', function () {
       }
     });
 
-    it('Product 0: Complete Payment', async function () {
+    it('Product 0: Exact Payment', async function () {
       const productIndex = 0;
+      const price = PRINT_SERVICE_ETH_PRODUCTS[productIndex].price;
+      const beforeBalance = await treasury.getBalance();
       await printService
         .connect(rando)
         .buy(
@@ -101,13 +103,17 @@ describe('PrintService', function () {
           8776,
           '0x0000000000000000000000000000000000000000000000000000000000000001',
           {
-            value: PRINT_SERVICE_ETH_PRODUCTS[productIndex].price,
+            value: price,
           },
         );
+      const afterBalance = await treasury.getBalance();
+      expect(afterBalance.sub(beforeBalance)).to.deep.eq(price);
     });
 
-    it('Product 1: Complete Payment', async function () {
+    it('Product 1: Exact Payment', async function () {
       const productIndex = 1;
+      const price = PRINT_SERVICE_ETH_PRODUCTS[productIndex].price;
+      const beforeBalance = await treasury.getBalance();
       await printService
         .connect(rando)
         .buy(
@@ -116,41 +122,75 @@ describe('PrintService', function () {
           8776,
           '0x0000000000000000000000000000000000000000000000000000000000000001',
           {
-            value: PRINT_SERVICE_ETH_PRODUCTS[productIndex].price,
+            value: price,
           },
         );
+      const afterBalance = await treasury.getBalance();
+      expect(afterBalance.sub(beforeBalance)).to.deep.eq(price);
     });
 
-    it('Product 0: Rejects Payment', async function () {
+    it('Product 0: Over Payment', async function () {
+      const productIndex = 0;
+      const beforeOwnerBalance = await treasury.getBalance();
+      const beforeRandoBalance = await rando.getBalance();
+      await printService
+        .connect(rando)
+        .buy(
+          productIndex,
+          LONDON_GIFT_CONTRACT,
+          8776,
+          '0x0000000000000000000000000000000000000000000000000000000000000001',
+          {
+            value: PRINT_SERVICE_ETH_PRODUCTS[productIndex + 1].price,
+          },
+        );
+      const afterOwnerBalance = await treasury.getBalance();
+      const afterRandoBalance = await rando.getBalance();
+      expect(afterOwnerBalance.sub(beforeOwnerBalance)).to.deep.eq(
+        PRINT_SERVICE_ETH_PRODUCTS[productIndex].price,
+      );
+      expect(beforeRandoBalance > afterRandoBalance).to.deep.eq(true);
+    });
+
+    it('Product 1: Under Payment', async function () {
+      const productIndex = 1;
+      const beforeOwnerBalance = await treasury.getBalance();
       await expect(
         printService
           .connect(rando)
           .buy(
-            0,
+            productIndex,
             LONDON_GIFT_CONTRACT,
             8776,
             '0x0000000000000000000000000000000000000000000000000000000000000001',
             {
-              value: PRINT_SERVICE_ETH_PRODUCTS[1].price,
+              value: PRINT_SERVICE_ETH_PRODUCTS[productIndex - 1].price,
             },
           ),
-      ).to.revertedWith('Incorrect payment');
+      ).to.revertedWith('Insufficient payment');
+      const afterOwnerBalance = await treasury.getBalance();
+      expect(afterOwnerBalance).to.deep.eq(beforeOwnerBalance);
     });
 
-    it('Product 1: Rejects Payment', async function () {
+    it('Out of Stock', async function () {
+      const productIndex = 0;
+      const beforeOwnerBalance = await treasury.getBalance();
+      await printService.connect(owner).setProductInStock(productIndex, false);
       await expect(
         printService
           .connect(rando)
           .buy(
-            1,
+            productIndex,
             LONDON_GIFT_CONTRACT,
             8776,
             '0x0000000000000000000000000000000000000000000000000000000000000001',
             {
-              value: PRINT_SERVICE_ETH_PRODUCTS[0].price,
+              value: PRINT_SERVICE_ETH_PRODUCTS[productIndex].price,
             },
           ),
-      ).to.revertedWith('Incorrect payment');
+      ).to.revertedWith('Product out of stock');
+      const afterOwnerBalance = await treasury.getBalance();
+      expect(afterOwnerBalance).to.deep.eq(beforeOwnerBalance);
     });
   });
 });

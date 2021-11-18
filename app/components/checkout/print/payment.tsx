@@ -371,6 +371,7 @@ const PurchaseButton = styled(SlimSectionBody)`
   text-transform: uppercase;
   color: #000000;
   cursor: pointer;
+  user-select: none;
 `;
 
 const Price = styled(SlimSectionBody)`

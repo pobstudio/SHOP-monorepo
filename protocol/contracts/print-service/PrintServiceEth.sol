@@ -47,13 +47,15 @@ contract PrintServiceEth is Ownable {
     function buy(uint256 _productIndex, address _collection, uint256 _tokenId, bytes32 _orderHash) public payable {
       Product memory product = products[_productIndex];
       uint256 price = product.price;
+      uint256 amountPaid = msg.value;
       // ensure approval and conditions are met
       require(product.inStock, "Product out of stock");
       // ensure enough balance
-      require(price == msg.value, "Incorrect payment");
-      // transfer ETH
+      require(price <= msg.value, "Insufficient payment");
+      // transfer ETH to Treasury
       treasury.call{value: price }("");
-      msg.sender.call{value: price}("");
+      // transfer any overpayment back to payer
+      msg.sender.call{value: amountPaid - price}("");
       // increment order count
       orderId += 1;
       // emit order details

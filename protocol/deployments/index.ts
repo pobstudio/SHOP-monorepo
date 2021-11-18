@@ -13,7 +13,7 @@ export const deployments: Deployments = {
     multisig: '0x28558Ba4343FeB2709ed7A9531B72402a7794D8D', // POB Multisig
     deployer: '0x0B7056e2D9064f2ec8647F1ae556BAcc06da6Db4', // deployer.pob.eth
     printService: '0x2eD18dF7240082E514F86C4CCdBD8DA2f615EC0e', // PrintService
-    printServiceEth: '0x891F611a6001bEd6E587a60fBf879B79b1786231', // PrintServiceEth
+    printServiceEth: '0x0c6881bF552208F41367f0B55759d0269E43aad1', // PrintServiceEth
   },
 };
 
