@@ -14,6 +14,7 @@ export type { IERC721Receiver } from './IERC721Receiver';
 export type { Ownable } from './Ownable';
 export type { PrintService } from './PrintService';
 export type { PrintServiceEth } from './PrintServiceEth';
+export type { PrintServiceV2 } from './PrintServiceV2';
 
 export { ERC165__factory } from './factories/ERC165__factory';
 export { ERC20__factory } from './factories/ERC20__factory';
@@ -28,3 +29,4 @@ export { IERC721Receiver__factory } from './factories/IERC721Receiver__factory';
 export { Ownable__factory } from './factories/Ownable__factory';
 export { PrintService__factory } from './factories/PrintService__factory';
 export { PrintServiceEth__factory } from './factories/PrintServiceEth__factory';
+export { PrintServiceV2__factory } from './factories/PrintServiceV2__factory';

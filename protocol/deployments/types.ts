@@ -4,6 +4,7 @@ export interface Deployment {
   deployer: string;
   printService: string;
   printServiceEth: string;
+  printServiceV2: string;
 }
 
 export type Deployments = { [chainId: number]: Deployment };

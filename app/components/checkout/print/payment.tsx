@@ -137,6 +137,7 @@ const usePaymentFlow = (
     if (pushFirebase.ok) {
       try {
         const startPay = await printServiceContract?.buy(
+          paymentCurrency.includes('eth') ? 0 : 1,
           getPrintServiceProductIndexFromType(product),
           collection,
           BigNumber.from(tokenID),

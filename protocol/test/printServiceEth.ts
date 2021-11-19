@@ -9,8 +9,7 @@ import { PRINT_SERVICE_ETH_PRODUCTS } from '../contracts/print-service/constants
 
 const LONDON_GIFT_CONTRACT = '0x7645eec8bb51862a5aa855c40971b2877dae81af';
 
-describe('PrintService', function () {
-  let erc20Mintable: ERC20Mintable;
+describe('PrintServiceEth', function () {
   let printService: PrintServiceEth;
 
   let owner: Signer;

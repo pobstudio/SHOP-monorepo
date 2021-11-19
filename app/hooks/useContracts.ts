@@ -1,8 +1,7 @@
 import {
   deployments,
   ERC20Mintable__factory,
-  PrintService__factory,
-  PrintServiceEth__factory,
+  PrintServiceV2__factory,
 } from '@pob/protocol';
 import { useMemo } from 'react';
 import { CHAIN_ID } from '../constants';
@@ -39,14 +38,8 @@ export const usePrintServiceContract = (shouldUseFallback: boolean = false) => {
       return;
     }
 
-    if (paymentCurrency.toLowerCase().includes('london')) {
-      return PrintService__factory.connect(
-        deployments[CHAIN_ID].printService,
-        getProviderOrSigner(provider as JsonRpcProvider, account as string),
-      );
-    }
-    return PrintServiceEth__factory.connect(
-      deployments[CHAIN_ID].printServiceEth,
+    return PrintServiceV2__factory.connect(
+      deployments[CHAIN_ID].printServiceV2,
       getProviderOrSigner(provider as JsonRpcProvider, account as string),
     );
   }, [account, provider, paymentCurrency]);
