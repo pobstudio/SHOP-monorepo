@@ -4,7 +4,7 @@ import { PrintServiceV2 } from '../typechain/PrintServiceV2';
 import {
   PrintServiceProductContractType,
   PRINT_SERVICE_CURRENCY_CONFIG,
-  PRINT_SERVICE_PRODUCT_CONFIG,
+  PRINT_SERVICE_CONFIG,
 } from '../contracts/print-service/constants';
 import { NETWORK_NAME_CHAIN_ID } from '../utils';
 
@@ -36,33 +36,15 @@ task(
     );
     console.log('\nwith orderId @ ', CURRENT_ORDER_ID);
 
-    // setup Pricing data
-    console.log('Wiring Metadata: setCurrencyConfig + setProductConfig');
-    for (const [i, address] of Object.entries(
-      PRINT_SERVICE_CURRENCY_CONFIG(chainId),
+    // setup Product data for each Currency
+    console.log('Wiring Metadata: setProducts for each currency');
+    for (const [address, products] of Object.entries(
+      PRINT_SERVICE_CONFIG(chainId),
     )) {
-      const currencyIndex = Math.floor(Number(i));
-      console.log('setCurrencyConfig: ', currencyIndex, address);
-      await printService.setCurrencyConfig(currencyIndex, address, {
-        gasLimit: 111111,
+      await printService.setProducts(address, [products[0], products[1]], {
+        gasLimit: 222222,
       });
-
-      for (const [j, product] of Object.entries(
-        PRINT_SERVICE_PRODUCT_CONFIG(chainId)[currencyIndex],
-      )) {
-        const productIndex = Math.floor(Number(j));
-        console.log(
-          'setProductConfig: ',
-          productIndex,
-          (product as PrintServiceProductContractType).id,
-        );
-        await printService.setProductConfig(
-          currencyIndex,
-          productIndex,
-          product as PrintServiceProductContractType,
-          { gasLimit: 111111 },
-        );
-      }
+      console.log('Successfully set Products for: ', address);
     }
 
     // MAINNET ONLY
@@ -115,7 +97,7 @@ task(
 );
 
 task(
-  'update-print-service-v2-currency',
+  'update-print-service-v2-products',
   'Updates PrintService Products',
   async (args, hre) => {
     const isProd = hre.network.name.includes('mainnet');
@@ -126,47 +108,14 @@ task(
       deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].printServiceV2,
     )) as PrintServiceV2;
 
-    const CURRENCY_INDEX = 1; // EDIT THIS + PRINT_SERVICE_CURRENCY_CONFIG
-
-    console.log('Updating currencyConfig...');
-    await printService.setCurrencyConfig(
-      CURRENCY_INDEX,
-      PRINT_SERVICE_CURRENCY_CONFIG(chainId)[CURRENCY_INDEX],
-      { gasLimit: 111111 },
-    );
-
-    console.log(
-      `Successfully updated currencyConfig for PrintServiceV2 ✓: ${
-        hre.network.name
-      } @ ${
-        deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].printServiceV2
-      }`,
-    );
-  },
-);
-
-task(
-  'update-print-service-v2-product',
-  'Updates PrintService Products',
-  async (args, hre) => {
-    const isProd = hre.network.name.includes('mainnet');
-    const chainId = isProd ? 1 : 4;
-
-    const PrintService = await hre.ethers.getContractFactory('PrintServiceV2');
-    const printService = (await PrintService.attach(
-      deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].printServiceV2,
-    )) as PrintServiceV2;
-
-    const CURRENCY_INDEX = 1; // EDIT THIS + PRINT_SERVICE_PRODUCT_CONFIG
-    const PRODUCT_INDEX = 1; // EDIT THIS + PRINT_SERVICE_PRODUCT_CONFIG
-
-    console.log('Updating currencyConfig...');
-    await printService.setProductConfig(
-      CURRENCY_INDEX,
-      PRODUCT_INDEX,
-      PRINT_SERVICE_PRODUCT_CONFIG(chainId)[CURRENCY_INDEX][PRODUCT_INDEX],
-      { gasLimit: 111111 },
-    );
+    for (const [address, products] of Object.entries(
+      PRINT_SERVICE_CONFIG(chainId),
+    )) {
+      await printService.setProducts(address, [products[0], products[1]], {
+        gasLimit: 222222,
+      });
+      console.log('Successfully set Products for: ', address);
+    }
 
     console.log(
       `Successfully updated productConfig for PrintServiceV2 ✓: ${

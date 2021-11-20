@@ -39,14 +39,14 @@ const FaqPage: NextPage = () => {
             </PageBodySection>
 
             <PageBodySection>
-              <PageSubheader>Get LONDON</PageSubheader>
+              <PageSubheader>Get $LONDON</PageSubheader>
               <PageText>
                 <a
                   href={TRADE_LONDON_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Buy LONDON via Matcha.xyz
+                  Buy $LONDON via Matcha.xyz
                 </a>
               </PageText>
             </PageBodySection>

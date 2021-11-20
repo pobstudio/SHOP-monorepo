@@ -1,7 +1,7 @@
 import {
   deployments,
   PrintOrderReceivedEvent,
-  PrintService__factory,
+  PrintServiceV2__factory,
 } from '@pob/protocol';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ethers } from 'ethers';
@@ -29,8 +29,8 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId = network?.toLowerCase()?.includes('MAINNET'.toLowerCase())
     ? 1
     : 4;
-  const printServiceContract = PrintService__factory.connect(
-    deployments[chainId].printService,
+  const printServiceContract = PrintServiceV2__factory.connect(
+    deployments[chainId].printServiceV2,
     PROVIDER,
   );
   const PrintOrderReceivedTopic0 = PrintOrderReceivedEvent;

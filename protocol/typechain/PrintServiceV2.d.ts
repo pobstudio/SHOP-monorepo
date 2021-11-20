@@ -23,14 +23,14 @@ import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
 
 interface PrintServiceV2Interface extends ethers.utils.Interface {
   functions: {
-    'buy(uint256,uint256,address,uint256,bytes32)': FunctionFragment;
-    'currencyConfig(uint256)': FunctionFragment;
+    'buy(address,uint256,address,uint256,bytes32)': FunctionFragment;
+    'config(address,uint256)': FunctionFragment;
     'orderId()': FunctionFragment;
     'owner()': FunctionFragment;
-    'productConfig(uint256,uint256)': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
-    'setCurrencyConfig(uint256,address)': FunctionFragment;
-    'setProductConfig(uint256,uint256,tuple)': FunctionFragment;
+    'setInStock(address,uint256,bool)': FunctionFragment;
+    'setPrice(address,uint256,uint256)': FunctionFragment;
+    'setProducts(address,tuple[])': FunctionFragment;
     'setTreasury(address)': FunctionFragment;
     'transferOwnership(address)': FunctionFragment;
     'treasury()': FunctionFragment;
@@ -38,33 +38,29 @@ interface PrintServiceV2Interface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: 'buy',
-    values: [BigNumberish, BigNumberish, string, BigNumberish, BytesLike],
+    values: [string, BigNumberish, string, BigNumberish, BytesLike],
   ): string;
   encodeFunctionData(
-    functionFragment: 'currencyConfig',
-    values: [BigNumberish],
+    functionFragment: 'config',
+    values: [string, BigNumberish],
   ): string;
   encodeFunctionData(functionFragment: 'orderId', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'productConfig',
-    values: [BigNumberish, BigNumberish],
-  ): string;
   encodeFunctionData(
     functionFragment: 'renounceOwnership',
     values?: undefined,
   ): string;
   encodeFunctionData(
-    functionFragment: 'setCurrencyConfig',
-    values: [BigNumberish, string],
+    functionFragment: 'setInStock',
+    values: [string, BigNumberish, boolean],
   ): string;
   encodeFunctionData(
-    functionFragment: 'setProductConfig',
-    values: [
-      BigNumberish,
-      BigNumberish,
-      { id: string; price: BigNumberish; inStock: boolean },
-    ],
+    functionFragment: 'setPrice',
+    values: [string, BigNumberish, BigNumberish],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'setProducts',
+    values: [string, { id: string; price: BigNumberish; inStock: boolean }[]],
   ): string;
   encodeFunctionData(functionFragment: 'setTreasury', values: [string]): string;
   encodeFunctionData(
@@ -74,26 +70,17 @@ interface PrintServiceV2Interface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: 'treasury', values?: undefined): string;
 
   decodeFunctionResult(functionFragment: 'buy', data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: 'currencyConfig',
-    data: BytesLike,
-  ): Result;
+  decodeFunctionResult(functionFragment: 'config', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'orderId', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: 'productConfig',
-    data: BytesLike,
-  ): Result;
   decodeFunctionResult(
     functionFragment: 'renounceOwnership',
     data: BytesLike,
   ): Result;
+  decodeFunctionResult(functionFragment: 'setInStock', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setPrice', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'setCurrencyConfig',
-    data: BytesLike,
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: 'setProductConfig',
+    functionFragment: 'setProducts',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -130,7 +117,7 @@ export class PrintServiceV2 extends Contract {
 
   'functions': {
     buy(
-      _currencyIndex: BigNumberish,
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -138,8 +125,8 @@ export class PrintServiceV2 extends Contract {
       overrides?: PayableOverrides,
     ): Promise<ContractTransaction>;
 
-    'buy(uint256,uint256,address,uint256,bytes32)'(
-      _currencyIndex: BigNumberish,
+    'buy(address,uint256,address,uint256,bytes32)'(
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -147,15 +134,29 @@ export class PrintServiceV2 extends Contract {
       overrides?: PayableOverrides,
     ): Promise<ContractTransaction>;
 
-    currencyConfig(
-      arg0: BigNumberish,
+    config(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
-    ): Promise<[string]>;
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
 
-    'currencyConfig(uint256)'(
-      arg0: BigNumberish,
+    'config(address,uint256)'(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
-    ): Promise<[string]>;
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
 
     orderId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -165,57 +166,47 @@ export class PrintServiceV2 extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<[string]>;
 
-    productConfig(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        id: string;
-        price: BigNumber;
-        inStock: boolean;
-      }
-    >;
-
-    'productConfig(uint256,uint256)'(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        id: string;
-        price: BigNumber;
-        inStock: boolean;
-      }
-    >;
-
     renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
 
     'renounceOwnership()'(overrides?: Overrides): Promise<ContractTransaction>;
 
-    setCurrencyConfig(
-      _currencyIndex: BigNumberish,
+    setInStock(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    'setCurrencyConfig(uint256,address)'(
-      _currencyIndex: BigNumberish,
+    'setInStock(address,uint256,bool)'(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    setProductConfig(
-      _currencyIndex: BigNumberish,
+    setPrice(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
-    'setProductConfig(uint256,uint256,(string,uint256,bool))'(
-      _currencyIndex: BigNumberish,
+    'setPrice(address,uint256,uint256)'(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<ContractTransaction>;
+
+    setProducts(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
+      overrides?: Overrides,
+    ): Promise<ContractTransaction>;
+
+    'setProducts(address,tuple[])'(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
 
@@ -245,7 +236,7 @@ export class PrintServiceV2 extends Contract {
   };
 
   'buy'(
-    _currencyIndex: BigNumberish,
+    _currency: string,
     _productIndex: BigNumberish,
     _collection: string,
     _tokenId: BigNumberish,
@@ -253,8 +244,8 @@ export class PrintServiceV2 extends Contract {
     overrides?: PayableOverrides,
   ): Promise<ContractTransaction>;
 
-  'buy(uint256,uint256,address,uint256,bytes32)'(
-    _currencyIndex: BigNumberish,
+  'buy(address,uint256,address,uint256,bytes32)'(
+    _currency: string,
     _productIndex: BigNumberish,
     _collection: string,
     _tokenId: BigNumberish,
@@ -262,15 +253,29 @@ export class PrintServiceV2 extends Contract {
     overrides?: PayableOverrides,
   ): Promise<ContractTransaction>;
 
-  'currencyConfig'(
-    arg0: BigNumberish,
+  'config'(
+    arg0: string,
+    arg1: BigNumberish,
     overrides?: CallOverrides,
-  ): Promise<string>;
+  ): Promise<
+    [string, BigNumber, boolean] & {
+      id: string;
+      price: BigNumber;
+      inStock: boolean;
+    }
+  >;
 
-  'currencyConfig(uint256)'(
-    arg0: BigNumberish,
+  'config(address,uint256)'(
+    arg0: string,
+    arg1: BigNumberish,
     overrides?: CallOverrides,
-  ): Promise<string>;
+  ): Promise<
+    [string, BigNumber, boolean] & {
+      id: string;
+      price: BigNumber;
+      inStock: boolean;
+    }
+  >;
 
   'orderId'(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -280,57 +285,47 @@ export class PrintServiceV2 extends Contract {
 
   'owner()'(overrides?: CallOverrides): Promise<string>;
 
-  'productConfig'(
-    arg0: BigNumberish,
-    arg1: BigNumberish,
-    overrides?: CallOverrides,
-  ): Promise<
-    [string, BigNumber, boolean] & {
-      id: string;
-      price: BigNumber;
-      inStock: boolean;
-    }
-  >;
-
-  'productConfig(uint256,uint256)'(
-    arg0: BigNumberish,
-    arg1: BigNumberish,
-    overrides?: CallOverrides,
-  ): Promise<
-    [string, BigNumber, boolean] & {
-      id: string;
-      price: BigNumber;
-      inStock: boolean;
-    }
-  >;
-
   'renounceOwnership'(overrides?: Overrides): Promise<ContractTransaction>;
 
   'renounceOwnership()'(overrides?: Overrides): Promise<ContractTransaction>;
 
-  'setCurrencyConfig'(
-    _currencyIndex: BigNumberish,
+  'setInStock'(
     _currency: string,
+    _productIndex: BigNumberish,
+    _inStock: boolean,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'setCurrencyConfig(uint256,address)'(
-    _currencyIndex: BigNumberish,
+  'setInStock(address,uint256,bool)'(
     _currency: string,
+    _productIndex: BigNumberish,
+    _inStock: boolean,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'setProductConfig'(
-    _currencyIndex: BigNumberish,
+  'setPrice'(
+    _currency: string,
     _productIndex: BigNumberish,
-    _product: { id: string; price: BigNumberish; inStock: boolean },
+    _price: BigNumberish,
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  'setProductConfig(uint256,uint256,(string,uint256,bool))'(
-    _currencyIndex: BigNumberish,
+  'setPrice(address,uint256,uint256)'(
+    _currency: string,
     _productIndex: BigNumberish,
-    _product: { id: string; price: BigNumberish; inStock: boolean },
+    _price: BigNumberish,
+    overrides?: Overrides,
+  ): Promise<ContractTransaction>;
+
+  'setProducts'(
+    _currency: string,
+    _products: { id: string; price: BigNumberish; inStock: boolean }[],
+    overrides?: Overrides,
+  ): Promise<ContractTransaction>;
+
+  'setProducts(address,tuple[])'(
+    _currency: string,
+    _products: { id: string; price: BigNumberish; inStock: boolean }[],
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
@@ -360,7 +355,7 @@ export class PrintServiceV2 extends Contract {
 
   'callStatic': {
     buy(
-      _currencyIndex: BigNumberish,
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -368,8 +363,8 @@ export class PrintServiceV2 extends Contract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    'buy(uint256,uint256,address,uint256,bytes32)'(
-      _currencyIndex: BigNumberish,
+    'buy(address,uint256,address,uint256,bytes32)'(
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -377,15 +372,29 @@ export class PrintServiceV2 extends Contract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    currencyConfig(
-      arg0: BigNumberish,
+    config(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
-    ): Promise<string>;
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
 
-    'currencyConfig(uint256)'(
-      arg0: BigNumberish,
+    'config(address,uint256)'(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
-    ): Promise<string>;
+    ): Promise<
+      [string, BigNumber, boolean] & {
+        id: string;
+        price: BigNumber;
+        inStock: boolean;
+      }
+    >;
 
     orderId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -395,57 +404,47 @@ export class PrintServiceV2 extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<string>;
 
-    productConfig(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        id: string;
-        price: BigNumber;
-        inStock: boolean;
-      }
-    >;
-
-    'productConfig(uint256,uint256)'(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        id: string;
-        price: BigNumber;
-        inStock: boolean;
-      }
-    >;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     'renounceOwnership()'(overrides?: CallOverrides): Promise<void>;
 
-    setCurrencyConfig(
-      _currencyIndex: BigNumberish,
+    setInStock(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    'setCurrencyConfig(uint256,address)'(
-      _currencyIndex: BigNumberish,
+    'setInStock(address,uint256,bool)'(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    setProductConfig(
-      _currencyIndex: BigNumberish,
+    setPrice(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    'setProductConfig(uint256,uint256,(string,uint256,bool))'(
-      _currencyIndex: BigNumberish,
+    'setPrice(address,uint256,uint256)'(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    setProducts(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    'setProducts(address,tuple[])'(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
       overrides?: CallOverrides,
     ): Promise<void>;
 
@@ -488,7 +487,7 @@ export class PrintServiceV2 extends Contract {
 
   'estimateGas': {
     buy(
-      _currencyIndex: BigNumberish,
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -496,8 +495,8 @@ export class PrintServiceV2 extends Contract {
       overrides?: PayableOverrides,
     ): Promise<BigNumber>;
 
-    'buy(uint256,uint256,address,uint256,bytes32)'(
-      _currencyIndex: BigNumberish,
+    'buy(address,uint256,address,uint256,bytes32)'(
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -505,13 +504,15 @@ export class PrintServiceV2 extends Contract {
       overrides?: PayableOverrides,
     ): Promise<BigNumber>;
 
-    currencyConfig(
-      arg0: BigNumberish,
+    config(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    'currencyConfig(uint256)'(
-      arg0: BigNumberish,
+    'config(address,uint256)'(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
@@ -523,45 +524,47 @@ export class PrintServiceV2 extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<BigNumber>;
 
-    productConfig(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    'productConfig(uint256,uint256)'(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
     renounceOwnership(overrides?: Overrides): Promise<BigNumber>;
 
     'renounceOwnership()'(overrides?: Overrides): Promise<BigNumber>;
 
-    setCurrencyConfig(
-      _currencyIndex: BigNumberish,
+    setInStock(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    'setCurrencyConfig(uint256,address)'(
-      _currencyIndex: BigNumberish,
+    'setInStock(address,uint256,bool)'(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    setProductConfig(
-      _currencyIndex: BigNumberish,
+    setPrice(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
-    'setProductConfig(uint256,uint256,(string,uint256,bool))'(
-      _currencyIndex: BigNumberish,
+    'setPrice(address,uint256,uint256)'(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<BigNumber>;
+
+    setProducts(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
+      overrides?: Overrides,
+    ): Promise<BigNumber>;
+
+    'setProducts(address,tuple[])'(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
       overrides?: Overrides,
     ): Promise<BigNumber>;
 
@@ -589,7 +592,7 @@ export class PrintServiceV2 extends Contract {
 
   'populateTransaction': {
     buy(
-      _currencyIndex: BigNumberish,
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -597,8 +600,8 @@ export class PrintServiceV2 extends Contract {
       overrides?: PayableOverrides,
     ): Promise<PopulatedTransaction>;
 
-    'buy(uint256,uint256,address,uint256,bytes32)'(
-      _currencyIndex: BigNumberish,
+    'buy(address,uint256,address,uint256,bytes32)'(
+      _currency: string,
       _productIndex: BigNumberish,
       _collection: string,
       _tokenId: BigNumberish,
@@ -606,13 +609,15 @@ export class PrintServiceV2 extends Contract {
       overrides?: PayableOverrides,
     ): Promise<PopulatedTransaction>;
 
-    currencyConfig(
-      arg0: BigNumberish,
+    config(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    'currencyConfig(uint256)'(
-      arg0: BigNumberish,
+    'config(address,uint256)'(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -624,45 +629,47 @@ export class PrintServiceV2 extends Contract {
 
     'owner()'(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    productConfig(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    'productConfig(uint256,uint256)'(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
     renounceOwnership(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     'renounceOwnership()'(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    setCurrencyConfig(
-      _currencyIndex: BigNumberish,
+    setInStock(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    'setCurrencyConfig(uint256,address)'(
-      _currencyIndex: BigNumberish,
+    'setInStock(address,uint256,bool)'(
       _currency: string,
+      _productIndex: BigNumberish,
+      _inStock: boolean,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    setProductConfig(
-      _currencyIndex: BigNumberish,
+    setPrice(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    'setProductConfig(uint256,uint256,(string,uint256,bool))'(
-      _currencyIndex: BigNumberish,
+    'setPrice(address,uint256,uint256)'(
+      _currency: string,
       _productIndex: BigNumberish,
-      _product: { id: string; price: BigNumberish; inStock: boolean },
+      _price: BigNumberish,
+      overrides?: Overrides,
+    ): Promise<PopulatedTransaction>;
+
+    setProducts(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
+      overrides?: Overrides,
+    ): Promise<PopulatedTransaction>;
+
+    'setProducts(address,tuple[])'(
+      _currency: string,
+      _products: { id: string; price: BigNumberish; inStock: boolean }[],
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 

@@ -5,9 +5,8 @@ import { utils, BigNumber, ethers } from 'ethers';
 import { useRouter } from 'next/dist/client/router';
 import { ONE_TOKEN_IN_BASE_UNITS } from '@pob/protocol/utils';
 import {
-  PRINT_SERVICE_ETH_PRODUCTS,
-  PRINT_SERVICE_PRODUCTS as PRINT_SERVICE_PRODUCTS_PROD,
-  PRINT_SERVICE_PRODUCTS_TEST,
+  PRINT_SERVICE_CURRENCY_CONFIG,
+  PRINT_SERVICE_CONFIG,
 } from '@pob/protocol/contracts/print-service/constants';
 import { SlimSectionBody } from '..';
 import {
@@ -33,26 +32,9 @@ const CONTRACTS = [
   HASH_CONTRACT.toLowerCase(),
 ];
 
-export const CHECKOUT_PAYMENT_CONFIG: { [key in paymentCurrencyType]: any } = {
-  eth: {
-    PRINT_SERVICE_PRODUCTS: {
-      1: PRINT_SERVICE_ETH_PRODUCTS,
-      4: PRINT_SERVICE_ETH_PRODUCTS,
-    },
-    amountDueCurrency: 'ETH',
-    amountDue: (price: BigNumber) => ethers.utils.formatEther(price),
-    contract: 'printServiceEth',
-  },
-  london: {
-    PRINT_SERVICE_PRODUCTS: {
-      1: PRINT_SERVICE_PRODUCTS_PROD,
-      4: PRINT_SERVICE_PRODUCTS_TEST,
-    },
-    amountDueCurrency: 'LONDON',
-    amountDue: (price: BigNumber) =>
-      price.div(ONE_TOKEN_IN_BASE_UNITS).toNumber(),
-    contract: 'printService',
-  },
+const DISPLAY_CURRENCY_CONFIG: { [key in paymentCurrencyType]: any } = {
+  eth: (price: BigNumber) => ethers.utils.formatEther(price),
+  london: (price: BigNumber) => price.div(ONE_TOKEN_IN_BASE_UNITS).toNumber(),
 };
 
 const usePaymentFlow = (
@@ -63,11 +45,13 @@ const usePaymentFlow = (
 ) => {
   const balance = useBalance();
   const paymentCurrency = useCheckoutStore((s) => s.paymentCurrency);
+  const currencyAddress =
+    PRINT_SERVICE_CURRENCY_CONFIG(CHAIN_ID)[paymentCurrency];
 
-  const PRINT_SERVICE_PRODUCTS =
-    CHECKOUT_PAYMENT_CONFIG[paymentCurrency].PRINT_SERVICE_PRODUCTS[CHAIN_ID];
-  const amountDueCurrency =
-    CHECKOUT_PAYMENT_CONFIG[paymentCurrency].amountDueCurrency;
+  const PRINT_SERVICE_PRODUCTS = Object.values(
+    PRINT_SERVICE_CONFIG(CHAIN_ID)[currencyAddress],
+  );
+  const amountDueCurrency = paymentCurrency.toUpperCase();
 
   const getPrintServiceProductIndexFromType = (id: PrintServiceProductType) =>
     PRINT_SERVICE_PRODUCTS.findIndex((product: any) => product.id === id);
@@ -77,7 +61,7 @@ const usePaymentFlow = (
     PRINT_SERVICE_PRODUCTS[0].price;
 
   const price = getPricingFromProductType(product);
-  const amountDue = CHECKOUT_PAYMENT_CONFIG[paymentCurrency].amountDue(price);
+  const amountDue = DISPLAY_CURRENCY_CONFIG[paymentCurrency](price);
 
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<any | undefined>(undefined);
@@ -101,7 +85,7 @@ const usePaymentFlow = (
       }
     }
     return false;
-  }, [tokenID, collection, orderDetails]);
+  }, [tokenID, collection, orderDetails, paymentCurrency]);
   const isEnoughBalance = useMemo(() => {
     if (paymentCurrency.toLowerCase().includes('london')) {
       return tokenBalance.gte(price);
@@ -110,7 +94,7 @@ const usePaymentFlow = (
         ethers.utils.formatEther(balance) >= ethers.utils.formatEther(price)
       );
     }
-  }, [tokenBalance, price]);
+  }, [tokenBalance, price, paymentCurrency]);
   const isBuyable = useMemo(() => {
     return PRINT_SERVICE_PRODUCTS[getPrintServiceProductIndexFromType(product)]
       .inStock;
@@ -137,16 +121,14 @@ const usePaymentFlow = (
     if (pushFirebase.ok) {
       try {
         const startPay = await printServiceContract?.buy(
-          paymentCurrency.includes('eth') ? 0 : 1,
+          PRINT_SERVICE_CURRENCY_CONFIG(CHAIN_ID)[paymentCurrency],
           getPrintServiceProductIndexFromType(product),
           collection,
           BigNumber.from(tokenID),
           hash,
-          paymentCurrency.includes('eth')
-            ? {
-                value: price,
-              }
-            : undefined,
+          {
+            value: paymentCurrency.includes('eth') ? price : 0,
+          },
         );
         console.log(startPay);
         setError(undefined);
@@ -174,15 +156,16 @@ const usePaymentFlow = (
     product,
     collection,
     tokenID,
+    paymentCurrency,
   ]);
 
   const onButtonClick = useCallback(async () => {
-    // if (isApproved) {
-    handlePay();
-    // } else if (!isApproving) {
-    //   approve();
-    // }
-  }, [handlePay, approve, isApproved, isApproving]);
+    if (isApproved || paymentCurrency.toLowerCase().includes('eth')) {
+      handlePay();
+    } else if (!isApproving) {
+      approve();
+    }
+  }, [handlePay, approve, isApproved, isApproving, paymentCurrency]);
 
   const payingState = useMemo(() => {
     switch (true) {

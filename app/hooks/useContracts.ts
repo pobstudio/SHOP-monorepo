@@ -10,7 +10,8 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import { useProvider } from './useProvider';
 import { useWeb3React } from '@web3-react/core';
 import { useCheckoutStore } from '../stores/checkout';
-import { CHECKOUT_PAYMENT_CONFIG } from '../components/checkout/print/payment';
+import { BigNumberish } from '@ethersproject/bignumber';
+import { BytesLike } from '@ethersproject/bytes';
 
 export const useLondonContract = (shouldUseFallback: boolean = false) => {
   const { account } = useWeb3React();

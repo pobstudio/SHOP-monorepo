@@ -10,17 +10,16 @@ export interface PrintServiceProductContractType {
 }
 
 export const PRINT_SERVICE_CURRENCY_CONFIG = (chainId: 1 | 4) => ({
-  0: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', // ETH
-  1: deployments[chainId].erc20, // LONDON
-  // 2: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
+  eth: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  london: deployments[chainId].erc20,
 });
 
-export const PRINT_SERVICE_PRODUCT_CONFIG = (
+export const PRINT_SERVICE_CONFIG = (
   chainId: 1 | 4,
 ): {
-  [currency: number]: { [product: number]: PrintServiceProductContractType };
+  [currency: string]: { [product: number]: PrintServiceProductContractType };
 } => ({
-  0: {
+  [PRINT_SERVICE_CURRENCY_CONFIG(chainId).eth]: {
     0: {
       id: 'print0',
       price: utils.parseEther('0.08'),
@@ -32,7 +31,7 @@ export const PRINT_SERVICE_PRODUCT_CONFIG = (
       inStock: true,
     },
   },
-  1: {
+  [PRINT_SERVICE_CURRENCY_CONFIG(chainId).london]: {
     0: {
       id: 'print0',
       price: ONE_TOKEN_IN_BASE_UNITS.mul(chainId == 1 ? 10000 : 1),
@@ -44,18 +43,6 @@ export const PRINT_SERVICE_PRODUCT_CONFIG = (
       inStock: true,
     },
   },
-  // 2: {
-  //   0: {
-  //     id: 'print0',
-  //     price: utils.parseEther('0.08'),
-  //     inStock: true,
-  //   },
-  //   1: {
-  //     id: 'print1',
-  //     price: utils.parseEther('0.24'),
-  //     inStock: true,
-  //   },
-  // },
 });
 
 // OLD SHIT

@@ -15,7 +15,7 @@ export const deployments: Deployments = {
     deployer: '0x0B7056e2D9064f2ec8647F1ae556BAcc06da6Db4', // deployer.pob.eth
     printService: '0x2eD18dF7240082E514F86C4CCdBD8DA2f615EC0e', // PrintService (OLD)
     printServiceEth: '0x0c6881bF552208F41367f0B55759d0269E43aad1', // PrintServiceEth (OLD)
-    printServiceV2: '0xF051878628ea72C0CBD6a8deb5eDB14ecE34067c', // PrintServiceV2
+    printServiceV2: '0x696a29cf2E0AbE648dbC2e6DBf236a64d87DeBa3', // PrintServiceV2
   },
 };
 
