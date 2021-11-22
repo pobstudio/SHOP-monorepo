@@ -304,7 +304,9 @@ describe('PrintServiceV2', function () {
             8776,
             '0x0000000000000000000000000000000000000000000000000000000000000001',
           ),
-      ).to.revertedWith('Insufficient allowance');
+      ).to.revertedWith(
+        'VM Exception while processing transaction: revert ERC20: transfer amount exceeds allowance',
+      );
     });
 
     it('LONDON: Reject if not enough balance', async function () {
@@ -322,7 +324,9 @@ describe('PrintServiceV2', function () {
             8776,
             '0x0000000000000000000000000000000000000000000000000000000000000001',
           ),
-      ).to.revertedWith('Insufficient balance');
+      ).to.revertedWith(
+        'VM Exception while processing transaction: revert ERC20: transfer amount exceeds balance',
+      );
     });
   });
 });

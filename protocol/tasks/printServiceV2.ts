@@ -8,7 +8,7 @@ import {
 } from '../contracts/print-service/constants';
 import { NETWORK_NAME_CHAIN_ID } from '../utils';
 
-const CURRENT_ORDER_ID = 0; // EDIT THIS
+const CURRENT_ORDER_ID = 2; // EDIT THIS
 
 task(
   'deploy-print-service-v2',

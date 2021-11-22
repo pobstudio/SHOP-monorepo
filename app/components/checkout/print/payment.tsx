@@ -140,7 +140,7 @@ const usePaymentFlow = (
         console.error(e);
         setPaying(false);
         setSuccess(false);
-        setError(e);
+        // setError(e);
       }
     } else {
       console.error(pushFirebase);

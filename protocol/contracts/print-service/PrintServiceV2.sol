@@ -40,21 +40,21 @@ contract PrintServiceV2 is Ownable {
     treasury = _treasury;
   }
 
-  function setProducts(address payable _currency, Product[] memory _products) public onlyOwner {
+  function setProducts(address _currency, Product[] memory _products) public onlyOwner {
     for (uint index = 0; index < _products.length; index++) {
       config[_currency][index] = _products[index];
     }
   }
 
-  function setInStock(address payable _currency, uint256 _productIndex, bool _inStock) public onlyOwner {
+  function setInStock(address _currency, uint256 _productIndex, bool _inStock) public onlyOwner {
     config[_currency][_productIndex].inStock = _inStock;
   }
 
-  function setPrice(address payable _currency, uint256 _productIndex, uint256 _price) public onlyOwner {
+  function setPrice(address _currency, uint256 _productIndex, uint256 _price) public onlyOwner {
     config[_currency][_productIndex].price = _price;
   }
 
-  function buy(address payable _currency, uint256 _productIndex, address _collection, uint256 _tokenId, bytes32 _orderHash) public payable {
+  function buy(address _currency, uint256 _productIndex, address _collection, uint256 _tokenId, bytes32 _orderHash) public payable {
     Product memory product = config[_currency][_productIndex];
     uint256 price = product.price;
 
@@ -66,8 +66,6 @@ contract PrintServiceV2 is Ownable {
       treasury.call{value: price }(""); // transfer ETH to Treasury
       msg.sender.call{value: amountPaid - price}(""); // transfer any overpayment back to payer
     } else { // is ERC20
-      require(ERC20Mintable(_currency).allowance(_msgSender(), address(this)) >= price, "Insufficient allowance");
-      require(ERC20Mintable(_currency).balanceOf(_msgSender()) >= price, "Insufficient balance");
       ERC20Mintable(_currency).transferFrom(_msgSender(), treasury, price); // transfer ERC20
     }
     
