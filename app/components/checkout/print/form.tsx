@@ -5,19 +5,25 @@ import {
   COLLECTION_MAP,
   useAccountCollections,
 } from '../../../hooks/useCollection';
-import { PrintServiceProductType } from '../../../utils/airtable';
+import {
+  PrintServiceCollectionRawType,
+  PrintServiceProductType,
+} from '../../../utils/airtable';
 import { PaymentFlow } from './payment';
 import { FIRESTORE_PRINT_SERVICE_RECORD } from '../../../clients/firebase';
-import { defaultCollection, useCheckoutStore } from '../../../stores/checkout';
+import {
+  defaultCollection,
+  defaultProduct,
+  useCheckoutStore,
+} from '../../../stores/checkout';
 
 export const PrintCheckout: FC = () => {
   const { account } = useWeb3React();
   const collections = useAccountCollections(account);
 
   const setCollection = useCheckoutStore((s) => s.setCollection);
-  const [artwork, setArtworkOption] = useState<'london-gifts' | 'hash'>(
-    defaultCollection,
-  );
+  const [artwork, setArtworkOption] =
+    useState<PrintServiceCollectionRawType>(defaultCollection);
   const handleArtChange = (e: any) => {
     setArtworkOption(e.target.value);
     setCollection(e.target.value);
@@ -54,7 +60,7 @@ export const PrintCheckout: FC = () => {
   }, [artwork, collections]);
 
   const [printOption, setPrintOption] =
-    useState<PrintServiceProductType>('print1');
+    useState<PrintServiceProductType>(defaultProduct);
   const handlePrintOptionChange = (e: any) => setPrintOption(e.target.value);
 
   const [email, setEmail] = useState<string>('');

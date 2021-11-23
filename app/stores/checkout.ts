@@ -1,8 +1,11 @@
 import create from 'zustand';
+import { PrintServiceCollectionRawType, PrintServiceProductType } from '../utils/airtable';
 
-export const defaultCollection = 'london-gifts';
-export const defaultCurrency = 'eth';
 export type paymentCurrencyType = 'eth' | 'london';
+
+export const defaultCollection: PrintServiceCollectionRawType = 'london-gifts';
+export const defaultCurrency: paymentCurrencyType = 'eth';
+export const defaultProduct: PrintServiceProductType = 'print0';
 
 type State = {
   paymentCurrency: paymentCurrencyType;

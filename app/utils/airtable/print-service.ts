@@ -10,6 +10,7 @@ export type PrintServiceOrderStatus =
   | 'complete'
   | 'rejected';
 export type PrintServiceProductType = 'print0' | 'print1';
+export type PrintServiceCollectionRawType = 'london-gifts' | 'hash';
 export const getPrintServicePackageNameFromProductType: {
   [index in PrintServiceProductType]: string;
 } = {
