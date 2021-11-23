@@ -25,6 +25,7 @@ export const getPrintServiceCollectionTypeFromAddress: {
 };
 export interface PrintServiceAirtableRecordType {
   'order id'?: string; // on chain id
+  'order count'?: string; // queue id
   'created at'?: string;
   'last modified'?: string;
   'google drive'?: string;

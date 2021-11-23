@@ -1,7 +1,9 @@
 import { BigNumber } from 'ethers';
 
 // env
-export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1');
+export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1') as
+  | 1
+  | 4;
 
 export const FIREBASE_ADMIN_CERT = process.env.FIREBASE_ADMIN_CERT ?? '{}';
 

@@ -1,7 +1,10 @@
-import { deployments, events, PrintService__factory } from '@pob/protocol';
+import {
+  deployments,
+  PrintOrderReceivedEvent,
+  PrintServiceV2__factory,
+} from '@pob/protocol';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ethers } from 'ethers';
-import { CHAIN_ID } from '../../../constants';
 import { PROVIDER } from '../../../constants/providers';
 import { getEtherscanTxUrl } from '../../../utils/urls';
 import { admin } from '../../../clients/firebase-server';
@@ -26,12 +29,11 @@ const handleNotify = async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId = network?.toLowerCase()?.includes('MAINNET'.toLowerCase())
     ? 1
     : 4;
-  const printServiceContract = PrintService__factory.connect(
-    deployments[chainId].printService,
+  const printServiceContract = PrintServiceV2__factory.connect(
+    deployments[chainId].printServiceV2,
     PROVIDER,
   );
-  const PrintOrderReceivedTopic0 =
-    events[chainId].printService.printOrderReceived;
+  const PrintOrderReceivedTopic0 = PrintOrderReceivedEvent;
   console.log(network, 'network');
 
   const activity = body?.activity;

@@ -3,6 +3,8 @@ export interface Deployment {
   multisig: string;
   deployer: string;
   printService: string;
+  printServiceEth: string;
+  printServiceV2: string;
 }
 
 export type Deployments = { [chainId: number]: Deployment };

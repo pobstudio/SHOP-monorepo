@@ -44,13 +44,12 @@ const AccountPage: NextPage = () => {
                         },
                         index: number,
                       ) => (
-                        <>
-                          <Order
-                            key={`order-cell-${index}`}
-                            data={record.fields}
-                          />
+                        <React.Fragment
+                          key={`order-cell-${index}-${record.id}`}
+                        >
+                          <Order data={record.fields} />
                           <br />
-                        </>
+                        </React.Fragment>
                       ),
                     )}
                   </>

@@ -32,7 +32,7 @@ export const TokensEffect: FC = () => {
       return;
     }
     london
-      .allowance(account, deployments[CHAIN_ID].printService)
+      .allowance(account, deployments[CHAIN_ID].printServiceV2)
       .then((allowance: any) => {
         // console.log('$LONDON Allowance: ', allowance);
         setPrintServiceApprovalBalance(allowance);
