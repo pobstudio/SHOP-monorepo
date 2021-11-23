@@ -1,5 +1,8 @@
 import create from 'zustand';
-import { PrintServiceCollectionRawType, PrintServiceProductType } from '../utils/airtable';
+import {
+  PrintServiceCollectionRawType,
+  PrintServiceProductType,
+} from '../utils/airtable';
 
 export type paymentCurrencyType = 'eth' | 'london';
 

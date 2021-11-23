@@ -85,7 +85,7 @@ const usePaymentFlow = (
       }
     }
     return false;
-  }, [tokenID, collection, orderDetails, paymentCurrency]);
+  }, [tokenID, collection, orderDetails, paymentCurrency, product]);
   const isEnoughBalance = useMemo(() => {
     if (paymentCurrency.toLowerCase().includes('london')) {
       return tokenBalance.gte(price);
@@ -94,7 +94,7 @@ const usePaymentFlow = (
         ethers.utils.formatEther(balance) >= ethers.utils.formatEther(price)
       );
     }
-  }, [tokenBalance, price, paymentCurrency]);
+  }, [tokenBalance, price, paymentCurrency, product]);
   const isBuyable = useMemo(() => {
     return PRINT_SERVICE_PRODUCTS[getPrintServiceProductIndexFromType(product)]
       .inStock;
@@ -165,7 +165,7 @@ const usePaymentFlow = (
     } else if (!isApproving) {
       approve();
     }
-  }, [handlePay, approve, isApproved, isApproving, paymentCurrency]);
+  }, [handlePay, approve, isApproved, isApproving, paymentCurrency, product]);
 
   const payingState = useMemo(() => {
     switch (true) {
@@ -200,7 +200,6 @@ export const PaymentFlow: FC<{
   orderDetails: FIRESTORE_PRINT_SERVICE_RECORD;
   disabled: boolean;
 }> = ({ artCollection, artTokenID, product, orderDetails, disabled }) => {
-  const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
   const {
     amountDue,
     onButtonClick,
@@ -212,6 +211,17 @@ export const PaymentFlow: FC<{
     success,
     error,
   } = usePaymentFlow(product, artCollection, artTokenID, orderDetails);
+
+  const [hoverPurchaseButton, setHoverPurchaseButton] = useState(false);
+  const paymentCurrency = useCheckoutStore((s) => s.paymentCurrency);
+  const setPaymentCurrency = useCheckoutStore((s) => s.setPaymentCurrency);
+  const togglePaymentCurrency = useCallback(() => {
+    if (paymentCurrency.toLowerCase().includes('eth')) {
+      setPaymentCurrency('london');
+    } else {
+      setPaymentCurrency('eth');
+    }
+  }, [paymentCurrency, product]);
 
   const reduceDisabled =
     !isEnoughBalance ||
@@ -269,6 +279,8 @@ export const PaymentFlow: FC<{
     isBuyable,
     isReady,
     disabled,
+    paymentCurrency,
+    product,
   ]);
 
   const { account } = useWeb3React();
@@ -278,7 +290,7 @@ export const PaymentFlow: FC<{
       return;
     }
     await onButtonClick();
-  }, [reduceDisabled]);
+  }, [reduceDisabled, paymentCurrency, product]);
 
   const router = useRouter();
   useEffect(() => {
@@ -288,16 +300,6 @@ export const PaymentFlow: FC<{
       }, 1.5 * 1000);
     }
   }, [success]);
-
-  const paymentCurrency = useCheckoutStore((s) => s.paymentCurrency);
-  const setPaymentCurrency = useCheckoutStore((s) => s.setPaymentCurrency);
-  const togglePaymentCurrency = useCallback(() => {
-    if (paymentCurrency.toLowerCase().includes('eth')) {
-      setPaymentCurrency('london');
-    } else {
-      setPaymentCurrency('eth');
-    }
-  }, [paymentCurrency]);
 
   return (
     <>
