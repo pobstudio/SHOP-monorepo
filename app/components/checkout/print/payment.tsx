@@ -15,9 +15,15 @@ import {
   LONDON_GIFT_CONTRACT,
 } from '../../../constants';
 import { usePrintServiceContract } from '../../../hooks/useContracts';
-import { useSetApprove } from '../../../hooks/useSetApproval';
+import {
+  useLondonApprove,
+  usePosterApprove,
+} from '../../../hooks/useSetApproval';
 import { useTokensStore } from '../../../stores/token';
-import { useIsPrintServiceApproved } from '../../../hooks/useIsApproved';
+import {
+  useIsPrintServiceLondonApproved,
+  useIsPrintServicePosterApproved,
+} from '../../../hooks/useIsApproved';
 import { PrintServiceProductType } from '../../../utils/airtable';
 import { FIRESTORE_PRINT_SERVICE_RECORD } from '../../../clients/firebase';
 import { ROUTES } from '../../../constants/routes';
@@ -68,7 +74,10 @@ const usePaymentFlow = (
   const [error, setError] = useState<any | undefined>(undefined);
   const [paying, setPaying] = useState(false);
 
-  const { approve, isApproving } = useSetApprove();
+  const { approve: londonApprove, isApproving: isLondonApproving } =
+    useLondonApprove();
+  const { approve: posterApprove, isApproving: isPosterApproving } =
+    usePosterApprove();
   const printServiceContract = usePrintServiceContract();
 
   const orderDetailsHash = (obj: any) =>
@@ -77,8 +86,10 @@ const usePaymentFlow = (
       [...Object.values(obj)],
     );
 
-  const tokenBalance = useTokensStore((s) => s.tokenBalance);
-  const isApproved = useIsPrintServiceApproved(price);
+  const londonBalance = useTokensStore((s) => s.londonBalance);
+  const isLondonApproved = useIsPrintServiceLondonApproved(price);
+  const posterBalance = useTokensStore((s) => s.posterBalance);
+  const isPosterApproved = useIsPrintServicePosterApproved(price);
   const isReady = useMemo(() => {
     if (tokenID !== '' && collection !== '' && orderDetails.customerContact) {
       if (CONTRACTS.includes(collection.toLowerCase())) {
@@ -88,14 +99,16 @@ const usePaymentFlow = (
     return false;
   }, [tokenID, collection, orderDetails, paymentCurrency, product]);
   const isEnoughBalance = useMemo(() => {
-    if (paymentCurrency.toLowerCase().includes('london')) {
-      return tokenBalance.gte(price);
+    if (paymentCurrency.includes('london')) {
+      return londonBalance.gte(price);
+    } else if (paymentCurrency.includes('poster')) {
+      return posterBalance.gte(price);
     } else {
       return (
         ethers.utils.formatEther(balance) >= ethers.utils.formatEther(price)
       );
     }
-  }, [tokenBalance, price, paymentCurrency, product]);
+  }, [londonBalance, posterBalance, price, paymentCurrency, product]);
   const isBuyable = useMemo(() => {
     return PRINT_SERVICE_PRODUCTS[getPrintServiceProductIndexFromType(product)]
       .inStock;
@@ -161,23 +174,38 @@ const usePaymentFlow = (
   ]);
 
   const onButtonClick = useCallback(async () => {
-    if (isApproved || paymentCurrency.toLowerCase().includes('eth')) {
+    if (paymentCurrency.includes('eth')) {
       handlePay();
-    } else if (!isApproving) {
-      approve();
+      return;
     }
-  }, [handlePay, approve, isApproved, isApproving, paymentCurrency, product]);
+    if (paymentCurrency.includes('london')) {
+      if (isLondonApproved) {
+        handlePay();
+      } else {
+        londonApprove();
+      }
+      return;
+    }
+    if (paymentCurrency.includes('poster')) {
+      if (isPosterApproved) {
+        handlePay();
+      } else {
+        posterApprove();
+      }
+      return;
+    }
+  }, [handlePay, paymentCurrency, product, isLondonApproved, isPosterApproved]);
 
   const payingState = useMemo(() => {
     switch (true) {
       case paying:
         return 'Paying...';
-      case isApproving:
+      case isLondonApproving || isPosterApproving:
         return 'Approving...';
       default:
         return '';
     }
-  }, [paying, isApproving]);
+  }, [paying, isLondonApproving, isPosterApproving]);
 
   return {
     price,
@@ -218,9 +246,9 @@ export const PaymentFlow: FC<{
   const setPaymentCurrency = useCheckoutStore((s) => s.setPaymentCurrency);
   const togglePaymentCurrency = useCallback(() => {
     if (paymentCurrency.includes('eth')) {
-      setPaymentCurrency('poster');
-    } else if (paymentCurrency.includes('poster')) {
       setPaymentCurrency('london');
+    } else if (paymentCurrency.includes('london')) {
+      setPaymentCurrency('poster');
     } else {
       setPaymentCurrency('eth');
     }

@@ -29,6 +29,22 @@ export const useLondonContract = (shouldUseFallback: boolean = false) => {
   }, [account, provider]);
 };
 
+export const usePosterContract = (shouldUseFallback: boolean = false) => {
+  const { account } = useWeb3React();
+  const provider = useProvider(shouldUseFallback);
+
+  return useMemo(() => {
+    if (!account && !provider) {
+      return;
+    }
+
+    return ERC20Mintable__factory.connect(
+      deployments[CHAIN_ID].poster,
+      getProviderOrSigner(provider as JsonRpcProvider, account as string),
+    );
+  }, [account, provider]);
+};
+
 export const usePrintServiceContract = (shouldUseFallback: boolean = false) => {
   const { account } = useWeb3React();
   const provider = useProvider(shouldUseFallback);
