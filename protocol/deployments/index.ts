@@ -8,7 +8,7 @@ export const deployments: Deployments = {
     printService: '0x7C8822D08A7A60500aa4b72F5417005D9fc270a2', // PrintService (OLD)
     printServiceEth: '0x0000000000000000000000000000000000000000', // PrintServiceEth (OLD)
     printServiceV2: '0xD8932fC665b692AA612F58b31841B10FFD8FE401', // PrintServiceV2
-    poster: '0x0000000000000000000000000000000000000000', // $POSTER token
+    poster: '0xA99757De24893FEC6B51610C754C62635b42AE13', // $POSTER token
   },
   4: {
     london: '0x243901455D1B8ef76678b32b4459602CC6B730ae', // $LONDON

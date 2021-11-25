@@ -12,6 +12,7 @@ export interface PrintServiceProductContractType {
 export const PRINT_SERVICE_CURRENCY_CONFIG = (chainId: 1 | 4) => ({
   eth: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   london: deployments[chainId].london,
+  poster: deployments[chainId].poster,
 });
 
 export const PRINT_SERVICE_CONFIG = (
@@ -40,6 +41,18 @@ export const PRINT_SERVICE_CONFIG = (
     1: {
       id: 'print1',
       price: ONE_TOKEN_IN_BASE_UNITS.mul(chainId == 1 ? 30000 : 3),
+      inStock: true,
+    },
+  },
+  [PRINT_SERVICE_CURRENCY_CONFIG(chainId).poster]: {
+    0: {
+      id: 'print0',
+      price: ONE_TOKEN_IN_BASE_UNITS.mul(1),
+      inStock: true,
+    },
+    1: {
+      id: 'print1',
+      price: ONE_TOKEN_IN_BASE_UNITS.mul(3),
       inStock: true,
     },
   },
