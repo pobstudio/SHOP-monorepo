@@ -1,5 +1,5 @@
 export interface Deployment {
-  erc20: string;
+  london: string;
   multisig: string;
   deployer: string;
   printService: string;

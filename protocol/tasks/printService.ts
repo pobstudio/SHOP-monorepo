@@ -21,7 +21,7 @@ task(
     const Erc20Mintable = await hre.ethers.getContractFactory('ERC20Mintable');
 
     const erc20 = await Erc20Mintable.attach(
-      deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].erc20,
+      deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].london,
     );
     await erc20.deployed();
 
@@ -88,7 +88,7 @@ task(
       address:
         deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].printService,
       constructorArguments: [
-        deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].erc20,
+        deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].london,
       ],
     });
   },

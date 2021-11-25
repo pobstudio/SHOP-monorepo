@@ -23,7 +23,7 @@ export const useLondonContract = (shouldUseFallback: boolean = false) => {
     }
 
     return ERC20Mintable__factory.connect(
-      deployments[CHAIN_ID].erc20,
+      deployments[CHAIN_ID].london,
       getProviderOrSigner(provider as JsonRpcProvider, account as string),
     );
   }, [account, provider]);

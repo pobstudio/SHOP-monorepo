@@ -11,7 +11,7 @@ export interface PrintServiceProductContractType {
 
 export const PRINT_SERVICE_CURRENCY_CONFIG = (chainId: 1 | 4) => ({
   eth: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-  london: deployments[chainId].erc20,
+  london: deployments[chainId].london,
 });
 
 export const PRINT_SERVICE_CONFIG = (
