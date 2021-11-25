@@ -1,11 +1,7 @@
 import { task } from 'hardhat/config';
 import { deployments } from '../deployments';
 import { PrintServiceV2 } from '../typechain/PrintServiceV2';
-import {
-  PrintServiceProductContractType,
-  PRINT_SERVICE_CURRENCY_CONFIG,
-  PRINT_SERVICE_CONFIG,
-} from '../contracts/print-service/constants';
+import { PRINT_SERVICE_CONFIG } from '../contracts/print-service/constants';
 import { NETWORK_NAME_CHAIN_ID } from '../utils';
 
 const CURRENT_ORDER_ID = 2; // EDIT THIS

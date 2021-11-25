@@ -64,20 +64,20 @@ task(
   },
 );
 
-task(
-  'verify-print-service-eth-etherscan',
-  'Verifies PrintService Deployment',
-  async (args, hre) => {
-    // Verifies Print Service Contract on Etherscan
-    await hre.run('verify:verify', {
-      address:
-        deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].printService,
-      constructorArguments: [
-        deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].erc20,
-      ],
-    });
-  },
-);
+// task(
+//   'verify-print-service-eth-etherscan',
+//   'Verifies PrintService Deployment',
+//   async (args, hre) => {
+//     // Verifies Print Service Contract on Etherscan
+//     await hre.run('verify:verify', {
+//       address:
+//         deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].printService,
+//       constructorArguments: [
+//         deployments[NETWORK_NAME_CHAIN_ID[hre.network.name]].london,
+//       ],
+//     });
+//   },
+// );
 
 task(
   'update-print-service-eth-products',
