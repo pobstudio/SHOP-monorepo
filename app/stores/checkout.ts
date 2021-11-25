@@ -4,7 +4,7 @@ import {
   PrintServiceProductType,
 } from '../utils/airtable';
 
-export type paymentCurrencyType = 'eth' | 'london';
+export type paymentCurrencyType = 'eth' | 'london' | 'poster';
 
 export const defaultCollection: PrintServiceCollectionRawType = 'london-gifts';
 export const defaultCurrency: paymentCurrencyType = 'eth';

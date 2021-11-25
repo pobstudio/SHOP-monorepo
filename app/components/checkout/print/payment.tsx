@@ -35,6 +35,7 @@ const CONTRACTS = [
 const DISPLAY_CURRENCY_CONFIG: { [key in paymentCurrencyType]: any } = {
   eth: (price: BigNumber) => ethers.utils.formatEther(price),
   london: (price: BigNumber) => price.div(ONE_TOKEN_IN_BASE_UNITS).toNumber(),
+  poster: (price: BigNumber) => price.div(ONE_TOKEN_IN_BASE_UNITS).toNumber(),
 };
 
 const usePaymentFlow = (
@@ -216,7 +217,9 @@ export const PaymentFlow: FC<{
   const paymentCurrency = useCheckoutStore((s) => s.paymentCurrency);
   const setPaymentCurrency = useCheckoutStore((s) => s.setPaymentCurrency);
   const togglePaymentCurrency = useCallback(() => {
-    if (paymentCurrency.toLowerCase().includes('eth')) {
+    if (paymentCurrency.includes('eth')) {
+      setPaymentCurrency('poster');
+    } else if (paymentCurrency.includes('poster')) {
       setPaymentCurrency('london');
     } else {
       setPaymentCurrency('eth');

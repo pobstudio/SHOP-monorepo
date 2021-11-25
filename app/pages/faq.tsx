@@ -14,6 +14,7 @@ import {
   PageBodySection,
 } from '../components/common';
 import { PRINT_SERVICE_BLOG_POST, TRADE_LONDON_LINK } from '../constants';
+import { deployments } from '@pob/protocol';
 
 const FaqPage: NextPage = () => {
   return (
@@ -66,6 +67,44 @@ const FaqPage: NextPage = () => {
                 To standardize how our art is displayed, we only provide 1 size
                 for HASH and LONDON GIFT respectively. If you think we should
                 provide multiple sizes, please contact us or tweet at us.
+              </PageText>
+            </PageBodySection>
+
+            <PageBodySection>
+              <PageSubheader>Relevant Contracts / Tokens</PageSubheader>
+              <PageText>
+                <a
+                  href={`https://etherscan.io/token/${deployments[1].london}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  $LONDON token
+                </a>
+                <br />
+                <a
+                  href={`https://etherscan.io/token/${deployments[1].poster}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  $POSTER token
+                </a>
+                <br />
+                <a
+                  href={`https://etherscan.io/address/${deployments[1].printServiceV2}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  PrintServiceV2 contract (current)
+                </a>
+                <br />
+                <a
+                  href={`https://etherscan.io/address/${deployments[1].printService}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  PrintServiceV1 contract
+                </a>
+                <br />
               </PageText>
             </PageBodySection>
           </PageBody>
