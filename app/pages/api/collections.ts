@@ -3,6 +3,7 @@ import {
   OPENSEA_API_KEY,
   HASH_CONTRACT,
   LONDON_GIFT_CONTRACT,
+  LONDON_EMBERS_CONTRACT,
 } from '../../constants';
 import { ADDRESS_REGEX } from '../../utils/regex';
 
@@ -38,7 +39,8 @@ const handlePobCollection = async (
         `&limit=${pageLimit}` +
         `&offset=${page}` +
         `&asset_contract_addresses=${HASH_CONTRACT}` +
-        `&asset_contract_addresses=${LONDON_GIFT_CONTRACT}`,
+        `&asset_contract_addresses=${LONDON_GIFT_CONTRACT}` +
+        `&asset_contract_addresses=${LONDON_EMBERS_CONTRACT}`,
       {
         headers,
       },
@@ -62,7 +64,7 @@ const handlePobCollection = async (
   }
   res.setHeader(
     'Cache-Control',
-    `public, immutable, no-transform, s-maxage=65536, max-age=65536`,
+    `public, immutable, no-transform, s-maxage=59, max-age=59, stale-while-revalidate=59`,
   );
   res.status(200).json({
     statusCode: 200,
