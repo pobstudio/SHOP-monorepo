@@ -1,4 +1,8 @@
-import { HASH_CONTRACT, LONDON_GIFT_CONTRACT } from '../../constants';
+import {
+  HASH_CONTRACT,
+  LONDON_EMBERS_CONTRACT,
+  LONDON_GIFT_CONTRACT,
+} from '../../constants';
 
 export type PrintServiceOrderStatus =
   | 'new'
@@ -10,17 +14,24 @@ export type PrintServiceOrderStatus =
   | 'complete'
   | 'rejected';
 export type PrintServiceProductType = 'print0' | 'print1';
-export type PrintServiceCollectionRawType = 'london-gifts' | 'hash';
+export type PrintServiceCollectionRawType =
+  | 'london-embers'
+  | 'london-gifts'
+  | 'hash';
 export const getPrintServicePackageNameFromProductType: {
   [index in PrintServiceProductType]: string;
 } = {
   print0: 'Print Only',
   print1: 'Framed',
 };
-export type PrintServiceCollectionType = 'LONDON GIFT' | 'HASH';
+export type PrintServiceCollectionType =
+  | 'LONDON EMBERS'
+  | 'LONDON GIFT'
+  | 'HASH';
 export const getPrintServiceCollectionTypeFromAddress: {
   [index: string]: PrintServiceCollectionType;
 } = {
+  [LONDON_EMBERS_CONTRACT.toLowerCase()]: 'LONDON EMBERS',
   [LONDON_GIFT_CONTRACT.toLowerCase()]: 'LONDON GIFT',
   [HASH_CONTRACT.toLowerCase()]: 'HASH',
 };

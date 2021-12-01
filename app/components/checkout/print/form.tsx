@@ -47,6 +47,18 @@ export const PrintCheckout: FC = () => {
         </>
       );
     }
+    if (artwork === 'london-embers') {
+      return (
+        <>
+          <option value="">-</option>
+          {collections?.['london-embers']?.map((asset: any) => (
+            <option key={asset.name} value={asset.token_id}>
+              {asset.name}
+            </option>
+          ))}
+        </>
+      );
+    }
     return (
       <>
         <option value="">-</option>
@@ -109,6 +121,7 @@ export const PrintCheckout: FC = () => {
           <h4>Collection</h4>
           <br />
           <select value={artwork} onChange={(e) => handleArtChange(e)}>
+            <option value="london-embers">LONDON EMBERS</option>
             <option value="london-gifts">LONDON GIFT</option>
             <option value="hash">HASH</option>
           </select>

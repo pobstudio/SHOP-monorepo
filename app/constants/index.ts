@@ -32,6 +32,8 @@ export const HASH_CONTRACT = `0xe18a32192ed95b0fe9d70d19e5025f103475d7ba`;
 
 export const LONDON_GIFT_CONTRACT = `0x7645eec8bb51862a5aa855c40971b2877dae81af`;
 
+export const LONDON_EMBERS_CONTRACT = `0x971fe57134d1b1b3d8d62ccadff1d2cf67e2b8ce`;
+
 // links
 export const STUDIO_PROD_LINK = 'https://pob.studio';
 

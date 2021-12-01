@@ -12,6 +12,7 @@ import { SlimSectionBody } from '..';
 import {
   CHAIN_ID,
   HASH_CONTRACT,
+  LONDON_EMBERS_CONTRACT,
   LONDON_GIFT_CONTRACT,
 } from '../../../constants';
 import { usePrintServiceContract } from '../../../hooks/useContracts';
@@ -34,6 +35,7 @@ import {
 import { useBalance } from '../../../hooks/useBalance';
 
 const CONTRACTS = [
+  LONDON_EMBERS_CONTRACT.toLowerCase(),
   LONDON_GIFT_CONTRACT.toLowerCase(),
   HASH_CONTRACT.toLowerCase(),
 ];

@@ -6,7 +6,7 @@ import {
 
 export type paymentCurrencyType = 'eth' | 'london' | 'poster';
 
-export const defaultCollection: PrintServiceCollectionRawType = 'london-gifts';
+export const defaultCollection: PrintServiceCollectionRawType = 'london-embers';
 export const defaultCurrency: paymentCurrencyType = 'eth';
 export const defaultProduct: PrintServiceProductType = 'print0';
 
