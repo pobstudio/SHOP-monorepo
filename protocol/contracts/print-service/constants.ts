@@ -26,24 +26,24 @@ export const PRINT_SERVICE_CONFIG = (
   [PRINT_SERVICE_CURRENCY_CONFIG(chainId).eth]: {
     0: {
       id: 'print0',
-      price: utils.parseEther('0.05'),
+      price: utils.parseEther('0.333'),
       inStock: true,
     },
     1: {
       id: 'print1',
-      price: utils.parseEther('0.15'),
+      price: utils.parseEther('0.69'),
       inStock: true,
     },
   },
   [PRINT_SERVICE_CURRENCY_CONFIG(chainId).london]: {
     0: {
       id: 'print0',
-      price: ONE_TOKEN_IN_BASE_UNITS.mul(chainId == 1 ? 6666 : 1),
+      price: ONE_TOKEN_IN_BASE_UNITS.mul(chainId == 1 ? 55555 : 1),
       inStock: true,
     },
     1: {
       id: 'print1',
-      price: ONE_TOKEN_IN_BASE_UNITS.mul(chainId == 1 ? 22222 : 3),
+      price: ONE_TOKEN_IN_BASE_UNITS.mul(chainId == 1 ? 111111 : 3),
       inStock: true,
     },
   },
