@@ -8,9 +8,11 @@ export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID ?? '1') as
 export const FIREBASE_ADMIN_CERT = process.env.FIREBASE_ADMIN_CERT ?? '{}';
 
 // keys
-export const OPENSEA_API_KEY = 'fc09ae6245fb40ab8afbcff451553345';
+export const OPENSEA_API_KEY = process.env.OPENSEA_API_KEY ?? '';
 
-export const AIRTABLE_API_KEY = `keynNuQm3SaErRWib`;
+export const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY ?? '';
+
+export const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY ?? '';
 
 export const ALCHEMY_KEY =
   CHAIN_ID === 1
